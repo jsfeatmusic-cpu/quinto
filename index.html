@@ -3,319 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repaso: Funciones Cuadráticas</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>Portal Educativo - CPES N°30</title>
     <style>
         :root {
-            --primary: #4F46E5;
-            --secondary: #818CF8;
-            --background: #F3F4F6;
-            --text: #1F2937;
-            --white: #FFFFFF;
+            --primary-color: #2563EB; /* Azul vibrante */
+            --secondary-color: #1E40AF; /* Azul oscuro */
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
         }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background);
-            color: var(--text);
+            background-color: var(--bg-color);
+            color: var(--text-main);
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
+            line-height: 1.6;
         }
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: var(--white);
-            min-height: 100vh;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            padding: 2rem;
-            box-sizing: border-box;
-        }
-        h1, h2, h3 {
-            color: var(--primary);
+
+        /* Encabezado */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
             text-align: center;
+            padding: 3rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        /* Pestañas */
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #E5E7EB;
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
         }
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: #6B7280;
-            transition: all 0.3s ease;
-        }
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-        }
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Contenido Teórico */
-        .theory-section {
-            background-color: #F9FAFB;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid var(--primary);
-        }
-        /* Minijuego */
-        .game-container {
-            text-align: center;
-        }
-        .score-board {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        .question-box {
+
+        header h2 {
+            margin: 10px 0 0 0;
             font-size: 1.5rem;
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background-color: #EEF2FF;
-            border-radius: 10px;
+            font-weight: 400;
+            color: #DBEAFE;
         }
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .option-btn {
-            background-color: var(--white);
-            border: 2px solid var(--secondary);
-            color: var(--primary);
-            padding: 1rem;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .option-btn:hover {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-        .feedback {
+
+        .profesor-badge {
+            display: inline-block;
             margin-top: 1.5rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
             font-weight: bold;
-            font-size: 1.2rem;
+            backdrop-filter: blur(5px);
         }
-        .correct { color: #10B981; }
-        .incorrect { color: #EF4444; }
+
+        /* Contenedor Principal */
+        main {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        .intro-text {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        /* Grilla de Cursos */
+        .grid-cursos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Tarjetas de Enlaces */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-main);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            border-top-color: #F59E0B; /* Toque de color al pasar el mouse */
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Tarjeta especial para Economía */
+        .card.economia {
+            border-top-color: #10B981; /* Verde para economía */
+        }
+        .card.economia h3 {
+            color: #059669;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Funciones Cuadráticas</h1>
-    
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('teoria', this)">📚 Teoría y Repaso</button>
-        <button class="tab-btn" onclick="openTab('juego', this)">🎮 Minijuego</button>
-    </div>
+    <header>
+        <h1>Colegio Provincial de Educación Secundaria N°30</h1>
+        <h2>Matemáticas y Economía</h2>
+        <div class="profesor-badge">Profesor: Schroder Gonzalo</div>
+    </header>
 
-    <div id="teoria" class="tab-content active">
-        <h2>Conceptos Fundamentales</h2>
-        
-        <div class="theory-section">
-            <h3>La Expresión Polinómica</h3>
-            <p>Una función cuadrática se expresa de la forma:</p>
-            <p style="text-align: center; font-size: 1.2rem;">\( f(x) = ax^2 + bx + c \)</p>
-            <p>Donde <strong>a</strong>, <strong>b</strong> y <strong>c</strong> son números reales y \( a \neq 0 \).</p>
-            <ul>
-                <li><strong>a:</strong> Término cuadrático (Indica la concavidad).</li>
-                <li><strong>b:</strong> Término lineal.</li>
-                <li><strong>c:</strong> Término independiente (Ordenada al origen).</li>
-            </ul>
+    <main>
+        <div class="intro-text">
+            <p>Bienvenidos al portal de estudio. Selecciona tu curso para acceder al material teórico, trabajos prácticos y repasos interactivos.</p>
         </div>
 
-        <div class="theory-section">
-            <h3>Concavidad (Las Ramas)</h3>
-            <p>El valor de <strong>a</strong> nos dice hacia dónde abren las ramas de la parábola:</p>
-            <ul>
-                <li>Si \( a > 0 \), las ramas van hacia <strong>arriba</strong> ∪ (Tiene un mínimo).</li>
-                <li>Si \( a < 0 \), las ramas van hacia <strong>abajo</strong> ∩ (Tiene un máximo).</li>
-            </ul>
+        <div class="grid-cursos">
+            <a href="primero.html" class="card">
+                <div class="card-icon">📐</div>
+                <h3>1° Año</h3>
+                <p>Matemática Básica y Geometría</p>
+            </a>
+
+            <a href="tercero.html" class="card">
+                <div class="card-icon">✖️</div>
+                <h3>3° Año</h3>
+                <p>Álgebra y Ecuaciones</p>
+            </a>
+
+            <a href="cuarto.html" class="card">
+                <div class="card-icon">📈</div>
+                <h3>4° Año</h3>
+                <p>Funciones y Análisis Gráfico</p>
+            </a>
+
+            <a href="quinto.html" class="card">
+                <div class="card-icon"> parab </div> <div class="card-icon">🚀</div>
+                <h3>5° Año</h3>
+                <p>Funciones Cuadráticas y Polinómicas</p>
+            </a>
+
+            <a href="economia.html" class="card economia">
+                <div class="card-icon">📊</div>
+                <h3>Economía</h3>
+                <p>Conceptos Económicos y Financieros</p>
+            </a>
         </div>
+    </main>
 
-        <div class="theory-section">
-            <h3>Vértice y Eje de Simetría</h3>
-            <p>El vértice es el punto máximo o mínimo de la parábola. Sus coordenadas \( V = (x_v, y_v) \) se calculan así:</p>
-            <p>\( x_v = \frac{-b}{2a} \)</p>
-            <p>\( y_v = f(x_v) \) (Reemplazamos \(x_v\) en la función original).</p>
-            <p>El <strong>Eje de simetría</strong> es la recta vertical que pasa por el vértice: \( x = x_v \).</p>
-        </div>
-
-        <div class="theory-section">
-            <h3>Raíces (Fórmula Resolvente o de Bhaskara)</h3>
-            <p>Las raíces son los puntos donde la gráfica corta al eje X. Se calculan igualando la función a cero (\( ax^2 + bx + c = 0 \)) y aplicando:</p>
-            <p style="text-align: center; font-size: 1.2rem;">\( x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \)</p>
-            <p>Al término dentro de la raíz (\( b^2 - 4ac \)) se lo llama <strong>Discriminante (\( \Delta \))</strong>.
-                Si es positivo hay dos raíces, si es cero hay una, y si es negativo no tiene raíces reales.
-            </p>
-        </div>
-    </div>
-
-    <div id="juego" class="tab-content">
-        <div class="game-container">
-            <h2>Desafío Cuadrático</h2>
-            <p>¡Pon a prueba lo que repasaste! Gana 10 puntos por cada respuesta correcta.</p>
-            
-            <div class="score-board">Puntuación: <span id="score">0</span></div>
-            
-            <div class="question-box" id="question-text">
-                </div>
-            
-            <div class="options" id="options-container">
-                </div>
-
-            <div id="feedback-msg" class="feedback"></div>
-            
-            <button class="option-btn" style="margin-top: 2rem; background-color: var(--primary); color: white; display: none;" id="next-btn" onclick="generateQuestion()">Siguiente Pregunta ➡️</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    // --- LÓGICA DE PESTAÑAS ---
-    function openTab(tabName, btnElement) {
-        let contents = document.getElementsByClassName("tab-content");
-        for (let i = 0; i < contents.length; i++) {
-            contents[i].classList.remove("active");
-        }
-        
-        let btns = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < btns.length; i++) {
-            btns[i].classList.remove("active");
-        }
-        
-        document.getElementById(tabName).classList.add("active");
-        btnElement.classList.add("active");
-    }
-
-    // --- LÓGICA DEL MINIJUEGO ---
-    let score = 0;
-    let currentAnswer = "";
-
-    function getRandomInt(min, max) {
-        // Excluimos el cero si estamos buscando coeficientes principales
-        let val = Math.floor(Math.random() * (max - min + 1)) + min;
-        return val;
-    }
-
-    function generateQuestion() {
-        document.getElementById('feedback-msg').innerHTML = "";
-        document.getElementById('next-btn').style.display = "none";
-        document.getElementById('options-container').style.pointerEvents = "auto";
-
-        const questionTypes = [
-            'concavidad',
-            'ordenada',
-            'verticeX'
-        ];
-        
-        const type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
-        
-        let a, b, c, questionText, options;
-
-        do { a = getRandomInt(-5, 5); } while (a === 0);
-        b = getRandomInt(-10, 10);
-        c = getRandomInt(-10, 10);
-
-        // Formatear la ecuación para que se vea bien
-        let eqA = a === 1 ? 'x^2' : (a === -1 ? '-x^2' : a + 'x^2');
-        let eqB = b > 0 ? '+' + b + 'x' : (b === 0 ? '' : b + 'x');
-        let eqC = c > 0 ? '+' + c : (c === 0 ? '' : c);
-        let equation = `\\( f(x) = ${eqA} ${eqB} ${eqC} \\)`;
-
-        if (type === 'concavidad') {
-            questionText = `Dada la función ${equation}, ¿hacia dónde se abren sus ramas?`;
-            currentAnswer = a > 0 ? "Hacia Arriba ∪" : "Hacia Abajo ∩";
-            options = ["Hacia Arriba ∪", "Hacia Abajo ∩"];
-        } 
-        else if (type === 'ordenada') {
-            questionText = `En la función ${equation}, ¿cuál es la ordenada al origen?`;
-            currentAnswer = c.toString();
-            options = [c.toString(), (c+2).toString(), (-c).toString(), (b).toString()];
-        }
-        else if (type === 'verticeX') {
-            // Asegurarnos que xv sea entero para no complicar el cálculo mental
-            b = a * getRandomInt(-3, 3) * 2; 
-            eqB = b > 0 ? '+' + b + 'x' : (b === 0 ? '' : b + 'x');
-            equation = `\\( f(x) = ${eqA} ${eqB} ${eqC} \\)`;
-            
-            let xv = -b / (2 * a);
-            questionText = `¿Cuál es el valor de la coordenada "x" del vértice (\\(x_v\\)) en ${equation}?`;
-            currentAnswer = xv.toString();
-            options = [xv.toString(), (-xv).toString(), (xv+1).toString(), (c).toString()];
-        }
-
-        // Eliminar duplicados en opciones y mezclar
-        options = [...new Set(options)];
-        while(options.length < 3 && type !== 'concavidad') {
-            options.push((parseInt(currentAnswer) + getRandomInt(1, 5)).toString());
-            options = [...new Set(options)];
-        }
-        options.sort(() => Math.random() - 0.5);
-
-        // Renderizar
-        document.getElementById('question-text').innerHTML = questionText;
-        
-        let optionsHtml = "";
-        options.forEach(opt => {
-            optionsHtml += `<button class="option-btn" onclick="checkAnswer('${opt}', this)">${opt}</button>`;
-        });
-        document.getElementById('options-container').innerHTML = optionsHtml;
-
-        // Le pedimos a MathJax que vuelva a renderizar las matemáticas inyectadas dinámicamente
-        MathJax.typesetPromise();
-    }
-
-    function checkAnswer(selected, btnElement) {
-        document.getElementById('options-container').style.pointerEvents = "none"; // Desactivar clics
-        const feedback = document.getElementById('feedback-msg');
-        
-        if (selected === currentAnswer) {
-            btnElement.style.backgroundColor = "#10B981"; // Verde
-            btnElement.style.color = "white";
-            score += 10;
-            document.getElementById('score').innerText = score;
-            feedback.innerHTML = "¡Excelente! Respuesta correcta. 🎉";
-            feedback.className = "feedback correct";
-        } else {
-            btnElement.style.backgroundColor = "#EF4444"; // Rojo
-            btnElement.style.color = "white";
-            feedback.innerHTML = `Ups... La respuesta correcta era: <strong>${currentAnswer}</strong>. ¡A repasar la teoría! 📚`;
-            feedback.className = "feedback incorrect";
-            score = Math.max(0, score - 5); // Restar puntos sin bajar de cero
-            document.getElementById('score').innerText = score;
-        }
-        
-        document.getElementById('next-btn').style.display = "inline-block";
-    }
-
-    // Iniciar el juego al cargar
-    window.onload = function() {
-        generateQuestion();
-    };
-</script>
+    <footer>
+        <p>Material de uso exclusivo para los alumnos del CPES N°30. ¡Muchos éxitos en el estudio!</p>
+    </footer>
 
 </body>
 </html>
