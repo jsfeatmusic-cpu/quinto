@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico: Números Reales</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #059669; /* Un verde esmeralda para diferenciarlo de 5to año */
+            --secondary: #34D399;
+            --background: #F3F4F6;
+            --text: #1F2937;
+            --white: #FFFFFF;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--white);
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        h1, h2, h3 {
+            color: var(--primary);
+            text-align: center;
+        }
+
+        /* Botón Volver */
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1.5rem;
+            gap: 8px;
+        }
+        .btn-volver:hover {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Pestañas */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #E5E7EB;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #6B7280;
+            transition: all 0.3s ease;
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Contenido Teórico */
+        .theory-section {
+            background-color: #ECFDF5;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        .set-box {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .set-symbol {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        /* Minijuego */
+        .game-container {
+            text-align: center;
+        }
+        .score-board {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .question-box {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            padding: 2.5rem;
+            background-color: #ECFDF5;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .option-btn {
+            background-color: var(--white);
+            border: 2px solid var(--secondary);
+            color: var(--text);
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-btn:hover {
+            background-color: var(--secondary);
+            color: var(--text);
+            transform: scale(1.02);
+        }
+        .feedback {
+            margin-top: 1.5rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-height: 2rem;
+        }
+        .correct { color: #059669; }
+        .incorrect { color: #DC2626; }
+        
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
+
+    <h1>Diagnóstico: Números Reales (\(\mathbb{R}\))</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('teoria', this)">📚 Teoría y Repaso</button>
+        <button class="tab-btn" onclick="openTab('juego', this)">🎮 Minijuego Clasificador</button>
+    </div>
+
+    <div id="teoria" class="tab-content active">
+        <h2>El Universo de los Números</h2>
+        <p>Antes de analizar gráficas y funciones, necesitamos saber con qué números estamos trabajando. El conjunto de los <strong>Números Reales (\(\mathbb{R}\))</strong> engloba a casi todos los números que conoces y se divide en varios subconjuntos más pequeños. Piensa en ellos como cajas dentro de otras cajas.</p>
+        
+        <div class="theory-section">
+            <h3>1. Números Racionales (\(\mathbb{Q}\))</h3>
+            <p>Son todos aquellos números que <strong>SÍ</strong> se pueden escribir como una fracción \(\frac{a}{b}\) (donde a y b son enteros, y b no es cero). Dentro de los racionales, encontramos dos cajas más pequeñas:</p>
+            
+            <div class="set-box">
+                <span class="set-symbol">\(\mathbb{N}\)</span> <strong>Naturales:</strong> Son los números enteros positivos que usamos para contar. 
+                <br><em>Ejemplos: 1, 2, 3, 15, 100...</em>
+            </div>
+            
+            <div class="set-box">
+                <span class="set-symbol">\(\mathbb{Z}\)</span> <strong>Enteros:</strong> Incluyen a los naturales, al cero y a los números negativos enteros.
+                <br><em>Ejemplos: -5, -1, 0, 4, 20...</em>
+            </div>
+
+            <div class="set-box">
+                <strong>Fracciones y Decimales Exactos/Periódicos:</strong> Los números que están entre los enteros.
+                <br><em>Ejemplos: \(\frac{1}{2}\), \(0.75\), \(-1.333...\)</em>
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <h3>2. Números Irracionales (\(\mathbb{I}\))</h3>
+            <p>Son aquellos números que <strong>NO</strong> se pueden escribir como una fracción. Tienen infinitas cifras decimales que no siguen ningún patrón (no son periódicos).</p>
+            <div class="set-box">
+                <span class="set-symbol">\(\mathbb{I}\)</span> <strong>Irracionales:</strong>
+                <br><em>Ejemplos: \(\pi\) (3.14159...), \(\sqrt{2}\) (1.4142...), \(\sqrt{5}\), el número \(e\).</em>
+            </div>
+        </div>
+
+        <div class="theory-section">
+            <h3>La Recta Numérica</h3>
+            <p>La unión de los Racionales (\(\mathbb{Q}\)) y los Irracionales (\(\mathbb{I}\)) forma el conjunto de los <strong>Números Reales (\(\mathbb{R}\))</strong>. Cualquier número real ocupa un punto exacto en la recta numérica, y la recta está completamente "llena", no hay huecos.</p>
+        </div>
+    </div>
+
+    <div id="juego" class="tab-content">
+        <div class="game-container">
+            <h2>Clasificador a Contrarreloj</h2>
+            <p>¿A qué conjunto pertenece este número? <br><small><strong>Regla:</strong> Elige siempre el conjunto "más pequeño" al que pertenezca (ej: si es 5, elige Natural en lugar de Entero).</small></p>
+            
+            <div class="score-board">Puntuación: <span id="score">0</span></div>
+            
+            <div class="question-box" id="number-display">
+                </div>
+            
+            <div class="options-grid" id="options-container">
+                <button class="option-btn" onclick="checkAnswer('Natural')">Natural (\(\mathbb{N}\))</button>
+                <button class="option-btn" onclick="checkAnswer('Entero')">Entero (\(\mathbb{Z}\))</button>
+                <button class="option-btn" onclick="checkAnswer('Racional')">Racional (\(\mathbb{Q}\))</button>
+                <button class="option-btn" onclick="checkAnswer('Irracional')">Irracional (\(\mathbb{I}\))</button>
+            </div>
+
+            <div id="feedback-msg" class="feedback"></div>
+            
+            <button class="btn-volver" style="margin-top: 1rem; background-color: var(--primary); color: white; display: none;" id="next-btn" onclick="generateQuestion()">Siguiente Número ➡️</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- LÓGICA DE PESTAÑAS ---
+    function openTab(tabName, btnElement) {
+        let contents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < contents.length; i++) {
+            contents[i].classList.remove("active");
+        }
+        
+        let btns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < btns.length; i++) {
+            btns[i].classList.remove("active");
+        }
+        
+        document.getElementById(tabName).classList.add("active");
+        btnElement.classList.add("active");
+    }
+
+    // --- LÓGICA DEL MINIJUEGO ---
+    let score = 0;
+    let currentCorrectType = "";
+
+    // Banco de números con algunas "trampas" para pensar
+    const numberPool = [
+        { val: "8", type: "Natural", exp: "8 es un número entero positivo, sirve para contar." },
+        { val: "\\(\\sqrt{25}\\)", type: "Natural", exp: "La raíz de 25 es 5, que es un número Natural." },
+        { val: "\\(\\frac{10}{2}\\)", type: "Natural", exp: "10 dividido 2 da 5 exacto, un número Natural." },
+        
+        { val: "-14", type: "Entero", exp: "-14 es un entero negativo, no sirve para contar, pero no tiene decimales." },
+        { val: "0", type: "Entero", exp: "El cero pertenece a los Enteros, no a los Naturales." },
+        { val: "\\(\\sqrt[3]{-8}\\)", type: "Entero", exp: "La raíz cúbica de -8 es -2, un número Entero." },
+        
+        { val: "\\(\\frac{3}{4}\\)", type: "Racional", exp: "Es una fracción que da 0.75, un decimal exacto." },
+        { val: "-0.5", type: "Racional", exp: "Es un decimal exacto, se puede escribir como -1/2." },
+        { val: "1.\\overline{3}", type: "Racional", exp: "Es un decimal periódico, viene de la fracción 4/3." },
+        
+        { val: "\\(\\pi\\)", type: "Irracional", exp: "Pi tiene infinitos decimales no periódicos." },
+        { val: "\\(\\sqrt{7}\\)", type: "Irracional", exp: "No tiene raíz exacta, sus decimales son infinitos y no periódicos." },
+        { val: "\\(e\\)", type: "Irracional", exp: "El número de Euler tiene infinitos decimales no periódicos." }
+    ];
+
+    let currentQuestionData = null;
+
+    function generateQuestion() {
+        // Restaurar estado
+        document.getElementById('feedback-msg').innerHTML = "";
+        document.getElementById('next-btn').style.display = "none";
+        document.getElementById('options-container').style.pointerEvents = "auto";
+        
+        // Reset colores de botones
+        let btns = document.getElementsByClassName('option-btn');
+        for(let i=0; i<btns.length; i++){
+            btns[i].style.backgroundColor = "var(--white)";
+            btns[i].style.color = "var(--text)";
+        }
+
+        // Elegir pregunta aleatoria
+        const randomIndex = Math.floor(Math.random() * numberPool.length);
+        currentQuestionData = numberPool[randomIndex];
+        currentCorrectType = currentQuestionData.type;
+
+        // Mostrar número
+        document.getElementById('number-display').innerHTML = currentQuestionData.val;
+        
+        // Renderizar matemáticas dinámicas
+        MathJax.typesetPromise();
+    }
+
+    function checkAnswer(selectedType) {
+        document.getElementById('options-container').style.pointerEvents = "none"; // Evitar doble clic
+        const feedback = document.getElementById('feedback-msg');
+        
+        // Pintar el botón que el usuario tocó
+        const clickedBtn = event.target;
+
+        if (selectedType === currentCorrectType) {
+            clickedBtn.style.backgroundColor = "#10B981"; // Verde
+            clickedBtn.style.color = "white";
+            score += 10;
+            feedback.innerHTML = `¡Correcto! 🎉 <br><span style="font-size:1rem; font-weight:normal;">${currentQuestionData.exp}</span>`;
+            feedback.className = "feedback correct";
+        } else {
+            clickedBtn.style.backgroundColor = "#EF4444"; // Rojo
+            clickedBtn.style.color = "white";
+            score = Math.max(0, score - 5);
+            feedback.innerHTML = `Incorrecto. Era <strong>${currentCorrectType}</strong>. <br><span style="font-size:1rem; font-weight:normal;">${currentQuestionData.exp}</span>`;
+            feedback.className = "feedback incorrect";
+        }
+        
+        document.getElementById('score').innerText = score;
+        document.getElementById('next-btn').style.display = "inline-flex";
+    }
+
+    // Iniciar
+    window.onload = function() {
+        generateQuestion();
+    };
+</script>
+
+</body>
+</html>
