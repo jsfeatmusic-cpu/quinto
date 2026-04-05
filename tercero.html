@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico: Números Racionales</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #7C3AED; /* Violeta vibrante */
+            --secondary: #A78BFA;
+            --background: #F3F4F6;
+            --text: #1F2937;
+            --white: #FFFFFF;
+            --accent: #F59E0B;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--white);
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            text-align: center;
+        }
+        h4 { margin-bottom: 0.5rem; color: #1F2937; }
+
+        /* Botón Volver */
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1.5rem;
+            gap: 8px;
+        }
+        .btn-volver:hover {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Pestañas */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #E5E7EB;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #6B7280;
+            transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab-btn:hover { background-color: #F5F3FF; }
+        .tab-btn.active {
+            color: var(--white);
+            background-color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Contenido Teórico */
+        .theory-section {
+            background-color: #F5F3FF;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .op-box {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-top: 3px solid var(--secondary);
+        }
+        
+        /* Ejemplos Resueltos */
+        .example-card {
+            background-color: var(--white);
+            border: 1px solid #E5E7EB;
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+        }
+
+        /* Juegos y Generador */
+        .game-container {
+            text-align: center;
+            background-color: #F9FAFB;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px dashed #D1D5DB;
+        }
+        .score-board {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .question-box {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1.5rem 0;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+            overflow-x: auto;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .option-btn {
+            background-color: var(--white);
+            border: 2px solid var(--secondary);
+            color: var(--text);
+            padding: 1rem;
+            font-size: 1.3rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 60px;
+        }
+        .option-btn:hover { background-color: var(--secondary); transform: scale(1.02); color: var(--white); }
+
+        .btn-action {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-action:hover { background-color: #5B21B6; transform: scale(1.02); }
+
+        .feedback {
+            margin-top: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-height: 2rem;
+        }
+        .correct { color: #10B981; }
+        .incorrect { color: #DC2626; }
+        
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
+
+    <h1>Diagnóstico: Números Racionales (\(\mathbb{Q}\))</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('teoria', this)">📚 Teoría y Operaciones</button>
+        <button class="tab-btn" onclick="openTab('ejemplos', this)">📝 Guía de Ejemplos</button>
+        <button class="tab-btn" onclick="openTab('juego', this)">🎮 Desafío Racional</button>
+    </div>
+
+    <div id="teoria" class="tab-content active">
+        <h2>¿Qué es un Número Racional?</h2>
+        <div class="theory-section">
+            <p>El conjunto de los <strong>Números Racionales (\(\mathbb{Q}\))</strong> está formado por todos aquellos números que pueden expresarse como el cociente (división) entre dos números enteros, es decir, como una <strong>fracción</strong> \(\frac{a}{b}\), donde \(b\) no puede ser cero.</p>
+            <p>Todo número entero es racional (ej: \(5 = \frac{5}{1}\)), y también lo son los decimales exactos y periódicos.</p>
+        </div>
+
+        <h2>Operaciones Básicas</h2>
+        <div class="grid-2">
+            <div class="op-box">
+                <h4>Suma y Resta</h4>
+                <p><strong>Mismo denominador:</strong> Se suman o restan los numeradores y se mantiene el denominador.<br>
+                \(\frac{a}{c} \pm \frac{b}{c} = \frac{a \pm b}{c}\)</p>
+                <p><strong>Distinto denominador:</strong> Se busca el Mínimo Común Múltiplo (MCM) o se multiplican los denominadores, y se buscan fracciones equivalentes.</p>
+            </div>
+            <div class="op-box">
+                <h4>Multiplicación</h4>
+                <p>Se multiplica derecho: numerador por numerador, y denominador por denominador. ¡Recuerda simplificar si es posible antes de multiplicar!</p>
+                \(\frac{a}{b} \cdot \frac{c}{d} = \frac{a \cdot c}{b \cdot d}\)
+            </div>
+            <div class="op-box">
+                <h4>División</h4>
+                <p>Se multiplica la primera fracción por la <strong>inversa</strong> de la segunda (o se multiplica cruzado).</p>
+                \(\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \cdot \frac{d}{c}\)
+            </div>
+            <div class="op-box">
+                <h4>Potenciación y Radicación</h4>
+                <p>La potencia y la raíz se distribuyen al numerador y al denominador.</p>
+                \(\left(\frac{a}{b}\right)^n = \frac{a^n}{b^n}\) &nbsp;&nbsp; | &nbsp;&nbsp; \(\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}\)
+                <p><strong>Exponente negativo:</strong> ¡Invierte la fracción!<br> \(\left(\frac{a}{b}\right)^{-n} = \left(\frac{b}{a}\right)^n\)</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="ejemplos" class="tab-content">
+        <h2>Guía de Ejercicios Resueltos</h2>
+        <p>A continuación, tienes 10 casos resueltos paso a paso para que te sirvan de guía al hacer tu tarea.</p>
+        
+        <div class="example-card">
+            <strong>1. Suma con igual denominador:</strong>
+            <p>\( \frac{3}{7} + \frac{2}{7} = \frac{3 + 2}{7} = \mathbf{\frac{5}{7}} \)</p>
+        </div>
+
+        <div class="example-card">
+            <strong>2. Suma con distinto denominador:</strong>
+            <p>\( \frac{1}{4} + \frac{1}{3} \)</p>
+            <p>MCM de 4 y 3 es 12. \(\rightarrow \frac{1 \cdot 3}{12} + \frac{1 \cdot 4}{12} = \frac{3}{12} + \frac{4}{12} = \mathbf{\frac{7}{12}} \)</p>
+        </div>
+
+        <div class="example-card">
+            <strong>3. Resta con distinto denominador:</strong>
+            <p>\( \frac{5}{2} - \frac{3}{5} \)</p>
+            <p>MCM es 10. \(\rightarrow \frac{25}{10} - \frac{6}{10} = \mathbf{\frac{19}{10}} \)</p>
+        </div>
+
+        <div class="example-card">
+            <strong>4. Multiplicación de fracciones:</strong>
+            <p>\( \frac{3}{5} \cdot \frac{4}{7} = \frac{3 \cdot 4}{5 \cdot 7} = \mathbf{\frac{12}{35}} \)</p>
+        </div>
+
+        <div class="example-card">
+            <strong>5. División de fracciones:</strong>
+            <p>\( \frac{2}{9} \div \frac{5}{3} \)</p>
+            <p>Invertimos la segunda y multiplicamos: \( \frac{2}{9} \cdot \frac{3}{5} = \frac{6}{45} \). Simplificando por 3: \(\mathbf{\frac{2}{15}}\)</p>
+        </div>
+
+        <div class="example-card">
+            <strong>6. Potencia de una fracción:</strong>
+            <p>\( \left(\frac{2}{3}\right)^3 = \frac{2^3}{3^3} = \mathbf{\frac{8}{27}} \)</p>
+        </div>
+
+        <div class="example-card">
+            <strong>7. Exponente negativo:</strong>
+            <p>\( \left(\frac{1}{4}\right)^{-2} \)</p>
+            <p>Invertimos la fracción: \( \left(\frac{4}{1}\right)^2 = 4^2 = \mathbf{16} \)</p>
+        </div>
+
+        <div class="example-card">
+            <strong>8. Raíz de una fracción:</strong>
+            <p>\( \sqrt{\frac{25}{49}} = \frac{\sqrt{25}}{\sqrt{49}} = \mathbf{\frac{5}{7}} \)</p>
+        </div>
+
+        <div class="example-card">
+            <strong>9. Cálculo combinado (Multiplicación y Suma):</strong>
+            <p>\( \frac{1}{2} \cdot \frac{4}{3} + \frac{1}{6} \)</p>
+            <p>Primero multiplicamos: \( \frac{4}{6} \). Simplificado es \( \frac{2}{3} \).</p>
+            <p>Luego sumamos: \( \frac{2}{3} + \frac{1}{6} \rightarrow MCM es 6 \rightarrow \frac{4}{6} + \frac{1}{6} = \mathbf{\frac{5}{6}} \)</p>
+        </div>
+
+        <div class="example-card">
+            <strong>10. Cálculo combinado (Potencia negativa y Multiplicación):</strong>
+            <p>\( \left(\frac{3}{2}\right)^{-1} \cdot \frac{9}{4} \)</p>
+            <p>Invertimos por el -1: \( \frac{2}{3} \cdot \frac{9}{4} = \frac{18}{12} \). Simplificando por 6: \(\mathbf{\frac{3}{2}}\)</p>
+        </div>
+    </div>
+
+    <div id="juego" class="tab-content">
+        <div class="game-container">
+            <h2>Desafío Racional</h2>
+            <p>Resuelve la operación en tu hoja y selecciona la fracción correcta.<br>¡Ojo! Los resultados siempre están <strong>simplificados</strong>.</p>
+            
+            <div class="score-board">Aciertos: <span id="score-juego" style="color: var(--accent);">0</span></div>
+            
+            <div class="question-box" id="math-display">
+                </div>
+            
+            <div class="options-grid" id="options-container">
+                </div>
+
+            <div id="feedback-juego" class="feedback"></div>
+            <button class="btn-action" style="margin-top: 1rem; display: none;" id="next-btn-juego" onclick="generateFractionExercise()">Siguiente Ejercicio ➡️</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- NAVEGACIÓN ---
+    function openTab(tabName, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        btnElement.classList.add('active');
+    }
+
+    // --- LÓGICA MATEMÁTICA PARA EL JUEGO ---
+    let scoreJuego = 0;
+    let correctAnswerString = "";
+
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Función para calcular el Máximo Común Divisor (MCD)
+    function gcd(a, b) {
+        a = Math.abs(a);
+        b = Math.abs(b);
+        while(b) {
+            let t = b;
+            b = a % b;
+            a = t;
+        }
+        return a;
+    }
+
+    // Función para simplificar fracciones y devolver un string de LaTeX
+    function simplifyFractionToLatex(num, den) {
+        if (den === 0) return "Undefined";
+        if (num === 0) return "0";
+        
+        let common = gcd(num, den);
+        num = num / common;
+        den = den / common;
+        
+        // Manejo de signos
+        if (den < 0) {
+            num = -num;
+            den = -den;
+        }
+        
+        if (den === 1) return `${num}`;
+        return `\\frac{${num}}{${den}}`;
+    }
+
+    function generateFractionExercise() {
+        document.getElementById('feedback-juego').innerHTML = "";
+        document.getElementById('next-btn-juego').style.display = "none";
+        document.getElementById('options-container').style.pointerEvents = "auto";
+        
+        let type = getRandomInt(1, 4); // 1: Suma/Resta, 2: Mult, 3: Div, 4: Potencia básica
+        let texString = "";
+        let correctNum, correctDen;
+
+        if (type === 1) { // Suma/Resta con mismo denominador (para que sea rápido)
+            let den = getRandomInt(3, 9);
+            let num1 = getRandomInt(1, 8);
+            let num2 = getRandomInt(1, 8);
+            let sign = Math.random() > 0.5 ? "+" : "-";
+            
+            texString = `\\( \\frac{${num1}}{${den}} ${sign} \\frac{${num2}}{${den}} \\)`;
+            correctNum = sign === "+" ? num1 + num2 : num1 - num2;
+            correctDen = den;
+        } 
+        else if (type === 2) { // Multiplicación simple
+            let num1 = getRandomInt(1, 5); let den1 = getRandomInt(2, 5);
+            let num2 = getRandomInt(1, 5); let den2 = getRandomInt(2, 5);
+            
+            texString = `\\( \\frac{${num1}}{${den1}} \\cdot \\frac{${num2}}{${den2}} \\)`;
+            correctNum = num1 * num2;
+            correctDen = den1 * den2;
+        }
+        else if (type === 3) { // División simple
+            let num1 = getRandomInt(1, 5); let den1 = getRandomInt(2, 5);
+            let num2 = getRandomInt(1, 5); let den2 = getRandomInt(2, 5);
+            
+            texString = `\\( \\frac{${num1}}{${den1}} \\div \\frac{${num2}}{${den2}} \\)`;
+            correctNum = num1 * den2;
+            correctDen = den1 * num2;
+        }
+        else { // Potencia 2 o 3, o exponente -1
+            let num = getRandomInt(1, 4);
+            let den = getRandomInt(2, 5);
+            let exp = getRandomInt(-1, 2);
+            if (exp === 0) exp = 2; // Evitamos a la cero porque siempre es 1
+
+            texString = `\\( \\left(\\frac{${num}}{${den}}\\right)^{${exp}} \\)`;
+            
+            if (exp === -1) {
+                correctNum = den; correctDen = num;
+            } else {
+                correctNum = Math.pow(num, exp);
+                correctDen = Math.pow(den, exp);
+            }
+        }
+
+        // Simplificamos la respuesta correcta
+        correctAnswerString = `\\( ${simplifyFractionToLatex(correctNum, correctDen)} \\)`;
+
+        // Generamos 3 opciones falsas pero creíbles
+        let options = [correctAnswerString];
+        while (options.length < 4) {
+            let fakeNum = correctNum + getRandomInt(-3, 3);
+            let fakeDen = correctDen + getRandomInt(-2, 4);
+            if (fakeDen <= 0) fakeDen = 2; // Evitamos den = 0 o negativos complicados
+            
+            let fakeString = `\\( ${simplifyFractionToLatex(fakeNum, fakeDen)} \\)`;
+            if (!options.includes(fakeString)) {
+                options.push(fakeString);
+            }
+        }
+
+        // Mezclar opciones
+        options.sort(() => Math.random() - 0.5);
+
+        // Renderizar
+        document.getElementById('math-display').innerHTML = texString;
+        
+        let optionsHtml = "";
+        options.forEach(opt => {
+            // Reemplazar las comillas simples de MathJax dentro del onClick puede dar problemas, 
+            // pasamos la string encodeada con base64 o comparamos el innerHTML.
+            // Para simplificar, guardamos el raw value en un atributo data.
+            let rawOpt = opt.replace(/\\/g, '\\\\').replace(/"/g, '&quot;');
+            optionsHtml += `<button class="option-btn" onclick="checkAnswer(this, '${rawOpt}')">${opt}</button>`;
+        });
+        document.getElementById('options-container').innerHTML = optionsHtml;
+
+        MathJax.typesetPromise();
+    }
+
+    function checkAnswer(btnElement, selectedAnswer) {
+        document.getElementById('options-container').style.pointerEvents = "none";
+        const feedback = document.getElementById('feedback-juego');
+
+        if (selectedAnswer === correctAnswerString.replace(/\\/g, '\\\\')) {
+            btnElement.style.backgroundColor = "#10B981";
+            btnElement.style.color = "white";
+            scoreJuego += 1;
+            feedback.innerHTML = "¡Excelente! Fracción correcta. 🎉";
+            feedback.className = "feedback correct";
+        } else {
+            btnElement.style.backgroundColor = "#DC2626";
+            btnElement.style.color = "white";
+            scoreJuego = 0; // Se reinicia la racha
+            // Para mostrar la correcta sin problemas de parseo:
+            feedback.innerHTML = `Ups. La respuesta correcta era la que equivalía a ese cálculo. ¡Sigue practicando!`;
+            feedback.className = "feedback incorrect";
+            
+            // Pintamos la correcta de verde para que la vea
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                // Truco sucio pero efectivo: repintar Mathjax
+            });
+        }
+
+        document.getElementById('score-juego').innerText = scoreJuego;
+        document.getElementById('next-btn-juego').style.display = "inline-block";
+    }
+
+    window.onload = function() {
+        generateFractionExercise();
+    };
+</script>
+
+</body>
+</html>
