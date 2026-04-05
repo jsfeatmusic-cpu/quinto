@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1° Año: Naturales y Enteros</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #EA580C; /* Naranja enérgico para 1er año */
+            --secondary: #F97316;
+            --background: #FFF7ED;
+            --text: #1F2937;
+            --white: #FFFFFF;
+            --accent: #2563EB;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--white);
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            text-align: center;
+        }
+        h4 { margin-bottom: 0.5rem; color: #1F2937; }
+
+        /* Botón Volver */
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1.5rem;
+            gap: 8px;
+        }
+        .btn-volver:hover {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Pestañas */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #FFEDD5;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #9A3412;
+            transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab-btn:hover { background-color: #FFEDD5; }
+        .tab-btn.active {
+            color: var(--white);
+            background-color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Contenido Teórico */
+        .theory-section {
+            background-color: #FFF7ED;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .rule-box {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-top: 3px solid var(--secondary);
+        }
+        .rule-box h4 { margin-top: 0; color: var(--primary); }
+        
+        .signs-table {
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem auto;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .signs-table th, .signs-table td {
+            border: 2px solid #FED7AA;
+            padding: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .signs-table th { background-color: #FFEDD5; color: var(--primary); }
+
+        /* Ejemplos Resueltos */
+        .example-card {
+            background-color: var(--white);
+            border: 1px solid #FED7AA;
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+        }
+
+        /* Juegos */
+        .game-container {
+            text-align: center;
+            background-color: #FAFAF9;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px dashed #D6D3D1;
+        }
+        .score-board {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .question-box {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 1.5rem 0;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .option-btn {
+            background-color: var(--white);
+            border: 2px solid var(--secondary);
+            color: var(--text);
+            padding: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-btn:hover { background-color: var(--secondary); transform: scale(1.02); color: var(--white); }
+
+        .btn-action {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-action:hover { background-color: #C2410C; transform: scale(1.02); }
+
+        .feedback { margin-top: 1rem; font-weight: bold; font-size: 1.2rem; min-height: 2rem; }
+        .correct { color: #16A34A; }
+        .incorrect { color: #DC2626; }
+        
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
+
+    <h1>Matemática 1° Año</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('naturales', this)">📚 1. Naturales</button>
+        <button class="tab-btn" onclick="openTab('enteros', this)">❄️ 2. Enteros</button>
+        <button class="tab-btn" onclick="openTab('ejemplos', this)">📝 3. Ejemplos</button>
+        <button class="tab-btn" onclick="openTab('juego', this)">🎮 4. Juego</button>
+    </div>
+
+    <div id="naturales" class="tab-content active">
+        <h2>Números Naturales y Divisibilidad</h2>
+        <div class="theory-section">
+            <p>Los <strong>Números Naturales (\(\mathbb{N}\))</strong> son los que usamos para contar cosas: 1, 2, 3, 4, 5... Con ellos podemos sumar, restar (siempre que el primero sea mayor), multiplicar y dividir.</p>
+        </div>
+
+        <h3>Criterios de Divisibilidad</h3>
+        <p>Son trucos rápidos para saber si un número se puede dividir por otro y que el resto sea cero (división exacta), sin tener que hacer la cuenta larga.</p>
+        
+        <div class="grid-cards">
+            <div class="rule-box">
+                <h4>Por 2</h4>
+                <p>Si termina en número par: 0, 2, 4, 6 u 8.<br><em>Ej: 34, 150, 998.</em></p>
+            </div>
+            <div class="rule-box">
+                <h4>Por 3</h4>
+                <p>Si al sumar sus cifras, el resultado está en la tabla del 3.<br><em>Ej: 144 (1+4+4 = 9).</em></p>
+            </div>
+            <div class="rule-box">
+                <h4>Por 4</h4>
+                <p>Si sus dos últimas cifras son 00 o múltiplo de 4.<br><em>Ej: 500, 312.</em></p>
+            </div>
+            <div class="rule-box">
+                <h4>Por 5</h4>
+                <p>Si termina en 0 o en 5.<br><em>Ej: 75, 1000.</em></p>
+            </div>
+            <div class="rule-box">
+                <h4>Por 6</h4>
+                <p>Si es divisible por 2 <strong>Y</strong> por 3 al mismo tiempo.<br><em>Ej: 18, 120.</em></p>
+            </div>
+            <div class="rule-box">
+                <h4>Por 9</h4>
+                <p>Si al sumar sus cifras da un múltiplo de 9.<br><em>Ej: 819 (8+1+9 = 18).</em></p>
+            </div>
+            <div class="rule-box">
+                <h4>Por 10</h4>
+                <p>Si termina en 0.<br><em>Ej: 40, 2300.</em></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="enteros" class="tab-content">
+        <h2>El Mundo de los Números Enteros (\(\mathbb{Z}\))</h2>
+        <div class="theory-section">
+            <p>A veces los números naturales no alcanzan. ¿Cómo escribimos una temperatura bajo cero? ¿O una deuda en el kiosco? ¡Para eso existen los números negativos!</p>
+            <p>El conjunto de los <strong>Enteros</strong> incluye: los positivos, el cero, y los negativos.</p>
+        </div>
+
+        <h3>Suma y Resta (El truco del Dinero)</h3>
+        <p>Para no confundirte nunca, piensa en los números positivos como <strong>DINERO QUE TIENES</strong> y los negativos como <strong>DEUDAS</strong>.</p>
+        <ul>
+            <li>\( 5 - 8 \): Tengo $5, pero debo $8. Pago los 5 y quedo debiendo 3. <strong>Resultado: -3</strong></li>
+            <li>\( -2 - 4 \): Debo $2 en el kiosco y luego saco fiado por $4 más. Ahora debo 6. <strong>Resultado: -6</strong></li>
+            <li>\( -10 + 15 \): Debo $10, pero mi abuela me regaló $15. Pago la deuda y me sobran 5. <strong>Resultado: 5</strong></li>
+        </ul>
+
+        <h3>Multiplicación y División (Regla de los Signos)</h3>
+        <p>¡Atención! Esta regla <strong>SOLO</strong> se usa cuando hay un signo de multiplicar (\(\cdot\)) o dividir (\(\div\)) entre los números.</p>
+        
+        <table class="signs-table">
+            <tr>
+                <th>Operación</th>
+                <th>Resultado</th>
+            </tr>
+            <tr>
+                <td>\( (+) \cdot (+) \)</td>
+                <td>\( \mathbf{+} \)</td>
+            </tr>
+            <tr>
+                <td>\( (-) \cdot (-) \)</td>
+                <td>\( \mathbf{+} \)</td>
+            </tr>
+            <tr>
+                <td>\( (+) \cdot (-) \)</td>
+                <td>\( \mathbf{-} \)</td>
+            </tr>
+            <tr>
+                <td>\( (-) \cdot (+) \)</td>
+                <td>\( \mathbf{-} \)</td>
+            </tr>
+        </table>
+        <p style="text-align: center;"><em>"Signos iguales da Positivo. Signos distintos da Negativo."</em></p>
+    </div>
+
+    <div id="ejemplos" class="tab-content">
+        <h2>Guía de Ejercicios Resueltos</h2>
+        <p>Repasa estos ejemplos antes de hacer la tarea o jugar al minijuego.</p>
+        
+        <div class="example-card">
+            <strong>1. ¿El número 345 es divisible por 3 y por 5?</strong>
+            <p><strong>Por 5:</strong> Sí, porque termina en 5.<br>
+            <strong>Por 3:</strong> Sumamos sus cifras (3+4+5 = 12). Como 12 está en la tabla del 3, sí es divisible.<br>
+            <em>Conclusión: Es divisible por ambos.</em></p>
+        </div>
+
+        <div class="example-card">
+            <strong>2. Suma y Resta básica:</strong>
+            <p>\( -7 + 12 \)<br>
+            <em>(Debo 7, tengo 12. Pago y me sobran 5).</em><br>
+            <strong>Respuesta: 5</strong></p>
+        </div>
+
+        <div class="example-card">
+            <strong>3. Dos números negativos:</strong>
+            <p>\( -4 - 5 \)<br>
+            <em>(Debo 4 y saco fiado 5 más. Mi deuda crece).</em><br>
+            <strong>Respuesta: -9</strong></p>
+        </div>
+
+        <div class="example-card">
+            <strong>4. Multiplicación de signos distintos:</strong>
+            <p>\( 6 \cdot (-3) \)<br>
+            <em>Primero multiplico los números: 6x3 = 18. Luego los signos: (+) por (-) es (-).</em><br>
+            <strong>Respuesta: -18</strong></p>
+        </div>
+
+        <div class="example-card">
+            <strong>5. División de signos iguales:</strong>
+            <p>\( (-20) \div (-4) \)<br>
+            <em>Divido los números: 20/4 = 5. Luego los signos: (-) por (-) es (+).</em><br>
+            <strong>Respuesta: 5</strong></p>
+        </div>
+
+        <div class="example-card">
+            <strong>6. Choque de signos en suma/resta:</strong>
+            <p>\( 8 - (-3) \)<br>
+            <em>Cuando hay un "menos menos" juntos, se transforma en suma (+).</em><br>
+            \( 8 + 3 = \mathbf{11} \)</p>
+        </div>
+    </div>
+
+    <div id="juego" class="tab-content">
+        <div class="game-container">
+            <h2>Maestro de los Signos</h2>
+            <p>Resuelve la operación mentalmente y elige el resultado correcto. ¡Cuidado con la regla de los signos y las deudas!</p>
+            
+            <div class="score-board">Aciertos: <span id="score-juego" style="color: var(--primary);">0</span></div>
+            
+            <div class="question-box" id="math-display">
+                </div>
+            
+            <div class="options-grid" id="options-container">
+                </div>
+
+            <div id="feedback-juego" class="feedback"></div>
+            <button class="btn-action" style="margin-top: 1rem; display: none;" id="next-btn-juego" onclick="generateExercise()">Siguiente Ejercicio ➡️</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- NAVEGACIÓN ---
+    function openTab(tabName, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        btnElement.classList.add('active');
+    }
+
+    // --- LÓGICA DEL MINIJUEGO ---
+    let scoreJuego = 0;
+    let currentCorrectAnswer = 0;
+
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateExercise() {
+        document.getElementById('feedback-juego').innerHTML = "";
+        document.getElementById('next-btn-juego').style.display = "none";
+        document.getElementById('options-container').style.pointerEvents = "auto";
+        
+        let operationType = getRandomInt(1, 3); // 1: Suma/Resta, 2: Multiplicación, 3: División
+        let texString = "";
+        let num1, num2;
+
+        if (operationType === 1) { // Suma/Resta (Ej: -5 - 3 = -8, o -2 + 7 = 5)
+            num1 = getRandomInt(-15, 10);
+            num2 = getRandomInt(-10, 15);
+            
+            // Para la pantalla, si num2 es negativo, lo ponemos entre paréntesis si es suma
+            let sign = Math.random() > 0.5 ? "+" : "-";
+            
+            if (sign === "+") {
+                currentCorrectAnswer = num1 + num2;
+                let strNum2 = num2 < 0 ? `(${num2})` : num2;
+                texString = `\\( ${num1} + ${strNum2} \\)`;
+            } else {
+                currentCorrectAnswer = num1 - num2;
+                let strNum2 = num2 < 0 ? `(${num2})` : num2;
+                texString = `\\( ${num1} - ${strNum2} \\)`;
+            }
+        } 
+        else if (operationType === 2) { // Multiplicación
+            num1 = getRandomInt(-9, 9);
+            num2 = getRandomInt(-9, 9);
+            if(num1 === 0) num1 = 2; // Evitamos el cero para no hacerlo tan fácil
+            if(num2 === 0) num2 = -3;
+            
+            currentCorrectAnswer = num1 * num2;
+            let strNum1 = num1 < 0 ? `(${num1})` : num1;
+            let strNum2 = num2 < 0 ? `(${num2})` : num2;
+            texString = `\\( ${strNum1} \\cdot ${strNum2} \\)`;
+        }
+        else { // División Exacta
+            num2 = getRandomInt(-10, 10);
+            if (num2 === 0) num2 = 4;
+            let multiplier = getRandomInt(-8, 8);
+            if (multiplier === 0) multiplier = 2;
+            
+            num1 = num2 * multiplier; // Garantiza división exacta
+            currentCorrectAnswer = num1 / num2;
+
+            let strNum1 = num1 < 0 ? `(${num1})` : num1;
+            let strNum2 = num2 < 0 ? `(${num2})` : num2;
+            texString = `\\( ${strNum1} \\div ${strNum2} \\)`;
+        }
+
+        // Generamos opciones
+        let options = [currentCorrectAnswer];
+        
+        // Trampas comunes
+        let trap1 = currentCorrectAnswer * -1; // Error de signo
+        let trap2, trap3;
+        
+        if (operationType === 1) { // Si es suma, el error común es multiplicar o sumar en vez de restar
+            trap2 = Math.abs(num1) + Math.abs(num2);
+            trap3 = (Math.abs(num1) + Math.abs(num2)) * -1;
+        } else { // Si es multiplicación/división, error de cuenta
+            trap2 = currentCorrectAnswer + num2;
+            trap3 = currentCorrectAnswer - num2;
+        }
+
+        if(!options.includes(trap1)) options.push(trap1);
+        if(!options.includes(trap2)) options.push(trap2);
+        if(!options.includes(trap3)) options.push(trap3);
+
+        // Rellenar si faltan por repeticiones
+        while(options.length < 4) {
+            let rand = currentCorrectAnswer + getRandomInt(-5, 5);
+            if(!options.includes(rand)) options.push(rand);
+        }
+
+        // Limitar a 4 opciones máximo y mezclar
+        options = options.slice(0, 4);
+        options.sort(() => Math.random() - 0.5);
+
+        // Renderizar
+        document.getElementById('math-display').innerHTML = texString;
+        
+        let optionsHtml = "";
+        options.forEach(opt => {
+            optionsHtml += `<button class="option-btn" onclick="checkAnswer(this, ${opt})">${opt}</button>`;
+        });
+        document.getElementById('options-container').innerHTML = optionsHtml;
+
+        MathJax.typesetPromise();
+    }
+
+    function checkAnswer(btnElement, selectedAnswer) {
+        document.getElementById('options-container').style.pointerEvents = "none";
+        const feedback = document.getElementById('feedback-juego');
+
+        if (selectedAnswer === currentCorrectAnswer) {
+            btnElement.style.backgroundColor = "#16A34A"; // Verde
+            btnElement.style.color = "white";
+            scoreJuego += 1;
+            feedback.innerHTML = "¡Excelente! Cuenta perfecta. 🎉";
+            feedback.className = "feedback correct";
+        } else {
+            btnElement.style.backgroundColor = "#DC2626"; // Rojo
+            btnElement.style.color = "white";
+            scoreJuego = 0; // Reinicia racha
+            feedback.innerHTML = `Ups... La respuesta correcta era <strong>${currentCorrectAnswer}</strong>. ¡Cuidado con los signos!`;
+            feedback.className = "feedback incorrect";
+        }
+
+        document.getElementById('score-juego').innerText = scoreJuego;
+        document.getElementById('next-btn-juego').style.display = "inline-block";
+    }
+
+    window.onload = function() {
+        generateExercise();
+    };
+</script>
+
+</body>
+</html>
