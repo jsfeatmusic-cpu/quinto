@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1° Año: Sistema de Misiones</title>
+    <title>1° Año: Sistema de Misiones y Teoría</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
@@ -16,6 +16,8 @@
             --text-muted: #94A3B8;
             --danger: #EF4444;
             --success: #10B981;
+            --theory-bg: #1e293b;
+            --theory-border: #334155;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -28,12 +30,13 @@
         }
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             min-height: 100vh;
             padding: 2rem;
             box-sizing: border-box;
         }
         h1, h2, h3 { color: var(--accent); text-align: center; }
+        h4 { color: var(--primary); margin-bottom: 0.5rem; }
         
         /* Botón Volver */
         .btn-volver {
@@ -96,31 +99,28 @@
             border-radius: 8px;
             border-left: 4px solid var(--accent);
             margin-bottom: 2rem;
-            display: flex; /* Oculto por defecto en JS */
             justify-content: space-between;
             align-items: center;
         }
         .player-name-display { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
 
-        /* Navegación de Misiones */
+        /* Navegación de Pestañas */
         .mission-tabs {
-            display: flex;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
             margin-bottom: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
         }
         .tab-btn {
             background-color: var(--bg-card);
             border: 2px solid transparent;
-            padding: 1rem;
+            padding: 0.8rem;
             color: var(--text-muted);
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
-            flex: 1;
-            min-width: 150px;
+            font-size: 0.95rem;
         }
         .tab-btn:hover { border-color: var(--primary); color: var(--text-main); }
         .tab-btn.active { background-color: var(--primary); color: var(--text-main); border-color: var(--primary); }
@@ -129,14 +129,46 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Tarjetas de Contenido */
+        /* Tarjetas de Contenido y Teoría */
         .card {
             background-color: var(--bg-card);
             padding: 1.5rem;
             border-radius: 8px;
             margin-bottom: 1.5rem;
-            border: 1px solid #334155;
+            border: 1px solid var(--theory-border);
         }
+        
+        /* Grilla para Reglas de Divisibilidad */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .rule-box {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+        .rule-box h4 { margin-top: 0; color: var(--accent); }
+
+        /* Tabla de Signos */
+        .signs-table {
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem auto;
+            border-collapse: collapse;
+            text-align: center;
+            background-color: var(--bg-dark);
+        }
+        .signs-table th, .signs-table td {
+            border: 1px solid var(--theory-border);
+            padding: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .signs-table th { background-color: var(--bg-card); color: var(--primary); }
 
         /* Simuladores (Minijuegos) */
         .simulator {
@@ -145,7 +177,7 @@
             border-radius: 8px;
             border: 2px solid var(--text-muted);
             text-align: center;
-            font-family: 'Courier New', Courier, monospace; /* Estilo terminal/juego retro */
+            font-family: 'Courier New', Courier, monospace;
         }
         .sim-display {
             font-size: 2rem;
@@ -173,6 +205,15 @@
             border: none;
             text-align: center;
             width: 100px;
+            margin-bottom: 10px;
+        }
+
+        .example-box {
+            background-color: var(--bg-dark);
+            border-left: 4px solid var(--success);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
         }
 
     </style>
@@ -199,41 +240,139 @@
         </div>
 
         <div class="mission-tabs">
-            <button class="tab-btn active" onclick="openTab('mision0', this)">Misión 0:<br>El Mercado</button>
-            <button class="tab-btn" onclick="openTab('mision1', this)">Misión 1:<br>Números Rojos</button>
+            <button class="tab-btn active" onclick="openTab('teoria-nat', this)">📚 Teoría:<br>Naturales</button>
+            <button class="tab-btn" onclick="openTab('teoria-ent', this)">❄️ Teoría:<br>Enteros</button>
+            <button class="tab-btn" onclick="openTab('mision0', this)">Misión 0:<br>El Mercado</button>
+            <button class="tab-btn" onclick="openTab('mision1', this)">Misión 1:<br>Pozo Petrolero</button>
             <button class="tab-btn" onclick="openTab('mision2', this)">Misión 2:<br>Batalla Naval</button>
         </div>
 
-        <div id="mision0" class="tab-content active">
+        <div id="teoria-nat" class="tab-content active">
+            <h2>Números Naturales (\(\mathbb{N}\))</h2>
+            <div class="card">
+                <h3>El Origen de los Números</h3>
+                <p>Los <strong>Números Naturales (\(\mathbb{N}\))</strong> son los que usamos para contar cosas en la vida real: 1, 2, 3, 4, 5... Con ellos podemos sumar, restar, multiplicar y dividir.</p>
+                <p><em>Regla de oro de la resta:</em> En este conjunto, solo podemos restar si el primer número es MAYOR o IGUAL al segundo (Ej: 10 - 3 = 7). Si intentas hacer 3 - 10, ¡el cálculo se rompe! (Por ahora...).</p>
+            </div>
+
+            <div class="card">
+                <h3>Criterios de Divisibilidad</h3>
+                <p>Son trucos rápidos para saber si un número se puede dividir por otro y que el resto sea cero (división exacta), sin tener que hacer la cuenta larga.</p>
+                <div class="grid-cards">
+                    <div class="rule-box">
+                        <h4>Por 2</h4>
+                        <p>Si termina en número par: 0, 2, 4, 6 u 8.<br><em>Ej: 34, 150, 998.</em></p>
+                    </div>
+                    <div class="rule-box">
+                        <h4>Por 3</h4>
+                        <p>Si al sumar sus cifras, el resultado está en la tabla del 3.<br><em>Ej: 144 (1+4+4 = 9).</em></p>
+                    </div>
+                    <div class="rule-box">
+                        <h4>Por 4</h4>
+                        <p>Si sus dos últimas cifras son 00 o múltiplo de 4.<br><em>Ej: 500, 312.</em></p>
+                    </div>
+                    <div class="rule-box">
+                        <h4>Por 5</h4>
+                        <p>Si termina en 0 o en 5.<br><em>Ej: 75, 1000.</em></p>
+                    </div>
+                    <div class="rule-box">
+                        <h4>Por 6</h4>
+                        <p>Si es divisible por 2 <strong>Y</strong> por 3 al mismo tiempo.<br><em>Ej: 18, 120.</em></p>
+                    </div>
+                    <div class="rule-box">
+                        <h4>Por 9</h4>
+                        <p>Si al sumar sus cifras da un múltiplo de 9.<br><em>Ej: 819 (8+1+9 = 18).</em></p>
+                    </div>
+                    <div class="rule-box">
+                        <h4>Por 10</h4>
+                        <p>Si termina en 0.<br><em>Ej: 40, 2300.</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="teoria-ent" class="tab-content">
+            <h2>El Mundo de los Números Enteros (\(\mathbb{Z}\))</h2>
+            <div class="card">
+                <h3>Cuando los naturales no alcanzan</h3>
+                <p>¿Cómo escribimos una temperatura bajo cero? ¿O una deuda en el kiosco? ¡Para eso existen los números negativos! El conjunto de los <strong>Enteros</strong> incluye: los positivos, el cero, y los negativos.</p>
+            </div>
+
+            <div class="card">
+                <h3>Suma y Resta (El truco del Dinero)</h3>
+                <p>Para no confundirte nunca, piensa en los números positivos como <strong>DINERO QUE TIENES</strong> y los negativos como <strong>DEUDAS</strong>.</p>
+                <div class="example-box">
+                    <p><strong>Ejemplo 1:</strong> \( 5 - 8 \)<br>Tengo $5, pero debo $8. Pago los 5 y quedo debiendo 3. <strong>Resultado: -3</strong></p>
+                    <p><strong>Ejemplo 2:</strong> \( -2 - 4 \)<br>Debo $2 en el kiosco y luego saco fiado por $4 más. Ahora debo 6. <strong>Resultado: -6</strong></p>
+                    <p><strong>Ejemplo 3:</strong> \( -10 + 15 \)<br>Debo $10, pero mi abuela me regaló $15. Pago la deuda y me sobran 5. <strong>Resultado: 5</strong></p>
+                </div>
+                <p><em>*Si se chocan dos signos como en \( 8 - (-3) \), el "menos menos" se transforma en suma: \( 8 + 3 = 11 \).</em></p>
+            </div>
+
+            <div class="card">
+                <h3>Multiplicación y División (Regla de los Signos)</h3>
+                <p style="color: var(--accent);">¡Atención! Esta regla <strong>SOLO</strong> se usa cuando hay un signo de multiplicar (\(\cdot\)) o dividir (\(\div\)). Nunca la uses para sumar o restar deudas.</p>
+                
+                <table class="signs-table">
+                    <tr>
+                        <th>Operación</th>
+                        <th>Resultado</th>
+                    </tr>
+                    <tr>
+                        <td>\( (+) \cdot (+) \)</td>
+                        <td>\( \mathbf{+} \)</td>
+                    </tr>
+                    <tr>
+                        <td>\( (-) \cdot (-) \)</td>
+                        <td>\( \mathbf{+} \)</td>
+                    </tr>
+                    <tr>
+                        <td>\( (+) \cdot (-) \)</td>
+                        <td>\( \mathbf{-} \)</td>
+                    </tr>
+                    <tr>
+                        <td>\( (-) \cdot (+) \)</td>
+                        <td>\( \mathbf{-} \)</td>
+                    </tr>
+                </table>
+                <p style="text-align: center;"><em>"Signos iguales da Positivo. Signos distintos da Negativo."</em></p>
+                
+                <div class="example-box">
+                    <p><strong>Multiplicación:</strong> \( 6 \cdot (-3) \)<br>Multiplico números (18) y luego signos (+ por - es -). <strong>Resultado: -18</strong></p>
+                    <p><strong>División:</strong> \( (-20) \div (-4) \)<br>Divido números (5) y luego signos (- por - es +). <strong>Resultado: 5</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="mision0" class="tab-content">
             <h2>Misión 0: El Mercado de Tres Lagos</h2>
             <div class="card">
                 <h3>Objetivo de la misión:</h3>
-                <p>En nuestra próxima clase presencial, tu equipo tendrá que administrar un comercio local usando únicamente <strong>Números Naturales (\(\mathbb{N}\))</strong>. Recuerda: los naturales son los números que usamos para contar (1, 2, 3, 4...).</p>
-                <p>Repasa mentalmente: Si tienes 5 cajas de mercadería y vendes 2, te quedan 3. La resta funciona perfecto, siempre y cuando el número al que le restas sea MAYOR.</p>
+                <p>En nuestra próxima clase presencial, tu equipo tendrá que administrar un comercio local usando únicamente <strong>Números Naturales (\(\mathbb{N}\))</strong>.</p>
+                <p>Demuestra que estás listo resolviendo este problema de inventario.</p>
             </div>
 
             <div class="simulator">
                 <h3 style="color: white; margin-top: 0;">Acertijo de Acceso</h3>
-                <p>Un estanciero de la zona trajo 120 fardos de pasto. Quiere repartirlos en partes iguales entre 3 corrales, pero se dio cuenta que 15 fardos se arruinaron por la lluvia y tuvo que tirarlos.</p>
+                <p>Un estanciero trajo 120 fardos de pasto. Quiere repartirlos en partes iguales entre 3 corrales, pero se dio cuenta que 15 fardos se arruinaron por la lluvia y tuvo que tirarlos.</p>
                 <p>¿Cuántos fardos exactos pondrá en cada corral usando los que quedaron?</p>
                 <input type="number" id="acertijo-input" class="input-game" placeholder="???">
+                <br>
                 <button class="btn-action" onclick="checkAcertijo()">Desbloquear</button>
                 <p id="acertijo-feedback" style="margin-top: 15px;"></p>
             </div>
         </div>
 
         <div id="mision1" class="tab-content">
-            <h2>Misión 1: El Quiebre del Modelo</h2>
+            <h2>Misión 1: Exploración Subterránea</h2>
             <div class="card">
-                <h3>Cuando los naturales no alcanzan</h3>
-                <p>¿Qué pasa en el mercado si quieres comprar repuestos que cuestan $1000 pero en tu caja solo tienes $700? Si el vendedor es de confianza, te anota en su cuaderno. Ahí nacen los <strong>Números Enteros Negativos</strong>.</p>
-                <p>\( 700 - 1000 = -300 \)</p>
-                <p>Ese signo menos (\(-\)) nos da una información vital según el contexto: puede significar una deuda en el kiosco, puntos en contra en un videojuego, o estar bajo el nivel del suelo.</p>
+                <h3>Surgimiento de los Negativos</h3>
+                <p>El signo menos (\(-\)) nos da una información vital según el contexto: puede significar una deuda en el kiosco, o estar bajo el nivel del suelo.</p>
             </div>
 
             <div class="simulator">
                 <h3 style="color: white; margin-top: 0;">Simulador: El Pozo Petrolero</h3>
-                <p>Imagina una torre de perforación en Santa Cruz. El nivel del suelo es el <strong>Cero (0)</strong>. La punta de la torre está a +15 metros. El taladro baja a buscar petróleo.</p>
+                <p>Imagina una torre de perforación. El nivel del suelo es el <strong>Cero (0)</strong>. Controla el taladro para buscar petróleo y observa cómo cambian los números.</p>
                 
                 <div class="sim-display" id="pozo-display" style="color: var(--text-main);">Nivel: 0 m</div>
                 
@@ -248,16 +387,16 @@
         <div id="mision2" class="tab-content">
             <h2>Misión 2: Ordenando el Tablero</h2>
             <div class="card">
-                <h3>La Recta Numérica y el Valor Absoluto</h3>
-                <p>Para prepararnos para el torneo de <strong>Batalla Naval de un solo eje</strong> en clase, necesitamos ordenar los números. Los negativos van a la izquierda del cero, y los positivos a la derecha.</p>
-                <p><strong>El Valor Absoluto (\(|x|\)):</strong> Es la distancia desde un número hasta el cero. Como es una distancia, ¡siempre es positiva! La distancia de -5 al cero es 5. Se anota: \( |-5| = 5 \).</p>
+                <h3>La Recta Numérica</h3>
+                <p>Para prepararnos para el torneo de Batalla Naval en clase, necesitamos ordenar los números. Los negativos van a la izquierda del cero, y los positivos a la derecha.</p>
             </div>
 
             <div class="simulator">
                 <h3 style="color: white; margin-top: 0;">Radar: Detectar Submarino</h3>
-                <p>Hay un submarino enemigo escondido en la recta numérica (entre -10 y +10). Ingresa coordenadas para disparar. El radar te dirá si debes moverte hacia los positivos o los negativos.</p>
+                <p>Hay un submarino enemigo escondido en la recta numérica (entre -10 y +10). Ingresa coordenadas numéricas para disparar. El radar te dirá hacia dónde ajustar la puntería.</p>
                 
                 <input type="number" id="radar-input" class="input-game" placeholder="Coord">
+                <br>
                 <button class="btn-action" onclick="fireRadar()">Disparar Carga</button>
                 
                 <p id="radar-feedback" style="font-size: 1.2rem; margin-top: 15px; color: var(--accent);">Buscando objetivo...</p>
@@ -277,14 +416,12 @@
             return;
         }
         
-        // Ocultar login, mostrar app
         document.getElementById('profile-screen').style.display = 'none';
         document.getElementById('main-app').style.display = 'block';
+        document.getElementById('player-header').style.display = 'flex';
         
-        // Poner el nombre en el header
         document.getElementById('display-name').innerText = nameInput;
         
-        // Iniciar el submarino
         resetSubmarine();
     }
 
@@ -301,7 +438,6 @@
         const input = document.getElementById('acertijo-input').value;
         const feedback = document.getElementById('acertijo-feedback');
         
-        // 120 - 15 = 105. 105 / 3 = 35.
         if (parseInt(input) === 35) {
             feedback.innerHTML = "¡Acceso Concedido! Análisis correcto. 105 fardos divididos en 3 corrales son 35.";
             feedback.style.color = "var(--success)";
@@ -327,10 +463,9 @@
 
         display.innerText = `Nivel: ${profundidadActual} m`;
 
-        // Colores según el nivel
         if (profundidadActual < 0) {
             display.className = "sim-display negative";
-            feedback.innerText = `Estamos perforando bajo tierra (Números Negativos). Distancia al suelo: ${Math.abs(profundidadActual)} metros.`;
+            feedback.innerText = `Estamos perforando bajo tierra (Números Negativos). Distancia al suelo (Valor Absoluto): ${Math.abs(profundidadActual)} metros.`;
         } else if (profundidadActual > 0) {
             display.className = "sim-display";
             display.style.color = "var(--primary)";
@@ -347,7 +482,6 @@
     let attempts = 0;
 
     function resetSubmarine() {
-        // Posición aleatoria entre -10 y 10, excluyendo el 0
         do {
             subPosition = Math.floor(Math.random() * 21) - 10;
         } while (subPosition === 0);
@@ -370,7 +504,7 @@
         if (guess === subPosition) {
             feedback.innerHTML = `¡IMPACTO DIRECTO en ${subPosition}! 💥 Submarino hundido.`;
             feedback.style.color = "var(--success)";
-            setTimeout(resetSubmarine, 4000); // Reinicia después de 4 seg
+            setTimeout(resetSubmarine, 4000); 
         } else if (guess < subPosition) {
             feedback.innerHTML = `Agua. El objetivo está más hacia los <strong>POSITIVOS (Derecha)</strong> ➡️`;
             feedback.style.color = "var(--danger)";
