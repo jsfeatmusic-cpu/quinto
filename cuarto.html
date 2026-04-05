@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnóstico: Números Reales</title>
+    <title>Números Reales y Operaciones</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root {
-            --primary: #059669; /* Un verde esmeralda para diferenciarlo de 5to año */
+            --primary: #059669; /* Verde esmeralda */
             --secondary: #34D399;
             --background: #F3F4F6;
             --text: #1F2937;
             --white: #FFFFFF;
+            --accent: #F59E0B; /* Naranja para resaltar */
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -25,17 +26,18 @@
         }
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             background-color: var(--white);
             min-height: 100vh;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
             padding: 2rem;
             box-sizing: border-box;
         }
-        h1, h2, h3 {
+        h1, h2, h3, h4 {
             color: var(--primary);
             text-align: center;
         }
+        h4 { margin-bottom: 0.5rem; color: #1F2937; }
 
         /* Botón Volver */
         .btn-volver {
@@ -67,30 +69,36 @@
             margin-bottom: 2rem;
             border-bottom: 2px solid #E5E7EB;
             flex-wrap: wrap;
+            gap: 5px;
         }
         .tab-btn {
             background: none;
             border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
             color: #6B7280;
             transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab-btn:hover {
+            background-color: #ECFDF5;
         }
         .tab-btn.active {
-            color: var(--primary);
+            color: var(--white);
+            background-color: var(--primary);
             border-bottom: 3px solid var(--primary);
         }
         .tab-content {
             display: none;
-            animation: fadeIn 0.5s;
+            animation: fadeIn 0.4s;
         }
         .tab-content.active {
             display: block;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -102,23 +110,31 @@
             margin-bottom: 1.5rem;
             border-left: 4px solid var(--primary);
         }
-        .set-box {
+        
+        /* Grillas para propiedades */
+        .prop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .prop-box {
             background: var(--white);
             padding: 1rem;
             border-radius: 6px;
-            margin-top: 1rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-top: 3px solid var(--secondary);
+            text-align: center;
         }
-        .set-symbol {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin-right: 10px;
-        }
+        .prop-box p { margin: 0.5rem 0 0 0; font-size: 0.9rem; color: #4B5563; }
 
-        /* Minijuego */
+        /* Juegos y Generador */
         .game-container {
             text-align: center;
+            background-color: #F9FAFB;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px dashed #D1D5DB;
         }
         .score-board {
             font-size: 1.2rem;
@@ -127,17 +143,62 @@
             color: var(--primary);
         }
         .question-box {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: bold;
-            margin: 2rem 0;
-            padding: 2.5rem;
-            background-color: #ECFDF5;
+            margin: 1.5rem 0;
+            padding: 2rem;
+            background-color: var(--white);
             border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100px;
+            min-height: 80px;
+            overflow-x: auto;
         }
+        
+        /* Inputs y Botones del Generador */
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .math-input {
+            padding: 0.8rem;
+            font-size: 1.2rem;
+            border: 2px solid #D1D5DB;
+            border-radius: 8px;
+            width: 150px;
+            text-align: center;
+        }
+        .math-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .btn-action {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-action:hover {
+            background-color: #047857;
+            transform: scale(1.02);
+        }
+        .btn-action.secondary {
+            background-color: var(--accent);
+        }
+        .btn-action.secondary:hover {
+            background-color: #D97706;
+        }
+
         .options-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -155,13 +216,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .option-btn:hover {
-            background-color: var(--secondary);
-            color: var(--text);
-            transform: scale(1.02);
-        }
+        .option-btn:hover { background-color: var(--secondary); transform: scale(1.02); }
+
         .feedback {
-            margin-top: 1.5rem;
+            margin-top: 1rem;
             font-weight: bold;
             font-size: 1.2rem;
             min-height: 2rem;
@@ -180,171 +238,335 @@
     
     <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
 
-    <h1>Diagnóstico: Números Reales (\(\mathbb{R}\))</h1>
+    <h1>Números Reales y Operaciones</h1>
     
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('teoria', this)">📚 Teoría y Repaso</button>
-        <button class="tab-btn" onclick="openTab('juego', this)">🎮 Minijuego Clasificador</button>
+        <button class="tab-btn active" onclick="openTab('teoria', this)">📚 Conjuntos</button>
+        <button class="tab-btn" onclick="openTab('juego-conjuntos', this)">🕹️ Clasificador</button>
+        <button class="tab-btn" onclick="openTab('operaciones', this)">🧮 Propiedades</button>
+        <button class="tab-btn" onclick="openTab('generador', this)">⚔️ Entrenamiento</button>
     </div>
 
     <div id="teoria" class="tab-content active">
         <h2>El Universo de los Números</h2>
-        <p>Antes de analizar gráficas y funciones, necesitamos saber con qué números estamos trabajando. El conjunto de los <strong>Números Reales (\(\mathbb{R}\))</strong> engloba a casi todos los números que conoces y se divide en varios subconjuntos más pequeños. Piensa en ellos como cajas dentro de otras cajas.</p>
+        <p>El conjunto de los <strong>Números Reales (\(\mathbb{R}\))</strong> engloba a casi todos los números que conoces y se divide en varios subconjuntos más pequeños. Piensa en ellos como cajas dentro de otras cajas.</p>
         
         <div class="theory-section">
             <h3>1. Números Racionales (\(\mathbb{Q}\))</h3>
-            <p>Son todos aquellos números que <strong>SÍ</strong> se pueden escribir como una fracción \(\frac{a}{b}\) (donde a y b son enteros, y b no es cero). Dentro de los racionales, encontramos dos cajas más pequeñas:</p>
-            
-            <div class="set-box">
-                <span class="set-symbol">\(\mathbb{N}\)</span> <strong>Naturales:</strong> Son los números enteros positivos que usamos para contar. 
-                <br><em>Ejemplos: 1, 2, 3, 15, 100...</em>
-            </div>
-            
-            <div class="set-box">
-                <span class="set-symbol">\(\mathbb{Z}\)</span> <strong>Enteros:</strong> Incluyen a los naturales, al cero y a los números negativos enteros.
-                <br><em>Ejemplos: -5, -1, 0, 4, 20...</em>
-            </div>
-
-            <div class="set-box">
-                <strong>Fracciones y Decimales Exactos/Periódicos:</strong> Los números que están entre los enteros.
-                <br><em>Ejemplos: \(\frac{1}{2}\), \(0.75\), \(-1.333...\)</em>
-            </div>
+            <p>Se pueden escribir como una fracción \(\frac{a}{b}\). Incluyen:</p>
+            <ul>
+                <li><strong>Naturales (\(\mathbb{N}\)):</strong> Enteros positivos (1, 2, 3...).</li>
+                <li><strong>Enteros (\(\mathbb{Z}\)):</strong> Naturales, el cero y negativos (-3, 0, 5...).</li>
+                <li><strong>Fracciones y decimales exactos/periódicos:</strong> \(\frac{1}{2}\), \(0.75\), \(1.\overline{3}\).</li>
+            </ul>
         </div>
 
         <div class="theory-section">
             <h3>2. Números Irracionales (\(\mathbb{I}\))</h3>
-            <p>Son aquellos números que <strong>NO</strong> se pueden escribir como una fracción. Tienen infinitas cifras decimales que no siguen ningún patrón (no son periódicos).</p>
-            <div class="set-box">
-                <span class="set-symbol">\(\mathbb{I}\)</span> <strong>Irracionales:</strong>
-                <br><em>Ejemplos: \(\pi\) (3.14159...), \(\sqrt{2}\) (1.4142...), \(\sqrt{5}\), el número \(e\).</em>
+            <p><strong>NO</strong> se pueden escribir como fracción. Sus decimales son infinitos y no periódicos.</p>
+            <p><em>Ejemplos: \(\pi\), \(\sqrt{2}\), \(\sqrt{5}\).</em></p>
+        </div>
+    </div>
+
+    <div id="juego-conjuntos" class="tab-content">
+        <div class="game-container">
+            <h2>Clasificador a Contrarreloj</h2>
+            <p>¿A qué conjunto pertenece este número? <br><small><strong>Regla:</strong> Elige siempre el conjunto "más pequeño" al que pertenezca.</small></p>
+            
+            <div class="score-board">Puntuación: <span id="score-clasificador">0</span></div>
+            
+            <div class="question-box" id="number-display"></div>
+            
+            <div class="options-grid" id="options-container">
+                <button class="option-btn" onclick="checkAnswerClasificador('Natural')">Natural (\(\mathbb{N}\))</button>
+                <button class="option-btn" onclick="checkAnswerClasificador('Entero')">Entero (\(\mathbb{Z}\))</button>
+                <button class="option-btn" onclick="checkAnswerClasificador('Racional')">Racional (\(\mathbb{Q}\))</button>
+                <button class="option-btn" onclick="checkAnswerClasificador('Irracional')">Irracional (\(\mathbb{I}\))</button>
+            </div>
+
+            <div id="feedback-msg-clasificador" class="feedback"></div>
+            <button class="btn-action" style="margin-top: 1rem; display: none;" id="next-btn-clasificador" onclick="generateQuestionClasificador()">Siguiente Número ➡️</button>
+        </div>
+    </div>
+
+    <div id="operaciones" class="tab-content">
+        <h2>Reglas de Juego: Propiedades</h2>
+        
+        <div class="theory-section">
+            <h3>🔥 Propiedades de la Potenciación</h3>
+            <div class="prop-grid">
+                <div class="prop-box">
+                    <strong>Producto de igual base</strong><br>
+                    \({a^m \cdot a^n = a^{m+n}}\)
+                    <p>Se suman los exponentes.</p>
+                </div>
+                <div class="prop-box">
+                    <strong>Cociente de igual base</strong><br>
+                    \({\frac{a^m}{a^n} = a^{m-n}}\)
+                    <p>Se restan los exponentes.</p>
+                </div>
+                <div class="prop-box">
+                    <strong>Potencia de potencia</strong><br>
+                    \({(a^m)^n = a^{m \cdot n}}\)
+                    <p>Se multiplican los exponentes.</p>
+                </div>
+                <div class="prop-box">
+                    <strong>Exponente negativo</strong><br>
+                    \({a^{-n} = \left(\frac{1}{a}\right)^n}\)
+                    <p>Se invierte la base.</p>
+                </div>
+                <div class="prop-box">
+                    <strong>Todo número a la cero</strong><br>
+                    \({a^0 = 1}\)  \((a \neq 0)\)
+                </div>
             </div>
         </div>
 
         <div class="theory-section">
-            <h3>La Recta Numérica</h3>
-            <p>La unión de los Racionales (\(\mathbb{Q}\)) y los Irracionales (\(\mathbb{I}\)) forma el conjunto de los <strong>Números Reales (\(\mathbb{R}\))</strong>. Cualquier número real ocupa un punto exacto en la recta numérica, y la recta está completamente "llena", no hay huecos.</p>
+            <h3>🧊 Propiedades de la Radicación</h3>
+            <div class="prop-grid">
+                <div class="prop-box">
+                    <strong>Distributiva (Mult/Div)</strong><br>
+                    \({\sqrt[n]{a \cdot b} = \sqrt[n]{a} \cdot \sqrt[n]{b}}\)
+                    <p>¡Ojo! NO es distributiva en suma o resta.</p>
+                </div>
+                <div class="prop-box">
+                    <strong>Raíz de raíz</strong><br>
+                    \({\sqrt[n]{\sqrt[m]{a}} = \sqrt[n \cdot m]{a}}\)
+                    <p>Se multiplican los índices.</p>
+                </div>
+                <div class="prop-box">
+                    <strong>Exponente fraccionario</strong><br>
+                    \({a^{\frac{m}{n}} = \sqrt[n]{a^m}}\)
+                    <p>El denominador es el índice.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="theory-section" style="border-left-color: var(--accent);">
+            <h3>🎯 Orden para resolver Cálculos Combinados</h3>
+            <p>Para no equivocarte, SIEMPRE sigue esta jerarquía:</p>
+            <ol>
+                <li><strong>Separar en términos:</strong> Los signos más (+) y menos (-) fuera de paréntesis separan términos.</li>
+                <li><strong>Paréntesis, corchetes y llaves:</strong> Resolver lo de adentro primero.</li>
+                <li><strong>Potencias y Raíces.</strong></li>
+                <li><strong>Multiplicaciones y Divisiones.</strong></li>
+                <li><strong>Sumas y Restas</strong> (¡De izquierda a derecha!).</li>
+            </ol>
+            
+            <div style="background-color: var(--white); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                <strong>Ejemplo Resuelto:</strong>
+                <p>\( 3 \cdot \sqrt{16} + (5 - 2)^2 - 10 \div 2 \)</p>
+                <p>1º Paréntesis y Raíz: \( 3 \cdot 4 + (3)^2 - 10 \div 2 \)</p>
+                <p>2º Potencia: \( 3 \cdot 4 + 9 - 10 \div 2 \)</p>
+                <p>3º Mult/Div: \( 12 + 9 - 5 \)</p>
+                <p>4º Suma/Resta: \( 21 - 5 = 16 \)</p>
+            </div>
         </div>
     </div>
 
-    <div id="juego" class="tab-content">
+    <div id="generador" class="tab-content">
         <div class="game-container">
-            <h2>Clasificador a Contrarreloj</h2>
-            <p>¿A qué conjunto pertenece este número? <br><small><strong>Regla:</strong> Elige siempre el conjunto "más pequeño" al que pertenezca (ej: si es 5, elige Natural en lugar de Entero).</small></p>
+            <h2>Sala de Entrenamiento</h2>
+            <p>Resuelve el cálculo combinado en una hoja y escribe el resultado final aquí.<br>¡Los ejercicios se generan al azar, nunca se acaban!</p>
             
-            <div class="score-board">Puntuación: <span id="score">0</span></div>
+            <div class="score-board">Racha de aciertos: <span id="racha-generador" style="color: var(--accent);">0</span> 🔥</div>
             
-            <div class="question-box" id="number-display">
+            <div class="question-box" id="math-exercise-display">
                 </div>
             
-            <div class="options-grid" id="options-container">
-                <button class="option-btn" onclick="checkAnswer('Natural')">Natural (\(\mathbb{N}\))</button>
-                <button class="option-btn" onclick="checkAnswer('Entero')">Entero (\(\mathbb{Z}\))</button>
-                <button class="option-btn" onclick="checkAnswer('Racional')">Racional (\(\mathbb{Q}\))</button>
-                <button class="option-btn" onclick="checkAnswer('Irracional')">Irracional (\(\mathbb{I}\))</button>
+            <div class="input-group">
+                <input type="number" id="user-answer" class="math-input" placeholder="Tu respuesta..." autocomplete="off">
+                <button class="btn-action" onclick="checkMathExercise()">Verificar</button>
             </div>
 
-            <div id="feedback-msg" class="feedback"></div>
+            <div id="feedback-generador" class="feedback"></div>
             
-            <button class="btn-volver" style="margin-top: 1rem; background-color: var(--primary); color: white; display: none;" id="next-btn" onclick="generateQuestion()">Siguiente Número ➡️</button>
+            <button class="btn-action secondary" style="margin-top: 1rem; display: none;" id="next-math-btn" onclick="generateMathExercise()">Generar Otro Ejercicio 🔄</button>
         </div>
     </div>
+
 </div>
 
 <script>
-    // --- LÓGICA DE PESTAÑAS ---
+    // --- NAVEGACIÓN DE PESTAÑAS ---
     function openTab(tabName, btnElement) {
-        let contents = document.getElementsByClassName("tab-content");
-        for (let i = 0; i < contents.length; i++) {
-            contents[i].classList.remove("active");
-        }
-        
-        let btns = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < btns.length; i++) {
-            btns[i].classList.remove("active");
-        }
-        
-        document.getElementById(tabName).classList.add("active");
-        btnElement.classList.add("active");
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        btnElement.classList.add('active');
     }
 
-    // --- LÓGICA DEL MINIJUEGO ---
-    let score = 0;
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // ==========================================
+    // LÓGICA: JUEGO CLASIFICADOR (Original)
+    // ==========================================
+    let scoreClasificador = 0;
     let currentCorrectType = "";
-
-    // Banco de números con algunas "trampas" para pensar
     const numberPool = [
-        { val: "8", type: "Natural", exp: "8 es un número entero positivo, sirve para contar." },
-        { val: "\\(\\sqrt{25}\\)", type: "Natural", exp: "La raíz de 25 es 5, que es un número Natural." },
-        { val: "\\(\\frac{10}{2}\\)", type: "Natural", exp: "10 dividido 2 da 5 exacto, un número Natural." },
-        
-        { val: "-14", type: "Entero", exp: "-14 es un entero negativo, no sirve para contar, pero no tiene decimales." },
-        { val: "0", type: "Entero", exp: "El cero pertenece a los Enteros, no a los Naturales." },
-        { val: "\\(\\sqrt[3]{-8}\\)", type: "Entero", exp: "La raíz cúbica de -8 es -2, un número Entero." },
-        
-        { val: "\\(\\frac{3}{4}\\)", type: "Racional", exp: "Es una fracción que da 0.75, un decimal exacto." },
-        { val: "-0.5", type: "Racional", exp: "Es un decimal exacto, se puede escribir como -1/2." },
-        { val: "1.\\overline{3}", type: "Racional", exp: "Es un decimal periódico, viene de la fracción 4/3." },
-        
-        { val: "\\(\\pi\\)", type: "Irracional", exp: "Pi tiene infinitos decimales no periódicos." },
-        { val: "\\(\\sqrt{7}\\)", type: "Irracional", exp: "No tiene raíz exacta, sus decimales son infinitos y no periódicos." },
-        { val: "\\(e\\)", type: "Irracional", exp: "El número de Euler tiene infinitos decimales no periódicos." }
+        { val: "8", type: "Natural", exp: "8 es un entero positivo." },
+        { val: "\\(\\sqrt{25}\\)", type: "Natural", exp: "La raíz de 25 es 5." },
+        { val: "-14", type: "Entero", exp: "-14 es un entero negativo." },
+        { val: "0", type: "Entero", exp: "El cero pertenece a los Enteros." },
+        { val: "\\(\\frac{3}{4}\\)", type: "Racional", exp: "Es una fracción (0.75)." },
+        { val: "-0.5", type: "Racional", exp: "Decimal exacto, equivale a -1/2." },
+        { val: "\\(\\pi\\)", type: "Irracional", exp: "Tiene infinitos decimales no periódicos." },
+        { val: "\\(\\sqrt{7}\\)", type: "Irracional", exp: "Raíz inexacta, decimales infinitos." }
     ];
-
     let currentQuestionData = null;
 
-    function generateQuestion() {
-        // Restaurar estado
-        document.getElementById('feedback-msg').innerHTML = "";
-        document.getElementById('next-btn').style.display = "none";
+    function generateQuestionClasificador() {
+        document.getElementById('feedback-msg-clasificador').innerHTML = "";
+        document.getElementById('next-btn-clasificador').style.display = "none";
         document.getElementById('options-container').style.pointerEvents = "auto";
-        
-        // Reset colores de botones
-        let btns = document.getElementsByClassName('option-btn');
-        for(let i=0; i<btns.length; i++){
-            btns[i].style.backgroundColor = "var(--white)";
-            btns[i].style.color = "var(--text)";
-        }
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.style.backgroundColor = "var(--white)";
+            btn.style.color = "var(--text)";
+        });
 
-        // Elegir pregunta aleatoria
         const randomIndex = Math.floor(Math.random() * numberPool.length);
         currentQuestionData = numberPool[randomIndex];
         currentCorrectType = currentQuestionData.type;
-
-        // Mostrar número
         document.getElementById('number-display').innerHTML = currentQuestionData.val;
-        
-        // Renderizar matemáticas dinámicas
         MathJax.typesetPromise();
     }
 
-    function checkAnswer(selectedType) {
-        document.getElementById('options-container').style.pointerEvents = "none"; // Evitar doble clic
-        const feedback = document.getElementById('feedback-msg');
-        
-        // Pintar el botón que el usuario tocó
+    function checkAnswerClasificador(selectedType) {
+        document.getElementById('options-container').style.pointerEvents = "none";
+        const feedback = document.getElementById('feedback-msg-clasificador');
         const clickedBtn = event.target;
 
         if (selectedType === currentCorrectType) {
-            clickedBtn.style.backgroundColor = "#10B981"; // Verde
-            clickedBtn.style.color = "white";
-            score += 10;
+            clickedBtn.style.backgroundColor = "#10B981"; clickedBtn.style.color = "white";
+            scoreClasificador += 10;
             feedback.innerHTML = `¡Correcto! 🎉 <br><span style="font-size:1rem; font-weight:normal;">${currentQuestionData.exp}</span>`;
             feedback.className = "feedback correct";
         } else {
-            clickedBtn.style.backgroundColor = "#EF4444"; // Rojo
-            clickedBtn.style.color = "white";
-            score = Math.max(0, score - 5);
+            clickedBtn.style.backgroundColor = "#EF4444"; clickedBtn.style.color = "white";
+            scoreClasificador = Math.max(0, scoreClasificador - 5);
             feedback.innerHTML = `Incorrecto. Era <strong>${currentCorrectType}</strong>. <br><span style="font-size:1rem; font-weight:normal;">${currentQuestionData.exp}</span>`;
             feedback.className = "feedback incorrect";
         }
-        
-        document.getElementById('score').innerText = score;
-        document.getElementById('next-btn').style.display = "inline-flex";
+        document.getElementById('score-clasificador').innerText = scoreClasificador;
+        document.getElementById('next-btn-clasificador').style.display = "inline-flex";
     }
 
-    // Iniciar
+    // ==========================================
+    // LÓGICA: GENERADOR DE EJERCICIOS COMBINADOS
+    // ==========================================
+    let currentMathAnswer = 0;
+    let racha = 0;
+
+    function generateMathExercise() {
+        document.getElementById('user-answer').value = "";
+        document.getElementById('feedback-generador').innerHTML = "";
+        document.getElementById('next-math-btn').style.display = "none";
+        document.getElementById('user-answer').disabled = false;
+
+        // Seleccionamos un "tipo de estructura" de cálculo al azar
+        const type = getRandomInt(1, 4);
+        let texString = "";
+
+        if (type === 1) {
+            // Tipo: a * b + c^2
+            let a = getRandomInt(-5, 5);
+            let b = getRandomInt(2, 6);
+            let c = getRandomInt(2, 5);
+            currentMathAnswer = (a * b) + Math.pow(c, 2);
+            
+            let strA = a < 0 ? `(${a})` : a;
+            texString = `\\( ${strA} \\cdot ${b} + ${c}^2 \\)`;
+        } 
+        else if (type === 2) {
+            // Tipo: \sqrt{a} - b * c (con raíz exacta)
+            let bases = [4, 9, 16, 25, 36, 49, 64, 81, 100];
+            let rootBase = bases[getRandomInt(0, bases.length - 1)];
+            let rootResult = Math.sqrt(rootBase);
+            let b = getRandomInt(2, 8);
+            let c = getRandomInt(-4, 5);
+            if(c === 0) c = 2; // Evitar multiplicaciones por cero muy obvias
+            
+            currentMathAnswer = rootResult - (b * c);
+            let strC = c < 0 ? `(${c})` : c;
+            texString = `\\( \\sqrt{${rootBase}} - ${b} \\cdot ${strC} \\)`;
+        }
+        else if (type === 3) {
+            // Tipo: (a - b)^2 + c * d
+            let a = getRandomInt(5, 10);
+            let b = getRandomInt(1, 8);
+            let c = getRandomInt(-3, 3);
+            if(c === 0) c = -2;
+            let d = getRandomInt(2, 5);
+            
+            currentMathAnswer = Math.pow((a - b), 2) + (c * d);
+            let strC = c < 0 ? `(${c})` : c;
+            texString = `\\( (${a} - ${b})^2 + ${strC} \\cdot ${d} \\)`;
+        }
+        else if (type === 4) {
+            // Tipo: a^3 / b + \sqrt{c}
+            let a = getRandomInt(2, 4); // 2^3=8, 3^3=27, 4^3=64
+            let aCubed = Math.pow(a, 3);
+            // Buscar un divisor exacto para no dar decimales
+            let divisors = [];
+            for (let i = 2; i <= aCubed; i++) { if (aCubed % i === 0) divisors.push(i); }
+            let b = divisors[getRandomInt(0, divisors.length - 1)];
+            
+            let bases = [1, 4, 9, 16, 25];
+            let rootBase = bases[getRandomInt(0, bases.length - 1)];
+            let rootResult = Math.sqrt(rootBase);
+
+            currentMathAnswer = (aCubed / b) + rootResult;
+            texString = `\\( ${a}^3 \\div ${b} + \\sqrt{${rootBase}} \\)`;
+        }
+
+        document.getElementById('math-exercise-display').innerHTML = texString;
+        MathJax.typesetPromise();
+    }
+
+    function checkMathExercise() {
+        const userInput = document.getElementById('user-answer').value;
+        const feedback = document.getElementById('feedback-generador');
+
+        if (userInput === "") {
+            feedback.innerHTML = "Por favor, ingresa un número.";
+            feedback.className = "feedback incorrect";
+            return;
+        }
+
+        const userNumber = parseInt(userInput);
+        document.getElementById('user-answer').disabled = true;
+
+        if (userNumber === currentMathAnswer) {
+            racha++;
+            feedback.innerHTML = "¡Excelente! Resultado perfecto. 🏆";
+            feedback.className = "feedback correct";
+        } else {
+            racha = 0;
+            feedback.innerHTML = `Mmm, casi. El resultado correcto era <strong>${currentMathAnswer}</strong>. ¡Revisa los pasos!`;
+            feedback.className = "feedback incorrect";
+        }
+
+        document.getElementById('racha-generador').innerText = racha;
+        document.getElementById('next-math-btn').style.display = "inline-block";
+    }
+
+    // Permitir usar la tecla Enter para verificar el ejercicio
+    document.getElementById("user-answer").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            if(!document.getElementById('user-answer').disabled) {
+                checkMathExercise();
+            }
+        }
+    });
+
+    // Iniciar ambos módulos al cargar la página
     window.onload = function() {
-        generateQuestion();
+        generateQuestionClasificador();
+        generateMathExercise();
     };
 </script>
 
