@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducción a la Economía</title>
+    <style>
+        :root {
+            --primary: #0D9488; /* Turquesa oscuro / Teal */
+            --secondary: #14B8A6;
+            --background: #F0FDFA; /* Fondo muy suave turquesa */
+            --text: #1F2937;
+            --white: #FFFFFF;
+            --accent: #F59E0B; /* Naranja para contrastar */
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--white);
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            text-align: center;
+        }
+        h4 { margin-bottom: 0.5rem; color: #1F2937; }
+
+        /* Botón Volver */
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1.5rem;
+            gap: 8px;
+        }
+        .btn-volver:hover {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        /* Pestañas */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #CCFBF1;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: #115E59;
+            transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
+        }
+        .tab-btn:hover { background-color: #CCFBF1; }
+        .tab-btn.active {
+            color: var(--white);
+            background-color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Contenido Teórico */
+        .theory-section {
+            background-color: #F0FDFA;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .concept-box {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--secondary);
+        }
+        .concept-box h4 { margin-top: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+        
+        /* Reflexiones */
+        .reflection-card {
+            background-color: #FFFBEB; /* Amarillo suave */
+            border: 1px solid #FDE68A;
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 6px;
+        }
+        .reflection-card h4 { color: #B45309; text-align: left; }
+
+        /* Juegos */
+        .game-container {
+            text-align: center;
+            background-color: #FAFAF9;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px dashed #D6D3D1;
+        }
+        .score-board {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        .question-box {
+            font-size: 1.3rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            line-height: 1.6;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .option-btn {
+            background-color: var(--white);
+            border: 2px solid var(--secondary);
+            color: var(--text);
+            padding: 1rem;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .option-btn:hover { background-color: var(--secondary); transform: translateX(5px); color: var(--white); }
+
+        .btn-action {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-action:hover { background-color: #0F766E; transform: scale(1.02); }
+
+        .feedback { margin-top: 1rem; font-weight: bold; font-size: 1.1rem; min-height: 3rem; }
+        .correct { color: #059669; }
+        .incorrect { color: #DC2626; }
+        
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
+
+    <h1>Introducción a la Economía</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('que-es', this)">📊 ¿Qué es?</button>
+        <button class="tab-btn" onclick="openTab('conceptos', this)">🔑 Nociones Básicas</button>
+        <button class="tab-btn" onclick="openTab('reflexion', this)">🤔 Para Reflexionar</button>
+        <button class="tab-btn" onclick="openTab('juego', this)">🎮 Simulador</button>
+    </div>
+
+    <div id="que-es" class="tab-content active">
+        <h2>La Ciencia de las Decisiones</h2>
+        <div class="theory-section">
+            <p>Muchas personas creen que la economía solo trata sobre dinero, bancos o la bolsa de valores. Sin embargo, la economía es fundamentalmente una <strong>ciencia social que estudia cómo las personas toman decisiones</strong>.</p>
+            <p>Imagina que tienes la tarde libre (un recurso). Puedes usarla para estudiar para tu examen, o puedes usarla para jugar videojuegos. No puedes hacer ambas cosas al máximo al mismo tiempo. Al elegir una, renuncias a la otra. ¡Eso es economía en su estado más puro!</p>
+        </div>
+
+        <h3>Las dos grandes ramas:</h3>
+        <div class="grid-cards">
+            <div class="concept-box">
+                <h4>🔬 Microeconomía</h4>
+                <p>Estudia el comportamiento económico de <strong>actores individuales</strong>: las familias, los consumidores y las empresas pequeñas.</p>
+                <p><em>Ejemplo: ¿Cómo afecta el aumento del precio del boleto de colectivo en el presupuesto de un estudiante?</em></p>
+            </div>
+            <div class="concept-box">
+                <h4>🔭 Macroeconomía</h4>
+                <p>Estudia la economía en su <strong>conjunto a nivel global o nacional</strong>. Analiza los grandes agregados económicos.</p>
+                <p><em>Ejemplo: ¿Por qué hay inflación en el país? ¿Cuál es el nivel de desempleo en Argentina este año?</em></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="conceptos" class="tab-content">
+        <h2>Conceptos Fundamentales</h2>
+        <p>Toda la teoría económica se construye sobre estos pilares. Entenderlos es cambiar la forma en la que ves el mundo.</p>
+
+        <div class="grid-cards">
+            <div class="concept-box">
+                <h4>⏳ La Escasez</h4>
+                <p>Es el problema económico fundamental. Consiste en que <strong>nuestros deseos y necesidades son infinitos, pero los recursos para satisfacerlos son limitados</strong> (tiempo, dinero, materias primas).</p>
+                <p>Si no hubiera escasez, la economía no existiría. ¡Todo sería gratis y para todos!</p>
+            </div>
+            <div class="concept-box">
+                <h4>⚖️ Costo de Oportunidad</h4>
+                <p>Al elegir algo, siempre renuncias a otra cosa. El costo de oportunidad es <strong>el valor de la mejor alternativa a la que renuncias</strong> cuando tomas una decisión.</p>
+                <p><em>Si con tus ahorros decides comprar un celular, el costo de oportunidad podrían ser las vacaciones que ya no podrás pagar.</em></p>
+            </div>
+            <div class="concept-box">
+                <h4>🛒 Bienes y Servicios</h4>
+                <p>Son los elementos que satisfacen nuestras necesidades. Los <strong>Bienes</strong> son tangibles (ropa, comida, un auto). Los <strong>Servicios</strong> son intangibles, acciones que otros hacen por nosotros (educación, transporte, corte de pelo).</p>
+            </div>
+            <div class="concept-box">
+                <h4>📈 Oferta y Demanda</h4>
+                <p>Es el motor del mercado. La <strong>Oferta</strong> es la cantidad de un bien que los vendedores quieren vender. La <strong>Demanda</strong> es la cantidad que los compradores quieren comprar.</p>
+                <p>Generalmente, si algo es muy demandado y hay poco (escasez), su precio sube.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="reflexion" class="tab-content">
+        <h2>Gimnasia Mental Económica</h2>
+        <p>Lee estas situaciones y piensa en ellas. En economía, las cosas no siempre son lo que parecen a simple vista.</p>
+
+        <div class="reflection-card">
+            <h4>La Paradoja del Valor (Agua vs. Diamantes)</h4>
+            <p>El agua es absolutamente esencial para la vida humana; sin ella morimos en pocos días. Los diamantes, en cambio, no son esenciales, son solo piedras brillantes decorativas.</p>
+            <p><strong>Pregunta:</strong> Si el agua es mucho más importante que un diamante, ¿por qué el agua es tan barata y los diamantes cuestan millones?</p>
+            <p><em>Pista: Piensa en el concepto de "escasez". ¿Qué hay en mayor abundancia en el planeta?</em></p>
+        </div>
+
+        <div class="reflection-card">
+            <h4>El Efecto Cobra (Incentivos Perversos)</h4>
+            <p>Durante la época colonial en la India, había demasiadas cobras venenosas en una ciudad. El gobierno decidió ofrecer una recompensa en dinero por cada cobra muerta que la gente entregara.</p>
+            <p>Al principio fue un éxito. Pero luego, la gente empezó a <strong>criar cobras en secreto</strong> para matarlas y cobrar la recompensa. Cuando el gobierno se dio cuenta y canceló el pago, los criadores soltaron a todas sus cobras en la ciudad.</p>
+            <p><strong>Pregunta:</strong> ¿Qué nos enseña esto sobre cómo reaccionan las personas a los incentivos económicos (dinero)?</p>
+        </div>
+
+        <div class="reflection-card">
+            <h4>Sueldos Desiguales</h4>
+            <p>Un médico cirujano salva vidas todos los días estudiando durante más de 10 años. Un futbolista famoso juega un partido a la semana por entretenimiento.</p>
+            <p><strong>Pregunta:</strong> ¿Por qué el futbolista gana millones más que el médico? ¿Es el mercado "injusto" o se rige por la ley de la oferta y la demanda de personas que están dispuestas a pagar una entrada de estadio vs. una consulta médica?</p>
+        </div>
+    </div>
+
+    <div id="juego" class="tab-content">
+        <div class="game-container">
+            <h2>Simulador de Decisiones</h2>
+            <p>Analiza el escenario y elige la respuesta económica correcta.</p>
+            
+            <div class="score-board">Aciertos Seguidos: <span id="score-juego" style="color: var(--accent);">0</span></div>
+            
+            <div class="question-box" id="scenario-display">
+                </div>
+            
+            <div class="options-grid" id="options-container">
+                </div>
+
+            <div id="feedback-juego" class="feedback"></div>
+            <button class="btn-action" style="margin-top: 1rem; display: none;" id="next-btn-juego" onclick="generateScenario()">Siguiente Caso ➡️</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- NAVEGACIÓN ---
+    function openTab(tabName, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        btnElement.classList.add('active');
+    }
+
+    // --- LÓGICA DEL SIMULADOR ECONÓMICO ---
+    let scoreJuego = 0;
+    let currentCorrectIndex = -1;
+
+    // Banco de preguntas
+    const scenarios = [
+        {
+            q: "Tienes $10.000 ahorrados. Decides ir a un recital de tu banda favorita en lugar de comprarte ropa nueva. ¿Cuál es tu Costo de Oportunidad?",
+            options: [
+                "Los $10.000 que gastaste en la entrada.",
+                "La ropa nueva que dejaste de comprar.",
+                "El tiempo que pasaste en el recital.",
+                "La alegría de ver a la banda."
+            ],
+            correct: 1,
+            exp: "El Costo de Oportunidad no es el dinero en sí, sino la MEJOR ALTERNATIVA a la que renunciaste (la ropa)."
+        },
+        {
+            q: "De repente, una helada destruye gran parte de la cosecha de tomates en el país. ¿Qué pasará probablemente con el precio del tomate en las verdulerías?",
+            options: [
+                "El precio bajará para que la gente compre rápido.",
+                "El precio se mantendrá igual.",
+                "El precio subirá porque hay escasez y la oferta disminuyó.",
+                "El Estado regalará los tomates restantes."
+            ],
+            correct: 2,
+            exp: "Cuando la oferta disminuye (hay menos tomates) pero la demanda sigue igual, los precios suben."
+        },
+        {
+            q: "Analizar el nivel de inflación de Argentina durante el último año es un estudio que corresponde a la...",
+            options: [
+                "Microeconomía",
+                "Macroeconomía",
+                "Contabilidad de empresas",
+                "Psicología económica"
+            ],
+            correct: 1,
+            exp: "La inflación es un fenómeno general de los precios a nivel nacional, por lo tanto, es un tema de la Macroeconomía."
+        },
+        {
+            q: "Se pone de moda un nuevo modelo de zapatillas en TikTok. Millones de jóvenes quieren comprarlas. Si las fábricas no pueden producir más rápido de lo normal, ¿qué ocurrirá?",
+            options: [
+                "Habrá exceso de oferta de zapatillas.",
+                "El precio de esas zapatillas disminuirá.",
+                "Habrá un faltante y el precio probablemente suba (aumento de demanda).",
+                "Las fábricas quebrarán por el estrés."
+            ],
+            correct: 2,
+            exp: "Un aumento drástico en la demanda sin aumento de la oferta genera escasez momentánea y hace que los precios suban."
+        },
+        {
+            q: "¿Por qué decimos que la Escasez es el problema principal de la economía?",
+            options: [
+                "Porque los gobiernos roban el dinero.",
+                "Porque nuestros deseos no tienen límite, pero los recursos del planeta sí.",
+                "Porque la gente no sabe ahorrar su salario.",
+                "Porque hay personas ricas y personas pobres."
+            ],
+            correct: 1,
+            exp: "La esencia de la economía es administrar recursos limitados frente a necesidades que siempre crecen y son ilimitadas."
+        }
+    ];
+
+    let currentQuestionData = null;
+
+    function generateScenario() {
+        document.getElementById('feedback-juego').innerHTML = "";
+        document.getElementById('next-btn-juego').style.display = "none";
+        document.getElementById('options-container').style.pointerEvents = "auto";
+        
+        // Elegir pregunta aleatoria
+        const randomIndex = Math.floor(Math.random() * scenarios.length);
+        currentQuestionData = scenarios[randomIndex];
+        currentCorrectIndex = currentQuestionData.correct;
+
+        // Renderizar pregunta
+        document.getElementById('scenario-display').innerHTML = currentQuestionData.q;
+        
+        // Renderizar botones
+        let optionsHtml = "";
+        for (let i = 0; i < currentQuestionData.options.length; i++) {
+            optionsHtml += `<button class="option-btn" onclick="checkAnswer(this, ${i})">${currentQuestionData.options[i]}</button>`;
+        }
+        document.getElementById('options-container').innerHTML = optionsHtml;
+    }
+
+    function checkAnswer(btnElement, selectedIndex) {
+        document.getElementById('options-container').style.pointerEvents = "none";
+        const feedback = document.getElementById('feedback-juego');
+
+        let buttons = document.querySelectorAll('.option-btn');
+
+        if (selectedIndex === currentCorrectIndex) {
+            btnElement.style.backgroundColor = "#10B981"; // Verde
+            btnElement.style.color = "white";
+            scoreJuego += 1;
+            feedback.innerHTML = `¡Correcto! ✅<br><span style="font-size:1rem; font-weight:normal; color: var(--text);">${currentQuestionData.exp}</span>`;
+            feedback.className = "feedback correct";
+        } else {
+            btnElement.style.backgroundColor = "#DC2626"; // Rojo
+            btnElement.style.color = "white";
+            scoreJuego = 0;
+            feedback.innerHTML = `Incorrecto. Piensa como economista.<br><span style="font-size:1rem; font-weight:normal; color: var(--text);">${currentQuestionData.exp}</span>`;
+            feedback.className = "feedback incorrect";
+            
+            // Mostrar cuál era la correcta
+            buttons[currentCorrectIndex].style.border = "3px solid #10B981";
+        }
+
+        document.getElementById('score-juego').innerText = scoreJuego;
+        document.getElementById('next-btn-juego').style.display = "inline-block";
+    }
+
+    // Iniciar juego al cargar
+    window.onload = function() {
+        generateScenario();
+    };
+</script>
+
+</body>
+</html>
