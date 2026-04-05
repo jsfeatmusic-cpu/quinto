@@ -129,7 +129,7 @@
             border-radius: 6px;
         }
 
-        /* Juegos y Generador */
+        /* Juegos */
         .game-container {
             text-align: center;
             background-color: #F9FAFB;
@@ -174,6 +174,7 @@
             cursor: pointer;
             transition: all 0.2s;
             min-height: 60px;
+            display: flex; align-items: center; justify-content: center; /* Centrar MathJax */
         }
         .option-btn:hover { background-color: var(--secondary); transform: scale(1.02); color: var(--white); }
 
@@ -319,7 +320,7 @@
             <h2>Desafío Racional</h2>
             <p>Resuelve la operación en tu hoja y selecciona la fracción correcta.<br>¡Ojo! Los resultados siempre están <strong>simplificados</strong>.</p>
             
-            <div class="score-board">Aciertos: <span id="score-juego" style="color: var(--accent);">0</span></div>
+            <div class="score-board">Racha: <span id="score-juego" style="color: var(--accent);">0</span></div>
             
             <div class="question-box" id="math-display">
                 </div>
@@ -343,9 +344,9 @@
         btnElement.classList.add('active');
     }
 
-    // --- LÓGICA MATEMÁTICA PARA EL JUEGO ---
+    // --- LÓGICA MATEMÁTICA CORREGIDA PARA EL JUEGO ---
     let scoreJuego = 0;
-    let correctAnswerString = "";
+    let correctAnswerIndex = -1; // Guardamos el índice, no el texto
 
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -363,133 +364,133 @@
         return a;
     }
 
-    // Función para simplificar fracciones y devolver un string de LaTeX
-    function simplifyFractionToLatex(num, den) {
-        if (den === 0) return "Undefined";
-        if (num === 0) return "0";
-        
+    // Función para simplificar internamente una fracción
+    function simplify(num, den) {
+        if (den === 0) return [0, 0]; // Error
         let common = gcd(num, den);
         num = num / common;
         den = den / common;
-        
-        // Manejo de signos
-        if (den < 0) {
-            num = -num;
-            den = -den;
-        }
-        
+        if (den < 0) { num = -num; den = -den; } // Denominador siempre positivo
+        return [num, den];
+    }
+
+    // Función para convertir num/den simplificados a string LaTeX para mostrar
+    function fractionToTex(num, den) {
         if (den === 1) return `${num}`;
         return `\\frac{${num}}{${den}}`;
     }
 
     function generateFractionExercise() {
+        // Reset interfaz
         document.getElementById('feedback-juego').innerHTML = "";
         document.getElementById('next-btn-juego').style.display = "none";
         document.getElementById('options-container').style.pointerEvents = "auto";
         
-        let type = getRandomInt(1, 4); // 1: Suma/Resta, 2: Mult, 3: Div, 4: Potencia básica
+        let type = getRandomInt(1, 4); 
         let texString = "";
-        let correctNum, correctDen;
+        let cNum, cDen; // Resultado correcto sin simplificar
 
-        if (type === 1) { // Suma/Resta con mismo denominador (para que sea rápido)
+        if (type === 1) { // Suma/Resta con mismo denominador
             let den = getRandomInt(3, 9);
             let num1 = getRandomInt(1, 8);
             let num2 = getRandomInt(1, 8);
+            if(num1 === num2) num2++; // Evitar resultado cero fácil
             let sign = Math.random() > 0.5 ? "+" : "-";
             
             texString = `\\( \\frac{${num1}}{${den}} ${sign} \\frac{${num2}}{${den}} \\)`;
-            correctNum = sign === "+" ? num1 + num2 : num1 - num2;
-            correctDen = den;
+            cNum = sign === "+" ? num1 + num2 : num1 - num2;
+            cDen = den;
         } 
-        else if (type === 2) { // Multiplicación simple
-            let num1 = getRandomInt(1, 5); let den1 = getRandomInt(2, 5);
-            let num2 = getRandomInt(1, 5); let den2 = getRandomInt(2, 5);
-            
-            texString = `\\( \\frac{${num1}}{${den1}} \\cdot \\frac{${num2}}{${den2}} \\)`;
-            correctNum = num1 * num2;
-            correctDen = den1 * den2;
+        else if (type === 2) { // Multiplicación
+            let n1 = getRandomInt(1, 5); let d1 = getRandomInt(2, 5);
+            let n2 = getRandomInt(1, 5); let d2 = getRandomInt(2, 5);
+            texString = `\\( \\frac{${n1}}{${d1}} \\cdot \\frac{${n2}}{${d2}} \\)`;
+            cNum = n1 * n2;
+            cDen = d1 * d2;
         }
-        else if (type === 3) { // División simple
-            let num1 = getRandomInt(1, 5); let den1 = getRandomInt(2, 5);
-            let num2 = getRandomInt(1, 5); let den2 = getRandomInt(2, 5);
-            
-            texString = `\\( \\frac{${num1}}{${den1}} \\div \\frac{${num2}}{${den2}} \\)`;
-            correctNum = num1 * den2;
-            correctDen = den1 * num2;
+        else if (type === 3) { // División
+            let n1 = getRandomInt(1, 5); let d1 = getRandomInt(2, 5);
+            let n2 = getRandomInt(1, 5); let d2 = getRandomInt(2, 5);
+            texString = `\\( \\frac{${n1}}{${d1}} \\div \\frac{${n2}}{${d2}} \\)`;
+            cNum = n1 * d2;
+            cDen = d1 * n2;
         }
-        else { // Potencia 2 o 3, o exponente -1
-            let num = getRandomInt(1, 4);
-            let den = getRandomInt(2, 5);
-            let exp = getRandomInt(-1, 2);
-            if (exp === 0) exp = 2; // Evitamos a la cero porque siempre es 1
+        else { // Potencia 2 o exponente -1
+            let n = getRandomInt(1, 4);
+            let d = getRandomInt(2, 5);
+            let exp = Math.random() > 0.5 ? 2 : -1;
 
-            texString = `\\( \\left(\\frac{${num}}{${den}}\\right)^{${exp}} \\)`;
-            
-            if (exp === -1) {
-                correctNum = den; correctDen = num;
-            } else {
-                correctNum = Math.pow(num, exp);
-                correctDen = Math.pow(den, exp);
-            }
+            texString = `\\( \\left(\\frac{${n}}{${d}}\\right)^{${exp}} \\)`;
+            if (exp === -1) { cNum = d; cDen = n; } 
+            else { cNum = n*n; cDen = d*d; }
         }
 
-        // Simplificamos la respuesta correcta
-        correctAnswerString = `\\( ${simplifyFractionToLatex(correctNum, correctDen)} \\)`;
+        // Obtener respuesta correcta simplificada FINAL
+        let [finalNum, finalDen] = simplify(cNum, cDen);
 
-        // Generamos 3 opciones falsas pero creíbles
-        let options = [correctAnswerString];
-        while (options.length < 4) {
-            let fakeNum = correctNum + getRandomInt(-3, 3);
-            let fakeDen = correctDen + getRandomInt(-2, 4);
-            if (fakeDen <= 0) fakeDen = 2; // Evitamos den = 0 o negativos complicados
+        // Generar opciones. Usamos objetos {n: numer, d: denom} para comparar fácil
+        let optionsData = [{n: finalNum, d: finalDen}];
+
+        // Generar 3 trampas simplificadas únicas
+        while (optionsData.length < 4) {
+            let fNum = finalNum + getRandomInt(-3, 3);
+            let fDen = finalDen + getRandomInt(-2, 3);
             
-            let fakeString = `\\( ${simplifyFractionToLatex(fakeNum, fakeDen)} \\)`;
-            if (!options.includes(fakeString)) {
-                options.push(fakeString);
+            // Validaciones: den no cero, n/d no negativos a la vez, no repetir correcta
+            if (fDen <= 0 || fDen > 20 || fNum === 0) continue; 
+            
+            let [sFNum, sFDen] = simplify(fNum, fDen);
+            
+            // Verificar si esta opción simplificada ya existe en el array
+            let exists = optionsData.some(opt => opt.n === sFNum && opt.d === sFDen);
+            if (!exists) {
+                optionsData.push({n: sFNum, d: sFDen});
             }
         }
 
         // Mezclar opciones
-        options.sort(() => Math.random() - 0.5);
+        optionsData.sort(() => Math.random() - 0.5);
 
-        // Renderizar
+        // Encontrar NUEVO índice de la correcta tras mezclar
+        correctAnswerIndex = optionsData.findIndex(opt => opt.n === finalNum && opt.d === finalDen);
+
+        // Renderizar pregunta
         document.getElementById('math-display').innerHTML = texString;
         
+        // Renderizar botones. Pasamos el ÍNDICE 'i' a la función checkAnswer
         let optionsHtml = "";
-        options.forEach(opt => {
-            // Reemplazar las comillas simples de MathJax dentro del onClick puede dar problemas, 
-            // pasamos la string encodeada con base64 o comparamos el innerHTML.
-            // Para simplificar, guardamos el raw value en un atributo data.
-            let rawOpt = opt.replace(/\\/g, '\\\\').replace(/"/g, '&quot;');
-            optionsHtml += `<button class="option-btn" onclick="checkAnswer(this, '${rawOpt}')">${opt}</button>`;
-        });
+        for (let i = 0; i < optionsData.length; i++) {
+            let displayTex = `\\( ${fractionToTex(optionsData[i].n, optionsData[i].d)} \\)`;
+            optionsHtml += `<button class="option-btn" onclick="checkAnswer(this, ${i})">${displayTex}</button>`;
+        }
         document.getElementById('options-container').innerHTML = optionsHtml;
 
+        // Avisar a MathJax
         MathJax.typesetPromise();
     }
 
-    function checkAnswer(btnElement, selectedAnswer) {
+    function checkAnswer(btnElement, selectedIndex) {
+        // Desactivar clics
         document.getElementById('options-container').style.pointerEvents = "none";
         const feedback = document.getElementById('feedback-juego');
 
-        if (selectedAnswer === correctAnswerString.replace(/\\/g, '\\\\')) {
-            btnElement.style.backgroundColor = "#10B981";
+        // COMPARACIÓN DE ÍNDICES (Lógica infalible)
+        if (selectedIndex === correctAnswerIndex) {
+            btnElement.style.backgroundColor = "#10B981"; // Verde
             btnElement.style.color = "white";
             scoreJuego += 1;
-            feedback.innerHTML = "¡Excelente! Fracción correcta. 🎉";
+            feedback.innerHTML = "¡Excelente! Fracción correcta y simplificada. 🎉";
             feedback.className = "feedback correct";
         } else {
-            btnElement.style.backgroundColor = "#DC2626";
+            btnElement.style.backgroundColor = "#DC2626"; // Rojo
             btnElement.style.color = "white";
-            scoreJuego = 0; // Se reinicia la racha
-            // Para mostrar la correcta sin problemas de parseo:
-            feedback.innerHTML = `Ups. La respuesta correcta era la que equivalía a ese cálculo. ¡Sigue practicando!`;
+            scoreJuego = 0; // Reiniciar racha
+            feedback.innerHTML = `Ups. Esa no era. ¡Revisa los cálculos y recuerda simplificar!`;
             feedback.className = "feedback incorrect";
             
-            // Pintamos la correcta de verde para que la vea
-            document.querySelectorAll('.option-btn').forEach(btn => {
-                // Truco sucio pero efectivo: repintar Mathjax
-            });
+            // Resaltar la correcta en verde para que aprendan
+            let buttons = document.querySelectorAll('.option-btn');
+            buttons[correctAnswerIndex].style.border = "3px solid #10B981";
         }
 
         document.getElementById('score-juego').innerText = scoreJuego;
@@ -501,5 +502,7 @@
     };
 </script>
 
+</body>
+</html>
 </body>
 </html>
