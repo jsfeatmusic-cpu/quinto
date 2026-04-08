@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Física 1° Año: Exploración del Universo</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0F172A;
+            --bg-card: #1E293B;
+            --primary: #E11D48; /* Rojo carmesí para Física */
+            --accent: #FDE047; /* Amarillo/Dorado para resaltar */
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --danger: #EF4444;
+            --success: #10B981;
+            --theory-border: #334155;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            min-height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+        h1, h2, h3 { color: var(--accent); text-align: center; }
+        h4 { color: var(--primary); margin-bottom: 0.5rem; }
+        
+        /* Botón Volver */
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1.5rem;
+        }
+        .btn-volver:hover { background-color: var(--primary); color: var(--text-main); }
+
+        /* Barra del Jugador */
+        .player-bar {
+            background: linear-gradient(135deg, var(--bg-card), #0f172a);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .player-input {
+            background-color: #000;
+            border: 1px solid var(--primary);
+            color: var(--accent);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1rem;
+            outline: none;
+        }
+        .player-input:focus { border-color: var(--success); }
+
+        /* Navegación de Pestañas */
+        .mission-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 8px;
+            margin-bottom: 2rem;
+        }
+        .tab-btn {
+            background-color: var(--bg-card);
+            border: 2px solid transparent;
+            padding: 0.8rem 0.5rem;
+            color: var(--text-muted);
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        .tab-btn:hover { border-color: var(--primary); color: var(--text-main); }
+        .tab-btn.active { background-color: var(--primary); color: var(--text-main); border-color: var(--primary); }
+        
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tarjetas de Contenido y Teoría */
+        .card {
+            background-color: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--theory-border);
+        }
+        
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .concept-box {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+        .concept-box h4 { margin-top: 0; color: var(--accent); font-size: 1.1rem;}
+
+        .formula-box {
+            background-color: #000;
+            border: 1px dashed var(--primary);
+            padding: 1rem;
+            text-align: center;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .highlight-text {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="btn-volver">🔙 Salir al Menú Principal</a>
+
+    <h1>Física 1° Año</h1>
+
+    <div class="player-bar">
+        <div>
+            <label for="playerName" style="color: var(--text-muted); font-weight: bold; margin-right: 10px;">ID Investigador:</label>
+            <input type="text" id="playerName" class="player-input" placeholder="Tu apodo científico...">
+        </div>
+        <div style="color: var(--primary); font-weight: bold;">Rango: <span style="color: var(--text-main);">Físico Teórico</span></div>
+    </div>
+
+    <div class="mission-tabs">
+        <button class="tab-btn active" onclick="openTab('intro', this)">⚛️ Nociones Básicas</button>
+        <button class="tab-btn" onclick="openTab('energia', this)">🔥 Energía y Calor</button>
+        <button class="tab-btn" onclick="openTab('fuerzas', this)">🚀 Fuerzas y Mov.</button>
+        <button class="tab-btn" onclick="openTab('magnetismo', this)">🧲 Magnetismo</button>
+        <button class="tab-btn" onclick="openTab('universo', this)">🌌 El Universo</button>
+    </div>
+
+    <!-- PESTAÑA: NOCIONES BÁSICAS -->
+    <div id="intro" class="tab-content active">
+        <h2>¿Qué es la Física?</h2>
+        <div class="card">
+            <p>La <strong>Física</strong> es la ciencia natural que estudia los componentes fundamentales del Universo. Analiza la energía, la materia, el espacio, el tiempo y las interacciones fundamentales que ocurren entre ellos.</p>
+            <p>A diferencia de la química, que estudia cómo cambian las sustancias por dentro, la física estudia cómo se mueven, cómo se calientan, cómo se atraen o se repelen <strong>sin dejar de ser lo que son</strong>.</p>
+        </div>
+
+        <div class="card">
+            <h3>Magnitudes y Unidades</h3>
+            <p>En física, no basta con decir "hace mucho calor" o "el auto va rápido". Necesitamos medir. Una <strong>magnitud</strong> es todo aquello que se puede medir (ej: longitud, tiempo, masa).</p>
+            <p>El Sistema Internacional (SI) establece las unidades oficiales:</p>
+            <ul>
+                <li><strong>Longitud:</strong> Metro (m)</li>
+                <li><strong>Masa:</strong> Kilogramo (kg)</li>
+                <li><strong>Tiempo:</strong> Segundo (s)</li>
+                <li><strong>Temperatura:</strong> Kelvin (K)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- PESTAÑA: TRANSFORMACIONES ENERGÉTICAS -->
+    <div id="energia" class="tab-content">
+        <h2>Eje: Transformaciones Energéticas</h2>
+        
+        <div class="card">
+            <h3>La Energía y sus principios</h3>
+            <p>La <strong>energía</strong> es la capacidad que tiene un cuerpo para realizar un trabajo o producir un cambio. Se rige por un principio fundamental:</p>
+            <blockquote style="border-left: 4px solid var(--accent); padding-left: 1rem; font-style: italic;">
+                "La energía no se crea ni se destruye, solo se transforma o se transfiere."
+            </blockquote>
+            
+            <div class="grid-cards">
+                <div class="concept-box">
+                    <h4>Fuentes Renovables</h4>
+                    <p>Son inagotables a escala humana o se regeneran rápidamente (Ej: Solar, Eólica, Hidráulica). Tienen menor impacto ambiental.</p>
+                </div>
+                <div class="concept-box">
+                    <h4>Fuentes No Renovables</h4>
+                    <p>Existen en cantidades limitadas y tardan millones de años en formarse (Ej: Petróleo, Carbón, Gas Natural). Generan mayor contaminación.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Calor vs. Temperatura</h3>
+            <p>Aunque los usamos como sinónimos en la vida diaria, en física son cosas muy distintas:</p>
+            <ul>
+                <li><strong>Temperatura:</strong> Es la medida de la energía cinética (movimiento) promedio de las partículas de un cuerpo. Se mide con un termómetro.</li>
+                <li><strong>Calor:</strong> Es la <span class="highlight-text">energía en tránsito</span> que fluye naturalmente de un cuerpo de mayor temperatura a uno de menor temperatura, hasta alcanzar el <strong>equilibrio térmico</strong>.</li>
+            </ul>
+
+            <div class="formula-box">
+                Unidades de Energía y Calor: <strong>Joule (J)</strong> y <strong>Caloría (cal)</strong>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Escalas Termométricas</h3>
+            <p>Existen diferentes escalas para medir la temperatura. Las más usadas son Celsius, Fahrenheit y Kelvin.</p>
+            <div class="formula-box">
+                De Celsius a Kelvin:<br>
+                $$ K = ^\circ C + 273.15 $$
+            </div>
+            <p><strong>Conductores y Aislantes:</strong> Los materiales conductores (como los metales) permiten que el calor fluya fácilmente. Los aislantes (como la madera o el telgopor) dificultan ese paso.</p>
+        </div>
+    </div>
+
+    <!-- PESTAÑA: ACCIONES MECÁNICAS -->
+    <div id="fuerzas" class="tab-content">
+        <h2>Eje: Acciones Mecánicas entre Cuerpos</h2>
+        
+        <div class="card">
+            <h3>¿Qué es una Fuerza?</h3>
+            <p>Una <strong>fuerza</strong> es toda acción capaz de alterar el estado de movimiento o de reposo de un cuerpo, o de producir en él una deformación. Se mide en <strong>Newtons (N)</strong>.</p>
+            <p>Las fuerzas son <strong>vectores</strong>. Esto significa que para definirlas no basta con un número, necesitamos:</p>
+            <ul>
+                <li><strong>Módulo:</strong> La intensidad (el número).</li>
+                <li><strong>Dirección:</strong> La línea sobre la que actúa (ej: horizontal, vertical).</li>
+                <li><strong>Sentido:</strong> Hacia dónde apunta la flecha (ej: izquierda, derecha).</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h3>Leyes de Newton y Rozamiento</h3>
+            <p>Sir Isaac Newton definió cómo se mueven los cuerpos:</p>
+            <ol>
+                <li><strong>Inercia:</strong> Todo cuerpo mantiene su estado de reposo o movimiento a menos que una fuerza actúe sobre él.</li>
+                <li><strong>Dinámica:</strong> La aceleración es proporcional a la fuerza e inversamente proporcional a la masa.
+                    <div class="formula-box">$$ F = m \cdot a $$</div>
+                </li>
+                <li><strong>Acción y Reacción:</strong> A toda fuerza de acción le corresponde una de reacción de igual magnitud pero en sentido contrario.</li>
+            </ol>
+            <p><strong>Fuerza de Rozamiento:</strong> Es una fuerza que siempre se opone al movimiento, generada por el contacto entre dos superficies.</p>
+        </div>
+
+        <div class="card">
+            <h3>Presión y Fluidos</h3>
+            <p>La <strong>presión</strong> es la relación entre la fuerza aplicada y el área sobre la cual actúa. Se mide en Pascales (Pa).</p>
+            <div class="formula-box">$$ P = \frac{F}{A} $$</div>
+            
+            <div class="grid-cards">
+                <div class="concept-box">
+                    <h4>Presión en Líquidos</h4>
+                    <p>A mayor profundidad en un fluido, mayor es la presión, debido al peso del líquido que está por encima.</p>
+                </div>
+                <div class="concept-box">
+                    <h4>Principio de Arquímedes</h4>
+                    <p>Todo cuerpo sumergido recibe un <strong>Empuje</strong> hacia arriba igual al peso del volumen del fluido que desaloja (Flotabilidad).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PESTAÑA: PROPIEDADES MAGNÉTICAS -->
+    <div id="magnetismo" class="tab-content">
+        <h2>Eje: Propiedades Magnéticas y Eléctricas</h2>
+        
+        <div class="card">
+            <h3>El Magnetismo</h3>
+            <p>Es el fenómeno físico por el cual ciertos materiales ejercen fuerzas de atracción o repulsión sobre otros. Los <strong>imanes</strong> tienen dos polos: Norte y Sur.</p>
+            <ul>
+                <li>Polos iguales se <strong>repelen</strong>.</li>
+                <li>Polos opuestos se <strong>atraen</strong>.</li>
+            </ul>
+            <p><strong>Líneas de campo:</strong> Son líneas imaginarias que representan la dirección del campo magnético. Salen del polo Norte y entran por el polo Sur del imán.</p>
+        </div>
+
+        <div class="card">
+            <h3>El Campo Magnético Terrestre</h3>
+            <p>¡La Tierra es un imán gigante! Su núcleo de hierro líquido genera un campo magnético que nos protege del viento solar.</p>
+            <p><strong>Las Brújulas y el GPS:</strong> La aguja de una brújula se alinea con este campo. Ojo: El Polo Norte Magnético no está exactamente en el mismo lugar que el Polo Norte Geográfico. Esa diferencia se llama <span class="highlight-text">Declinación Magnética</span>.</p>
+        </div>
+
+        <div class="card">
+            <h3>Electroimanes</h3>
+            <p>Se descubrió que la electricidad y el magnetismo están unidos. Si enrollamos un cable de cobre alrededor de un clavo de hierro y le pasamos corriente eléctrica, ¡se convierte en un imán! A esto se le llama <strong>magnetismo inducido</strong> o electroimán.</p>
+        </div>
+    </div>
+
+    <!-- PESTAÑA: NUESTRO UNIVERSO -->
+    <div id="universo" class="tab-content">
+        <h2>Eje: Nuestro Universo</h2>
+        
+        <div class="card">
+            <h3>Cosmovisiones a través de la Historia</h3>
+            <p>A lo largo de los siglos, la humanidad cambió su forma de entender nuestro lugar en el cosmos:</p>
+            <div class="grid-cards">
+                <div class="concept-box">
+                    <h4>Geocentrismo</h4>
+                    <p>Teoría antigua (Ptolomeo) que afirmaba que la <strong>Tierra estaba inmóvil en el centro del universo</strong> y el Sol, la Luna y las estrellas giraban a su alrededor.</p>
+                </div>
+                <div class="concept-box">
+                    <h4>Heliocentrismo</h4>
+                    <p>Revolución científica (Copérnico, Galileo) que demostró que <strong>el Sol es el centro del sistema planetario</strong> y la Tierra es solo un planeta más que órbita a su alrededor.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Cuerpos Celestes</h3>
+            <p>El universo está compuesto por múltiples elementos:</p>
+            <ul>
+                <li><strong>Estrellas:</strong> Esferas de gas caliente (plasma) que emiten luz propia por fusión nuclear (Ej: El Sol).</li>
+                <li><strong>Planetas:</strong> Cuerpos que orbitan una estrella, tienen masa suficiente para ser esféricos y han "limpiado" su órbita de otros objetos.</li>
+                <li><strong>Satélites Naturales:</strong> Cuerpos celestes que orbitan alrededor de los planetas (Ej: La Luna).</li>
+                <li><strong>Asteroides y Cometas:</strong> Restos rocosos o de hielo que vagan por el sistema solar.</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- NAVEGACIÓN DE PESTAÑAS ---
+    function openTab(tabName, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        btnElement.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
