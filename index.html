@@ -192,6 +192,245 @@
     <footer>
         <p>Material de uso exclusivo para los alumnos del CPES N°30. ¡Muchos éxitos en el estudio!</p>
     </footer>
+<!-- ========================================== -->
+<!-- INICIO DEL CHATBOT PROFESOR GONZALO        -->
+<!-- ========================================== -->
+<style>
+    /* Estilos del Chatbot */
+    .chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
+    .chat-btn {
+        background-color: var(--primary-color, #2563EB);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .chat-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .chat-window {
+        display: none;
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 320px;
+        height: 450px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #E5E7EB;
+    }
+
+    .chat-header {
+        background: linear-gradient(135deg, var(--primary-color, #2563EB), var(--secondary-color, #1E40AF));
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .close-chat {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    .chat-body {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        background-color: #F9FAFB;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .message {
+        max-width: 80%;
+        padding: 10px 14px;
+        border-radius: 15px;
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    .bot-msg {
+        background-color: #E0E7FF;
+        color: #1E40AF;
+        align-self: flex-start;
+        border-bottom-left-radius: 2px;
+    }
+
+    .user-msg {
+        background-color: var(--primary-color, #2563EB);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 2px;
+    }
+
+    .chat-input-area {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #E5E7EB;
+        background-color: white;
+    }
+
+    .chat-input-area input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #D1D5DB;
+        border-radius: 20px;
+        outline: none;
+        font-size: 0.95rem;
+    }
+
+    .chat-input-area button {
+        background-color: var(--primary-color, #2563EB);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        margin-left: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    /* Enlaces dentro del chat */
+    .bot-msg a {
+        color: #2563EB;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="chat-widget">
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            👨‍🏫 Prof. Gonzalo Virtual
+            <button class="close-chat" onclick="toggleChat()">✖</button>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <!-- Mensaje de bienvenida inicial -->
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="Escribe tu duda aquí..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+    <button class="chat-btn" onclick="toggleChat()">💬</button>
+</div>
+
+<script>
+    const chatWindow = document.getElementById('chat-window');
+    const chatBody = document.getElementById('chat-body');
+    const userInput = document.getElementById('user-input');
+
+    let chatOpen = false;
+    let greetingSent = false;
+
+    function toggleChat() {
+        chatOpen = !chatOpen;
+        chatWindow.style.display = chatOpen ? 'flex' : 'none';
+        
+        if (chatOpen && !greetingSent) {
+            setTimeout(() => {
+                addMessage("¡Hola! Soy el asistente virtual del Profesor Gonzalo. 🤖 Puedo guiarte por el portal. ¿Buscas material de Matemática, Física o Economía?", 'bot');
+                greetingSent = true;
+            }, 300);
+        }
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+
+    function sendMessage() {
+        const text = userInput.value.trim();
+        if (text === '') return;
+
+        // Agregar mensaje del usuario
+        addMessage(text, 'user');
+        userInput.value = '';
+
+        // Procesar respuesta del bot
+        setTimeout(() => {
+            getBotResponse(text.toLowerCase());
+        }, 500);
+    }
+
+    function addMessage(text, sender) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message', sender === 'bot' ? 'bot-msg' : 'user-msg');
+        msgDiv.innerHTML = text; // Permite inyectar HTML (enlaces)
+        chatBody.appendChild(msgDiv);
+        chatBody.scrollTop = chatBody.scrollHeight; // Auto-scroll hacia abajo
+    }
+
+    // --- LÓGICA DEL "CEREBRO" DEL BOT ---
+    function getBotResponse(input) {
+        let response = "";
+
+        // Reglas de palabras clave
+        if (input.includes('hola') || input.includes('buen dia') || input.includes('buenas')) {
+            response = "¡Hola! ¿En qué te puedo ayudar hoy? Escribe tu materia o año (ej: 'primero', 'física', 'cuadráticas').";
+        } 
+        else if (input.includes('primero') || input.includes('1') || input.includes('naturales') || input.includes('enteros')) {
+            response = "Para 1° Año tenemos el Sistema de Misiones de Matemática. Puedes entrar haciendo clic aquí: <a href='primero.html'>Ir a Matemática 1°</a>.";
+        }
+        else if (input.includes('fisica') || input.includes('física')) {
+            response = "¡Claro! La exploración del universo y las fuerzas te esperan en la sección de Física de 1° Año. <a href='fisica.html'>Entrar a Física</a>.";
+        }
+        else if (input.includes('tercero') || input.includes('3') || input.includes('racionales') || input.includes('fraccion')) {
+            response = "El material sobre Números Racionales para 3° Año está listo. <a href='tercero.html'>Ir a Matemática 3°</a>.";
+        }
+        else if (input.includes('cuarto') || input.includes('4') || input.includes('reales') || input.includes('propiedades')) {
+            response = "Para 4° Año tenemos entrenamiento con Números Reales y Cálculos Combinados. <a href='cuarto.html'>Ir a Matemática 4°</a>.";
+        }
+        else if (input.includes('quinto') || input.includes('5') || input.includes('cuadratica') || input.includes('parabola')) {
+            response = "Las Funciones Cuadráticas son el tema de 5° Año. Tienes un minijuego muy bueno esperándote. <a href='quinto.html'>Ir a Matemática 5°</a>.";
+        }
+        else if (input.includes('economia') || input.includes('economía') || input.includes('escasez') || input.includes('plata')) {
+            response = "La sección de Economía te enseñará sobre la ciencia de las decisiones y el costo de oportunidad. <a href='economia.html'>Ir a Economía</a>.";
+        }
+        else if (input.includes('profesor') || input.includes('gonzalo') || input.includes('schroder')) {
+            response = "El Profesor Gonzalo es quien armó todo este portal. Si tienes dudas muy específicas que yo no pueda responder, ¡recuerda anotarlas para la clase presencial!";
+        }
+        else if (input.includes('juego') || input.includes('minijuego')) {
+            response = "¡Todas nuestras secciones tienen minijuegos! Ve al menú principal y elige tu curso, luego busca el ícono del joystick 🎮.";
+        }
+        else {
+            // Respuesta por defecto si no entiende
+            response = "Mmm, no estoy seguro de entender eso. 🤔 Intenta escribir palabras clave como: <strong>primero, quinto, física, economía, o cuadráticas</strong>. Si es una duda de un ejercicio, ¡guárdala para charlarla en el aula!";
+        }
+
+        addMessage(response, 'bot');
+    }
+</script>
+<!-- ========================================== -->
+<!-- FIN DEL CHATBOT                            -->
+<!-- ========================================== -->
 </body>
 </html>
