@@ -6,10 +6,11 @@
     <title>Kiosco Matemático - CPES N°30</title>
     <style>
         :root {
-            --bg-shop: #E0F2FE; /* Azul clarito de pared */
-            --wood-counter: #8B4513; /* Madera del mostrador */
+            --bg-shop: #E0F2FE; 
+            --wood-counter: #8B4513; 
             --wood-light: #A0522D;
-            --primary: #2563EB;
+            --primary: #06B6D4; /* Cyan para 1er año */
+            --primary-dark: #0E7490;
             --accent: #F59E0B;
             --danger: #EF4444;
             --success: #10B981;
@@ -38,9 +39,9 @@
             position: relative;
         }
 
-        /* Botón Volver */
+        /* Header */
         .header-bar {
-            background-color: var(--primary);
+            background-color: var(--primary-dark);
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
@@ -56,18 +57,17 @@
             border-radius: 20px;
             transition: all 0.2s;
         }
-        .btn-volver:hover { background-color: white; color: var(--primary); }
-
+        .btn-volver:hover { background-color: white; color: var(--primary-dark); }
         .score-board { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
+        .day-display { font-size: 1.2rem; font-weight: bold; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 8px;}
 
-        /* Escenario del Kiosco */
+        /* Escenario */
         .shop-stage {
             height: 400px;
             position: relative;
             background: linear-gradient(to bottom, #E0F2FE 0%, #BAE6FD 100%);
         }
 
-        /* Mostrador */
         .counter {
             position: absolute;
             bottom: 0;
@@ -75,18 +75,12 @@
             height: 120px;
             background: linear-gradient(to bottom, var(--wood-light), var(--wood-counter));
             border-top: 10px solid #5C2E0B;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            padding: 0 20px;
-            box-sizing: border-box;
             z-index: 10;
         }
 
-        /* Cliente y Animación */
         .character-box {
             position: absolute;
-            bottom: 100px; /* Parado detrás del mostrador */
+            bottom: 100px;
             left: 50px;
             width: 180px;
             height: 250px;
@@ -94,14 +88,13 @@
             justify-content: center;
             align-items: flex-end;
             z-index: 5;
-            transform: translateX(-300px); /* Oculto a la izquierda al inicio */
+            transform: translateX(-300px);
             transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .character-box.active { transform: translateX(0); }
         .char-img { max-height: 100%; max-width: 100%; object-fit: contain; }
-        .char-emoji { font-size: 8rem; margin-bottom: -20px; }
+        .char-emoji { font-size: 8rem; margin-bottom: -20px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
 
-        /* Productos sobre el mostrador */
         .product-box {
             position: absolute;
             bottom: 120px;
@@ -120,16 +113,15 @@
         .prod-img { max-height: 100%; max-width: 100%; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
         .prod-emoji { font-size: 5rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
 
-        /* Globo de Texto (Diálogo) */
         .speech-bubble {
             position: absolute;
-            top: 30px;
+            top: 20px;
             left: 200px;
             background-color: white;
             border: 3px solid var(--text-dark);
             border-radius: 20px;
             padding: 15px 20px;
-            max-width: 350px;
+            max-width: 400px;
             font-size: 1.1rem;
             font-weight: bold;
             color: var(--text-dark);
@@ -140,27 +132,16 @@
             z-index: 20;
         }
         .speech-bubble::before {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 30px;
-            border-width: 15px 15px 0 0;
-            border-style: solid;
-            border-color: white transparent transparent transparent;
+            content: ''; position: absolute; bottom: -15px; left: 30px;
+            border-width: 15px 15px 0 0; border-style: solid; border-color: white transparent transparent transparent;
         }
         .speech-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -19px;
-            left: 28px;
-            border-width: 18px 18px 0 0;
-            border-style: solid;
-            border-color: var(--text-dark) transparent transparent transparent;
-            z-index: -1;
+            content: ''; position: absolute; bottom: -19px; left: 28px;
+            border-width: 18px 18px 0 0; border-style: solid; border-color: var(--text-dark) transparent transparent transparent; z-index: -1;
         }
         .speech-bubble.active { opacity: 1; transform: scale(1); }
 
-        /* Caja Registradora (Panel de Control) */
+        /* Panel Registradora */
         .register-panel {
             background-color: #334155;
             padding: 20px;
@@ -169,7 +150,7 @@
             gap: 15px;
             color: white;
         }
-        .register-title { margin: 0; color: var(--accent); text-align: center; font-size: 1.5rem; }
+        .register-title { margin: 0; color: var(--primary); text-align: center; font-size: 1.5rem; }
         
         .input-group {
             display: flex;
@@ -182,67 +163,39 @@
         }
         .input-group label { font-size: 1.2rem; font-weight: bold; width: 60%; }
         .input-group input {
-            width: 35%;
-            padding: 10px;
-            font-size: 1.2rem;
-            border-radius: 6px;
-            border: 2px solid var(--primary);
-            text-align: right;
-            background-color: #0F172A;
-            color: var(--success);
-            font-weight: bold;
+            width: 35%; padding: 10px; font-size: 1.2rem; border-radius: 6px;
+            border: 2px solid var(--primary); text-align: right;
+            background-color: #0F172A; color: var(--success); font-weight: bold;
         }
         .input-group input:focus { outline: none; border-color: var(--accent); }
 
         .btn-vender {
-            background-color: var(--success);
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 0 #047857;
+            background-color: var(--success); color: white; border: none; padding: 15px;
+            font-size: 1.5rem; font-weight: bold; border-radius: 8px; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 4px 0 #047857;
         }
         .btn-vender:hover { transform: translateY(2px); box-shadow: 0 2px 0 #047857; }
         .btn-vender:active { transform: translateY(4px); box-shadow: 0 0 0 #047857; }
 
-        /* Feedback Flotante */
-        .feedback-msg {
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            min-height: 30px;
-            margin-top: 10px;
-        }
+        .feedback-msg { text-align: center; font-size: 1.2rem; font-weight: bold; min-height: 30px; margin-top: 5px; }
         .correct { color: var(--success); }
         .incorrect { color: var(--danger); animation: shake 0.4s; }
 
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            50% { transform: translateX(10px); }
-            75% { transform: translateX(-10px); }
-            100% { transform: translateX(0); }
-        }
+        @keyframes shake { 0%, 100% {transform: translateX(0);} 25%, 75% {transform: translateX(-10px);} 50% {transform: translateX(10px);} }
 
-        /* Pantalla Final */
-        #end-screen {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(15, 23, 42, 0.95);
-            z-index: 50;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
+        /* Pantallas de Transición (Días y Fin) */
+        .overlay-screen {
+            display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.95); z-index: 50;
+            flex-direction: column; justify-content: center; align-items: center;
+            color: white; text-align: center; padding: 20px; box-sizing: border-box;
         }
+        .btn-overlay {
+            background-color: var(--primary); color: white; border: none; padding: 15px 30px;
+            font-size: 1.3rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px;
+        }
+        .btn-overlay:hover { background-color: var(--primary-dark); }
+        .btn-overlay.success { background-color: var(--success); }
     </style>
 </head>
 <body>
@@ -250,114 +203,191 @@
 <div class="game-container">
     
     <div class="header-bar">
-        <a href="index.html" class="btn-volver">🔙 Salir del Turno</a>
+        <a href="index.html" class="btn-volver">🔙 Salir al Menú</a>
+        <div class="day-display" id="day-display">Lunes</div>
         <div>Caja Fuerte: <span class="score-board">$<span id="score">0</span></span></div>
     </div>
 
+    <div id="day-screen" class="overlay-screen">
+        <h1 id="day-title" style="color: var(--accent); font-size: 3.5rem; margin-bottom: 10px;">Lunes</h1>
+        <h2 id="day-subtitle" style="font-weight: normal; margin-top: 0;">Un día tranquilo para empezar.</h2>
+        <button class="btn-overlay" onclick="iniciarDia()">A r r a n c a r  T u r n o  ▶</button>
+    </div>
+
     <div class="shop-stage">
-        
         <div class="character-box" id="character-box">
             <img src="" alt="Cliente" class="char-img" id="char-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
             <div class="char-emoji" id="char-emoji" style="display: none;">🧑</div>
         </div>
-
-        <div class="speech-bubble" id="speech-bubble">
-            </div>
-
+        <div class="speech-bubble" id="speech-bubble"></div>
         <div class="product-box" id="product-box">
             <img src="" alt="Producto" class="prod-img" id="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
             <div class="prod-emoji" id="prod-emoji" style="display: none;">📦</div>
         </div>
-
         <div class="counter"></div>
     </div>
 
     <div class="register-panel">
         <h3 class="register-title">🛒 Caja Registradora</h3>
-        
         <div class="input-group">
             <label id="label-q1">Costo TOTAL de la compra: $</label>
             <input type="number" id="input-q1" placeholder="0">
         </div>
-        
         <div class="input-group">
             <label id="label-q2">VUELTO a entregar: $</label>
             <input type="number" id="input-q2" placeholder="0">
         </div>
-
         <button class="btn-vender" onclick="verificarVenta()">COBRAR Y ENTREGAR VUELTO 💵</button>
         <div id="feedback" class="feedback-msg"></div>
     </div>
 
-    <div id="end-screen">
-        <h1 style="color: var(--accent); font-size: 3rem;">¡Turno Terminado! 🏪</h1>
+    <div id="end-screen" class="overlay-screen" style="display: none;">
+        <h1 style="color: var(--success); font-size: 3rem;">¡Semana Terminada! 🏆</h1>
         <h2 id="final-msg"></h2>
-        <p style="font-size: 1.2rem; max-width: 500px;">Gran trabajo administrando el negocio. Has practicado sumas, restas, multiplicaciones y divisiones como un verdadero profesional.</p>
-        <button class="btn-vender" style="margin-top: 20px; width: auto; padding: 15px 30px;" onclick="location.reload()">Jugar Otro Turno 🔄</button>
+        <p style="font-size: 1.2rem; max-width: 500px;">¡Eres un experto en el mostrador! Calculaste sumas, restas, divisiones y multiplicaciones a una velocidad increíble. Tu negocio es un éxito rotundo.</p>
+        <button class="btn-overlay success" onclick="location.reload()">Jugar Otra Semana 🔄</button>
     </div>
 
 </div>
 
 <script>
-    // --- BASE DE DATOS DE CLIENTES Y NIVELES ---
-    const niveles = [
+    // --- BASE DE DATOS: SEMANA, DÍAS Y CLIENTES ---
+    const semana = [
         {
-            clienteImg: "cliente1.png", emojiFallback: "👦",
-            prodImg: "producto_pan.png", prodEmoji: "🥐",
-            texto: "¡Hola! Quiero llevar 4 medialunas. Cada una cuesta $300. Te pago con un billete de $2000.",
-            preg1: "¿Cuál es el costo TOTAL?",
-            resp1: 1200, // 4 * 300
-            preg2: "¿Cuánto VUELTO le debes dar?",
-            resp2: 800  // 2000 - 1200
+            dia: "Lunes",
+            subtitulo: "Un día tranquilo. Ideal para calentar motores.",
+            clientes: [
+                {
+                    clienteImg: "cliente1.png", emojiFallback: "👦", prodImg: "producto_alfajor.png", prodEmoji: "🍩",
+                    texto: "¡Hola! Dame 2 alfajores triples. Cada uno está $800. Te pago con un billete de $2000.",
+                    resp1: 1600, // 2 * 800
+                    resp2: 400  // 2000 - 1600
+                },
+                {
+                    clienteImg: "cliente2.png", emojiFallback: "👩", prodImg: "producto_pan.png", prodEmoji: "🥖",
+                    texto: "Buenas. Llevo 3 jugos a $1000 cada uno y 1 pan de molde a $500. Te doy $5000.",
+                    resp1: 3500, // (3 * 1000) + 500
+                    resp2: 1500 // 5000 - 3500
+                }
+            ]
         },
         {
-            clienteImg: "cliente2.png", emojiFallback: "👩‍🦰",
-            prodImg: "producto_bebida.png", prodEmoji: "🥤",
-            texto: "Buenas tardes. Llevo 3 gaseosas a $1500 cada una y 1 paquete de galletitas a $2500. Te pago con $10000.",
-            preg1: "¿Cuál es el TOTAL a cobrar?",
-            resp1: 7000, // (3 * 1500) + 2500
-            preg2: "¿Cuánto VUELTO le entregas?",
-            resp2: 3000 // 10000 - 7000
+            dia: "Martes",
+            subtitulo: "Empieza a llegar más gente. ¡Presta atención a las promociones!",
+            clientes: [
+                {
+                    clienteImg: "cliente3.png", emojiFallback: "👵", prodImg: "producto_caramelos.png", prodEmoji: "🍬",
+                    texto: "Hola mijo. Quiero 5 docenas de caramelos. Cada docena cuesta $300. Pago con $2000.",
+                    resp1: 1500, // 5 * 300
+                    resp2: 500  // 2000 - 1500
+                },
+                {
+                    clienteImg: "cliente4.png", emojiFallback: "👨‍🦰", prodImg: "producto_fideos.png", prodEmoji: "🍝",
+                    texto: "Llevo 2 paquetes de fideos a $1200 cada uno, y 1 salsa de tomate a $900. Toma, $5000.",
+                    resp1: 3300, // (2 * 1200) + 900
+                    resp2: 1700 // 5000 - 3300
+                }
+            ]
         },
         {
-            clienteImg: "cliente3.png", emojiFallback: "👴",
-            prodImg: "producto_caja.png", prodEmoji: "📦",
-            texto: "Hola chico. Llevo una caja de mercadería que cuesta $12000. La vamos a pagar entre 4 vecinos a partes iguales. Yo te pago mi parte exacta con $5000.",
-            preg1: "¿Cuánto debe pagar CADA VECINO? (División)",
-            resp1: 3000, // 12000 / 4
-            preg2: "¿Cuánto VUELTO me das por mi parte?",
-            resp2: 2000 // 5000 - 3000
+            dia: "Miércoles",
+            subtitulo: "¡DÍA COMPLICADO! Lleno de pedidos grandes y compras para dividir entre amigos. 🤯",
+            clientes: [
+                {
+                    clienteImg: "cliente1.png", emojiFallback: "👨‍🎓", prodImg: "producto_caja.png", prodEmoji: "📦",
+                    texto: "¡Rápido! Llevo 4 leches a $1100, 2 panes a $800 y 3 quesos a $2000. Te pago con $20000.",
+                    resp1: 12000, // 4400 + 1600 + 6000
+                    resp2: 8000 // 20000 - 12000
+                },
+                {
+                    clienteImg: "cliente2.png", emojiFallback: "👧", prodImg: "producto_snack.png", prodEmoji: "🍿",
+                    texto: "Somos 5 amigos. Llevamos snacks por $8500 y bebidas por $4000. Dividimos en 5 partes iguales. Te pago mi parte con $3000. ¿Cuánto es el total de mi parte y mi vuelto?",
+                    resp1: 2500, // (8500 + 4000) / 5
+                    resp2: 500 // 3000 - 2500
+                },
+                {
+                    clienteImg: "cliente3.png", emojiFallback: "🧔", prodImg: "producto_empanadas.png", prodEmoji: "🥟",
+                    texto: "Quiero media docena (6) de empanadas a $600 cada una, y 2 gaseosas a $1500. Toma un billete de $10000.",
+                    resp1: 6600, // (6 * 600) + 3000
+                    resp2: 3400 // 10000 - 6600
+                }
+            ]
         },
         {
-            clienteImg: "cliente4.png", emojiFallback: "👧",
-            prodImg: "producto_dulces.png", prodEmoji: "🍬",
-            texto: "¡Hola! Dame 5 docenas de chupetines. Cada docena está $400. Y también un chocolate gigante de $1500. Toma, te doy $4000.",
-            preg1: "¿Cuánto es el TOTAL?",
-            resp1: 3500, // (5 * 400) + 1500
-            preg2: "¿Cuánto VUELTO me das?",
-            resp2: 500 // 4000 - 3500
+            dia: "Jueves",
+            subtitulo: "Casi es fin de semana. ¡A mantener el ritmo!",
+            clientes: [
+                {
+                    clienteImg: "cliente4.png", emojiFallback: "👷", prodImg: "producto_yerba.png", prodEmoji: "🧉",
+                    texto: "Llevo 2 kilos de yerba a $3500 cada uno y 1 kilo de azúcar a $1200. Pago con $10000.",
+                    resp1: 8200, // 7000 + 1200
+                    resp2: 1800 // 10000 - 8200
+                },
+                {
+                    clienteImg: "cliente1.png", emojiFallback: "👦", prodImg: "producto_choco.png", prodEmoji: "🍫",
+                    texto: "¡Tienen promo! '3 chocolates por $2400 (precio total de los tres)'. Quiero llevar 6 chocolates. Te pago con $5000.",
+                    resp1: 4800, // (2400 / 3) * 6 = 800 * 6 = 4800, o simplemente 2400 * 2
+                    resp2: 200 // 5000 - 4800
+                }
+            ]
+        },
+        {
+            dia: "Viernes",
+            subtitulo: "El último esfuerzo. Todo el colegio viene a comprar.",
+            clientes: [
+                {
+                    clienteImg: "cliente2.png", emojiFallback: "👩‍🏫", prodImg: "producto_regalo.png", prodEmoji: "🎁",
+                    texto: "Hola. Compramos un regalo comunitario de $18000. Somos 6 para dividir el gasto. Te pago solo mi parte con un billete de $5000.",
+                    resp1: 3000, // 18000 / 6
+                    resp2: 2000 // 5000 - 3000
+                },
+                {
+                    clienteImg: "cliente3.png", emojiFallback: "👱‍♂️", prodImg: "producto_utiles.png", prodEmoji: "🖊️",
+                    texto: "Necesito 20 fotocopias a $50 cada una y 3 lapiceras a $400. Toma $5000.",
+                    resp1: 2200, // (20 * 50) + 1200
+                    resp2: 2800 // 5000 - 2200
+                }
+            ]
         }
     ];
 
-    let nivelActual = 0;
+    let diaActual = 0;
+    let clienteActual = 0;
     let dineroCaja = 0;
 
-    // --- LÓGICA DE ANIMACIÓN Y CARGA ---
-    function cargarNivel() {
-        if (nivelActual >= niveles.length) {
-            finalizarJuego();
-            return;
+    // --- FUNCIONES DEL JUEGO ---
+    
+    function cargarPantallaDia() {
+        const d = semana[diaActual];
+        document.getElementById('day-display').innerText = d.dia;
+        document.getElementById('day-title').innerText = d.dia;
+        
+        // El miércoles es color rojo para asustar un poco
+        if(d.dia === "Miércoles") {
+            document.getElementById('day-title').style.color = "var(--danger)";
+        } else {
+            document.getElementById('day-title').style.color = "var(--accent)";
         }
 
-        const data = niveles[nivelActual];
+        document.getElementById('day-subtitle').innerText = d.subtitulo;
+        document.getElementById('day-screen').style.display = 'flex';
+    }
 
-        // Reset inputs
+    function iniciarDia() {
+        document.getElementById('day-screen').style.display = 'none';
+        clienteActual = 0;
+        cargarCliente();
+    }
+
+    function cargarCliente() {
+        const data = semana[diaActual].clientes[clienteActual];
+
+        // Reset UI
         document.getElementById('input-q1').value = '';
         document.getElementById('input-q2').value = '';
         document.getElementById('feedback').innerHTML = '';
         document.getElementById('feedback').className = 'feedback-msg';
 
-        // Ocultar elementos para animarlos de entrada
         const charBox = document.getElementById('character-box');
         const speech = document.getElementById('speech-bubble');
         const prodBox = document.getElementById('product-box');
@@ -366,11 +396,15 @@
         speech.classList.remove('active');
         prodBox.classList.remove('active');
 
-        // Configurar Textos de Labels
-        document.getElementById('label-q1').innerText = data.preg1;
-        document.getElementById('label-q2').innerText = data.preg2;
+        // Configurar si es división en lugar de "Costo TOTAL"
+        if(data.texto.includes("mi parte") || data.texto.includes("dividir")) {
+            document.getElementById('label-q1').innerText = "Su PARTE a pagar: $";
+        } else {
+            document.getElementById('label-q1').innerText = "Costo TOTAL de la compra: $";
+        }
+        document.getElementById('label-q2').innerText = "VUELTO a entregar: $";
 
-        // Configurar Imágenes y Emojis
+        // Imágenes/Emojis
         const charImg = document.getElementById('char-img');
         const charEmoji = document.getElementById('char-emoji');
         charImg.style.display = 'block'; charEmoji.style.display = 'none';
@@ -383,62 +417,68 @@
         prodImg.src = data.prodImg;
         prodEmoji.innerText = data.prodEmoji;
 
-        // Animar Entrada
+        // Animar
         setTimeout(() => {
-            charBox.classList.add('active'); // Entra el cliente
+            charBox.classList.add('active');
             setTimeout(() => {
                 speech.innerHTML = data.texto;
-                speech.classList.add('active'); // Habla el cliente
-                prodBox.classList.add('active'); // Deja el producto en la mesa
+                speech.classList.add('active');
+                prodBox.classList.add('active');
             }, 800);
         }, 100);
     }
 
-    // --- LÓGICA DE VALIDACIÓN ---
     function verificarVenta() {
-        const data = niveles[nivelActual];
+        const data = semana[diaActual].clientes[clienteActual];
         const in1 = parseInt(document.getElementById('input-q1').value);
         const in2 = parseInt(document.getElementById('input-q2').value);
         const feedback = document.getElementById('feedback');
 
         if (isNaN(in1) || isNaN(in2)) {
-            feedback.innerText = "¡Atención! Debes completar ambos campos con números.";
+            feedback.innerText = "¡Atención! Completa ambos campos.";
             feedback.className = "feedback-msg incorrect";
             return;
         }
 
         if (in1 === data.resp1 && in2 === data.resp2) {
-            // ¡Correcto!
             dineroCaja += data.resp1;
             document.getElementById('score').innerText = dineroCaja;
             
-            feedback.innerHTML = "¡Excelente cálculo! ✅ +$" + data.resp1 + " a la caja.";
+            feedback.innerHTML = "¡Excelente! ✅ +$" + data.resp1 + " a la caja.";
             feedback.className = "feedback-msg correct";
 
-            // Siguiente cliente
-            nivelActual++;
-            setTimeout(cargarNivel, 2000);
+            // Avanzar cliente o terminar día
+            clienteActual++;
+            if (clienteActual < semana[diaActual].clientes.length) {
+                setTimeout(cargarCliente, 2000);
+            } else {
+                setTimeout(terminarDia, 2000);
+            }
         } else {
-            // Incorrecto
-            feedback.innerText = "¡Hay un error en las cuentas! Revisa el Total y el Vuelto.";
+            feedback.innerText = "¡Hay un error! Revisa los cálculos.";
             feedback.className = "feedback-msg incorrect";
-            
-            // Vaciar para que intente de nuevo
             document.getElementById('input-q1').value = '';
             document.getElementById('input-q2').value = '';
         }
     }
 
+    function terminarDia() {
+        diaActual++;
+        if (diaActual < semana.length) {
+            cargarPantallaDia(); // Siguiente día
+        } else {
+            finalizarJuego(); // Fin de la semana
+        }
+    }
+
     function finalizarJuego() {
         const endScreen = document.getElementById('end-screen');
-        const finalMsg = document.getElementById('final-msg');
-        
-        finalMsg.innerHTML = `Ventas Totales del Día: <span style="color: var(--success);">$${dineroCaja}</span>`;
+        document.getElementById('final-msg').innerHTML = `Recaudación Total de la Semana: <br><span style="color: var(--success); font-size: 3rem;">$${dineroCaja}</span>`;
         endScreen.style.display = 'flex';
     }
 
-    // Iniciar el primer cliente al cargar la página
-    window.onload = cargarNivel;
+    // Iniciar el juego al cargar
+    window.onload = cargarPantallaDia;
 
 </script>
 
