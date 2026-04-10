@@ -3,248 +3,415 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Educativo - CPES N°30</title>
+    <title>Desafío de Compras Diarias - CPES N°30</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root {
-            --primary-color: #2563EB; 
-            --secondary-color: #1E40AF; 
-            --bg-color: #F3F4F6;
-            --card-bg: #FFFFFF;
-            --text-main: #1F2937;
-            --text-muted: #6B7280;
+            --bg-dark: #0F172A;
+            --bg-card: #1E293B;
+            --primary: #3B82F6; /* Azul gamificado */
+            --accent: #F59E0B; /* Naranja/Oro para resaltar */
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --danger: #EF4444;
+            --success: #10B981;
+            --game-bg: #1e293b;
+            --game-border: #334155;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             color: var(--text-main);
             margin: 0;
             padding: 0;
-            line-height: 1.6;
-            padding-bottom: 80px; 
+            display: flex;
+            justify-content: center;
         }
-
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            text-align: center;
-            padding: 3rem 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        header h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; }
-        header h2 { margin: 10px 0 0 0; font-size: 1.5rem; font-weight: 400; color: #DBEAFE; }
-
-        .profesor-badge {
-            display: inline-block;
-            margin-top: 1.5rem;
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            backdrop-filter: blur(5px);
-        }
-
-        main { max-width: 1000px; margin: 3rem auto; padding: 0 1rem; }
-
-        .section-title {
-            text-align: center;
-            color: var(--primary-color);
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #E5E7EB;
-            padding-bottom: 1rem;
-        }
-
-        .grid-cursos, .grid-biblioteca {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
+        .container {
+            width: 100%;
+            max-width: 800px;
+            min-height: 100vh;
             padding: 2rem;
-            text-align: center;
+            box-sizing: border-box;
+        }
+        h1, h2, h3 { color: var(--accent); text-align: center; }
+        h4 { color: var(--primary); margin-bottom: 0.5rem; }
+        
+        /* Botón Volver a la página principal */
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
             text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1.5rem;
+            gap: 8px; /* Espacio para icono */
+        }
+        .btn-volver:hover { background-color: var(--primary); color: var(--text-main); }
+
+        /* Pantalla de Perfil */
+        #profile-screen {
+            background-color: var(--bg-card);
+            padding: 3rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            margin-top: 2rem;
+        }
+        .player-input {
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: 2px solid var(--text-muted);
+            border-radius: 8px;
+            background-color: var(--bg-dark);
             color: var(--text-main);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-top: 4px solid var(--primary-color);
-            display: block;
+            width: 80%;
+            max-width: 300px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+        .btn-start {
+            background-color: var(--accent);
+            color: var(--bg-dark);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn-start:hover { transform: scale(1.05); }
+
+        /* Header del Jugador */
+        #player-header {
+            display: none;
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-dark));
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 2rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .player-name-display { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
+
+        /* Tarjetas de Contenido y Juego */
+        .card {
+            background-color: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--game-border);
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-            border-top-color: #F59E0B;
+        /* Simuladores (Minijuegos) */
+        .simulator {
+            background-color: #000000;
+            padding: 2rem;
+            border-radius: 8px;
+            border: 2px solid var(--text-muted);
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .sim-display {
+            font-size: 2.5rem;
+            margin: 1.5rem 0;
+            color: var(--success);
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .sim-display.negative { color: var(--danger); }
+        
+        .btn-action {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+        .btn-action:hover { opacity: 0.8; transform: scale(1.02); }
+        
+        .input-game {
+            padding: 0.5rem;
+            font-size: 1.2rem;
+            border-radius: 4px;
+            border: none;
+            text-align: center;
+            width: 120px;
+            margin-bottom: 10px;
+            background-color: var(--bg-dark);
+            color: var(--accent);
+            border: 1px solid var(--primary);
         }
 
-        .card-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .card h3 { margin: 0 0 0.5rem 0; font-size: 1.5rem; color: var(--primary-color); }
-        .card p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
-
-        .card.economia { border-top-color: #10B981; }
-        .card.fisica { border-top-color: #E11D48; }
-        .card.biblioteca { border-top-color: #8B5CF6; background-color: #F5F3FF; }
-
-        footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; }
-
-        /* --- CHATBOT STYLE --- */
-        .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
-        .chat-btn {
-            background-color: var(--primary-color); color: white; border: none;
-            border-radius: 50%; width: 60px; height: 60px; font-size: 1.8rem;
-            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        /* Animación para el cambio de presupuesto */
+        @keyframes budgetChange {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); color: var(--accent); }
+            100% { transform: scale(1); }
         }
-        .chat-window {
-            display: none; position: absolute; bottom: 80px; right: 0;
-            width: 320px; height: 450px; background-color: #ffffff;
-            border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-            flex-direction: column; overflow: hidden; border: 1px solid #E5E7EB;
+        .animate-budget {
+            animation: budgetChange 0.5s ease;
         }
-        .chat-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white; padding: 15px; font-weight: bold;
+
+        /* Grilla para las opciones de compra */
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
         }
-        .chat-body { flex: 1; padding: 15px; overflow-y: auto; background-color: #F9FAFB; display: flex; flex-direction: column; gap: 10px; }
-        .message { max-width: 85%; padding: 10px 14px; border-radius: 15px; font-size: 0.95rem; }
-        .bot-msg { background-color: #E0E7FF; color: #1E40AF; align-self: flex-start; }
-        .user-msg { background-color: var(--primary-color); color: white; align-self: flex-end; }
-        .chat-input-area { display: flex; padding: 10px; border-top: 1px solid #E5E7EB; }
-        .chat-input-area input { flex: 1; padding: 10px; border: 1px solid #D1D5DB; border-radius: 20px; outline: none; }
-        .chat-input-area button { background-color: var(--primary-color); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; margin-left: 8px; cursor: pointer; }
+        .option-box {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 2px solid var(--game-border);
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .option-box:hover { border-color: var(--primary); }
+        .option-box h4 { margin-top: 0; color: var(--accent); }
+        .option-cost { font-size: 1.2rem; font-weight: bold; color: var(--success); margin: 5px 0; }
+        .option-need { font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
+
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Colegio Provincial de Educación Secundaria N°30</h1>
-        <h2>Matemática, Física y Economía</h2>
-        <div class="profesor-badge">Profesor: Schroder Gonzalo</div>
-    </header>
+<div class="container">
+    
+    <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
 
-    <main>
-        <h2 class="section-title">Aulas Interactivas</h2>
-        <div class="grid-cursos">
-            <a href="primero.html" class="card">
-                <div class="card-icon">📐</div>
-                <h3>Matemática 1° Año</h3>
-                <p>Misiones y Desafíos</p>
-            </a>
-            <a href="fisica.html" class="card fisica">
-                <div class="card-icon">⚛️</div>
-                <h3>Física 1° Año</h3>
-                <p>Fenómenos del Universo</p>
-            </a>
-            <a href="tercero.html" class="card">
-                <div class="card-icon">✖️</div>
-                <h3>Matemática 3° Año</h3>
-                <p>Números Racionales</p>
-            </a>
-            <a href="cuarto.html" class="card">
-                <div class="card-icon">📈</div>
-                <h3>Matemática 4° Año</h3>
-                <p>Números Reales</p>
-            </a>
-            <a href="quinto.html" class="card">
-                <div class="card-icon">🚀</div>
-                <h3>Matemática 5° Año</h3>
-                <p>Funciones Cuadráticas</p>
-            </a>
-            <a href="economia.html" class="card economia">
-                <div class="card-icon">📊</div>
-                <h3>Economía</h3>
-                <p>Teoría y Simulaciones</p>
-            </a>
-        </div>
-
-        <h2 class="section-title">📚 Biblioteca Digital</h2>
-        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
-            Todo el material bibliográfico y apuntes oficiales en nuestra carpeta de Google Drive.
-        </p>
-        
-        <div class="grid-biblioteca">
-            <a href="https://drive.google.com/drive/folders/1JhXmmbtKzVRUa3umwPE4ZgVL9Eo9Ce9c?usp=drive_link" target="_blank" class="card biblioteca">
-                <div class="card-icon">📁</div>
-                <h3>Carpeta de Materiales</h3>
-                <p>Acceder a los libros de Matemática, Economía y Guías de Estudio.</p>
-            </a>
-        </div>
-    </main>
-
-    <footer>
-        <p>Material de uso exclusivo para los alumnos del CPES N°30.</p>
-    </footer>
-
-    <div class="chat-widget">
-        <div class="chat-window" id="chat-window">
-            <div class="chat-header">👨‍🏫 Prof. Gonzalo Virtual</div>
-            <div class="chat-body" id="chat-body"></div>
-            <div class="chat-input-area">
-                <input type="text" id="user-input" placeholder="Pregunta algo..." onkeypress="handleKeyPress(event)">
-                <button onclick="sendMessage()">➤</button>
-            </div>
-        </div>
-        <button class="chat-btn" onclick="toggleChat()">💬</button>
+    <h1>Matemática 1° Año</h1>
+    
+    <div id="profile-screen">
+        <h2>Terminal Educativa - CPES N°30</h2>
+        <p>Iniciando simulador de finanzas personales...</p>
+        <h3>Crea tu Perfil de Jugador</h3>
+        <input type="text" id="player-name" class="player-input" placeholder="Tu nombre o apodo..." autocomplete="off">
+        <br>
+        <button class="btn-start" onclick="startGame()">INICIAR DESAFÍO 🚀</button>
     </div>
 
-    <script>
-        const chatWindow = document.getElementById('chat-window');
-        const chatBody = document.getElementById('chat-body');
-        const userInput = document.getElementById('user-input');
-        let chatOpen = false;
+    <div id="main-app" style="display: none;">
+        
+        <div id="player-header">
+            <div>Jugador: <span class="player-name-display" id="display-name"></span></div>
+            <div>Rango: <span style="color: var(--primary);">Analista Financiero</span></div>
+        </div>
 
-        function toggleChat() {
-            chatOpen = !chatOpen;
-            chatWindow.style.display = chatOpen ? 'flex' : 'none';
-            if (chatOpen && chatBody.innerHTML === "") {
-                addMessage("¡Hola! Soy tu asistente. 🤖 ¿Buscas las aulas de clase o el <strong>Material Bibliográfico</strong> en Drive?", 'bot');
-            }
+        <div class="card">
+            <h2>Misión: Sobrevivir al Día</h2>
+            <p>¡Hola, Investigador! Te damos un presupuesto inicial de <strong>$120.50</strong> para sobrevivir un día típico. Deberás tomar decisiones inteligentes. Algunas son necesarias (NECESIDADES), otras son tentaciones (DESEOS).</p>
+            <p>Tu objetivo es no agotar tu presupuesto. ¡Usa tus habilidades de cálculo con números racionales!</p>
+        </div>
+
+        <div class="simulator">
+            <h3 style="color: white; margin-top: 0;">Presupuesto Disponible</h3>
+            
+            <div class="sim-display" id="budget-display">$120.50</div>
+            
+            <p id="game-feedback" style="color: var(--text-muted); margin-top: 15px;">Inicia el día y toma tu primera decisión.</p>
+        </div>
+
+        <div id="game-stage">
+            </div>
+
+    </div>
+</div>
+
+<script>
+    // --- LÓGICA DE INICIO (Perfil) ---
+    function startGame() {
+        const nameInput = document.getElementById('player-name').value.trim();
+        if (nameInput === "") {
+            alert("Por favor, ingresa un nombre para iniciar el desafío.");
+            return;
+        }
+        
+        // Ocultar login, mostrar app
+        document.getElementById('profile-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        document.getElementById('player-header').style.display = 'flex';
+        
+        // Poner el nombre en el header
+        document.getElementById('display-name').innerText = nameInput;
+        
+        // Iniciar el primer escenario
+        loadScenario(0);
+    }
+
+    // --- LÓGICA DEL JUEGO ---
+    let budget = 120.50;
+    let attempts = 0;
+    let currentScenario = 0;
+
+    // Banco de escenarios con precios decimales y tipos de operaciones
+    const scenarios = [
+        {
+            title: "El Desayuno: Energía para Arrancar",
+            description: "Es hora de desayunar. ¿Qué eliges? (Simple resta decimal)",
+            options: [
+                { name: "Café con 2 facturas", cost: 18.75, type: "need" },
+                { name: "Solo café (más económico)", cost: 9.10, type: "need" },
+                { name: "Desayuno completo (con jugo y tostadas)", cost: 35.50, type: "want" },
+                { name: "Mejor no desayuno (¡ojo con la salud!)", cost: 0.00, type: "want" }
+            ]
+        },
+        {
+            title: "Transporte al CPES N°30",
+            description: "Tienes que ir al colegio. Calcula el costo total de ida y vuelta. (Multiplicación y suma decimal)",
+            options: [
+                { name: "Colectivo (Ida y vuelta: $1.50 * 2 = $3.00)", cost: 3.00, type: "need" },
+                { name: "Tren (Ida y vuelta: $3.25 * 2 = $6.50)", cost: 6.50, type: "need" },
+                { name: "Taxi (Compartido con 3 compañeros, costo total $25.40: $25.40 / 4 = $6.35)", cost: 6.35, type: "want" },
+                { name: "Mejor camino (gratis, pero llego tarde)", cost: 0.00, type: "want" }
+            ]
+        },
+        {
+            title: "El Almuerzo (con amigos)",
+            description: "Varios compañeros van a comer. ¿Qué decides? (Suma y resta)",
+            options: [
+                { name: "Sandwich y bebida", cost: 28.85, type: "need" },
+                { name: "Plato del día (más caro, pero más rico)", cost: 42.10, type: "want" },
+                { name: "Ensalada y agua", cost: 19.30, type: "need" },
+                { name: "Traje mi vianda (cubiertos: $2.15)", cost: 2.15, type: "need" }
+            ]
+        },
+        {
+            title: "Supermercado: Compras Necesarias",
+            description: "Debes comprar algunos básicos. Elige el combo que mejor se adapte a tu presupuesto. (Suma decimal)",
+            options: [
+                { name: "Leche ($2.40), Pan ($1.15) y Docena de huevos ($5.10). Total: $8.65", cost: 8.65, type: "need" },
+                { name: "Solo Leche ($2.40) y Pan ($1.15). Total: $3.55", cost: 3.55, type: "need" },
+                { name: "Docena de huevos ($5.10) y 1kg Manzanas ($4.20). Total: $9.30", cost: 9.30, type: "need" }
+            ]
+        },
+        {
+            title: "Tentación: ¿Deseo o Ahorro?",
+            description: "Aparece una oferta. ¿Usas tus números racionales para calcular el costo de oportunidad? (Suma y resta final)",
+            options: [
+                { name: "Subscripción de juegos ($14.99)", cost: 14.99, type: "want" },
+                { name: "Entrada al cine ($9.50)", cost: 9.50, type: "want" },
+                { name: "Libro de ejercicios ($18.75)", cost: 18.75, type: "need" },
+                { name: "¡Mejor ahorro el dinero!", cost: 0.00, type: "want" }
+            ]
+        }
+    ];
+
+    function updateBudgetDisplay() {
+        const display = document.getElementById('budget-display');
+        display.innerText = `$${budget.toFixed(2)}`; // Formatear a 2 decimales
+        
+        if (budget < 0) {
+            display.className = "sim-display animate-budget negative";
+        } else if (budget < 20) {
+            display.className = "sim-display animate-budget"; // Alerta, poco presupuesto
+            display.style.color = "var(--danger)";
+        } else {
+            display.className = "sim-display animate-budget";
+            display.style.color = "var(--success)";
+        }
+    }
+
+    function loadScenario(index) {
+        if (budget < 0) {
+            endGame(false);
+            return;
         }
 
-        function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
-
-        function sendMessage() {
-            const text = userInput.value.trim();
-            if (text === '') return;
-            addMessage(text, 'user');
-            userInput.value = '';
-            setTimeout(() => getBotResponse(text.toLowerCase()), 600);
+        if (index >= scenarios.length) {
+            endGame(true);
+            return;
         }
 
-        function addMessage(text, sender) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('message', sender === 'bot' ? 'bot-msg' : 'user-msg');
-            msgDiv.innerHTML = text;
-            chatBody.appendChild(msgDiv);
-            chatBody.scrollTop = chatBody.scrollHeight;
-        }
+        currentScenario = index;
+        const scenario = scenarios[index];
+        const stage = document.getElementById('game-stage');
+        document.getElementById('game-feedback').innerText = scenario.description;
 
-        function getBotResponse(input) {
-            let response = "";
-            const driveLink = "https://drive.google.com/drive/folders/1JhXmmbtKzVRUa3umwPE4ZgVL9Eo9Ce9c?usp=drive_link";
+        let optionsHtml = `<div class="card">
+            <h3>Escenario ${index + 1}: ${scenario.title}</h3>
+            <p>${scenario.description}</p>
+            <div class="options-grid">`;
 
-            if (input.includes('libro') || input.includes('pdf') || input.includes('descargar') || input.includes('material') || input.includes('bibliografia') || input.includes('drive')) {
-                response = "Debido al tamaño de los libros, los hemos mudado a Google Drive para que los descargues rápido. 📚<br><br>Encuentra todo aquí: <a href='" + driveLink + "' target='_blank'>Abrir Carpeta de Materiales</a>.";
-            }
-            else if (input.includes('matematica') || input.includes('mate')) {
-                response = "Tenemos misiones desde 1° a 5° año. También puedes encontrar el libro de Matemática en la <a href='" + driveLink + "' target='_blank'>Biblioteca Drive</a>.";
-            }
-            else if (input.includes('economia') || input.includes('economía')) {
-                response = "En el aula de <a href='economia.html'>Economía</a> tienes simuladores, y en el <a href='" + driveLink + "' target='_blank'>Drive</a> está el apunte teórico completo.";
-            }
-            else if (input.includes('fisica') || input.includes('física')) {
-                response = "¡Explora el universo en el <a href='fisica.html'>Aula de Física</a>!";
-            }
-            else {
-                response = "No estoy seguro, pero puedes probar buscando 'libro', 'física' o el año de tu curso. ¡O entra directamente a la <a href='" + driveLink + "' target='_blank'>Biblioteca</a>!";
-            }
-            addMessage(response, 'bot');
+        scenario.options.forEach((opt, optIndex) => {
+            optionsHtml += `
+            <div class="option-box">
+                <h4>${opt.name}</h4>
+                <p class="option-cost">-$${opt.cost.toFixed(2)}</p>
+                <p class="option-need">${opt.type === "need" ? "Necesidad Básica" : "Deseo/Tentación"}</p>
+                <button class="btn-action" onclick="makeChoice(${optIndex})">Elegir Opción</button>
+            </div>`;
+        });
+
+        optionsHtml += `</div></div>`;
+        stage.innerHTML = optionsHtml;
+        MathJax.typesetPromise();
+    }
+
+    function makeChoice(optIndex) {
+        attempts++;
+        const cost = scenarios[currentScenario].options[optIndex].cost;
+        
+        budget -= cost;
+        updateBudgetDisplay();
+
+        // Cargar siguiente escenario
+        loadScenario(currentScenario + 1);
+    }
+
+    function endGame(success) {
+        const stage = document.getElementById('game-stage');
+        document.getElementById('game-feedback').innerText = success ? "¡Misión Cumplida!" : "¡Presupuesto Agotado!";
+        
+        let endHtml = `<div class="card">`;
+        if (success) {
+            endHtml += `
+                <h2 style="color: var(--success);">¡Sobreviviste! 🎉</h2>
+                <p>Gran manejo financiero, Analista. Has logrado superar el día manteniendo un presupuesto racional final de <strong>$${budget.toFixed(2)}</strong>.</p>
+                <p>Has repasado tus operaciones con números racionales decimales de forma exitosa.</p>
+            `;
+        } else {
+            endHtml += `
+                <h2 style="color: var(--danger);">¡Oh no! Game Over.</h2>
+                <p>Tu presupuesto se agotó en el escenario ${currentScenario + 1}. Recuerda: al restar un número decimal mayor a uno menor, ¡nos vamos a los negativos!</p>
+                <p>Intenta de nuevo y calcula mejor tus gastos con números racionales. ¡La práctica hace al maestro!</p>
+            `;
         }
-    </script>
+        endHtml += `
+            <button class="btn-start" style="margin-top: 1.5rem;" onclick="resetGame()">REINTENTAR DESAFÍO 🔄</button>
+        </div>`;
+        
+        stage.innerHTML = endHtml;
+    }
+
+    function resetGame() {
+        budget = 120.50;
+        attempts = 0;
+        updateBudgetDisplay();
+        loadScenario(0);
+    }
+
+    // Iniciar
+    window.onload = function() {
+        // El juego inicia cuando se toca el botón en la pantalla de perfil
+    };
+</script>
+
 </body>
 </html>
