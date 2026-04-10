@@ -96,6 +96,9 @@
         
         .card.juego { border-top-color: #F59E0B; background-color: #FFFBEB; }
         .card.juego h3 { color: #D97706; }
+
+        .card.juego2 { border-top-color: #06B6D4; background-color: #ECFEFF; }
+        .card.juego2 h3 { color: #0E7490; }
         
         .card.biblioteca { border-top-color: #8B5CF6; background-color: #F5F3FF; }
         .card.biblioteca h3 { color: #6D28D9; }
@@ -139,6 +142,13 @@
     <main>
         <h2 class="section-title">Aulas Interactivas y Desafíos</h2>
         <div class="grid-cursos">
+            
+            <a href="juego2.html" class="card juego2">
+                <div class="card-icon">🛒</div>
+                <h3>Juego Matemática 1°</h3>
+                <p>¡Atiende el kiosco y calcula el vuelto!</p>
+            </a>
+
             <a href="juego.html" class="card juego">
                 <div class="card-icon">🎮</div>
                 <h3>Simulador de Finanzas</h3>
@@ -148,7 +158,7 @@
             <a href="primero.html" class="card">
                 <div class="card-icon">📐</div>
                 <h3>Matemática 1° Año</h3>
-                <p>Misiones y Desafíos</p>
+                <p>Misiones y Desafíos (Teoría)</p>
             </a>
             <a href="fisica.html" class="card fisica">
                 <div class="card-icon">⚛️</div>
@@ -217,7 +227,7 @@
             chatOpen = !chatOpen;
             chatWindow.style.display = chatOpen ? 'flex' : 'none';
             if (chatOpen && chatBody.innerHTML === "") {
-                addMessage("¡Hola! Soy tu asistente. 🤖 ¿Buscas las aulas de clase, el <strong>Juego de Finanzas</strong> o el Material Bibliográfico en Drive?", 'bot');
+                addMessage("¡Hola! Soy tu asistente. 🤖 ¿Buscas las aulas de clase, los <strong>Juegos Interactivos</strong> o el Material Bibliográfico en Drive?", 'bot');
             }
         }
 
@@ -243,9 +253,12 @@
             let response = "";
             const driveLink = "https://drive.google.com/drive/folders/1JhXmmbtKzVRUa3umwPE4ZgVL9Eo9Ce9c?usp=drive_link";
 
-            // LOGICA ACTUALIZADA PARA EL JUEGO
-            if (input.includes('juego') || input.includes('jugar') || input.includes('simulador') || input.includes('presupuesto')) {
-                response = "¡Genial! Prepárate para el Desafío de Compras Diarias. Pon a prueba tus habilidades matemáticas administrando tu dinero. 🎮<br><br><a href='juego.html'>Haz clic aquí para Jugar</a>";
+            // LOGICA ACTUALIZADA PARA LOS DOS JUEGOS
+            if (input.includes('kiosco') || (input.includes('juego') && input.includes('primero'))) {
+                response = "¡Para 1° Año tenemos el Kiosco Matemático! Entrena tus sumas, restas y vueltos en la caja registradora. 🛒<br><br><a href='juego2.html'>Jugar a Matemática 1°</a>";
+            }
+            else if (input.includes('juego') || input.includes('jugar') || input.includes('simulador')) {
+                response = "¡Tenemos dos juegos geniales preparados! 🎮<br><br>1. <a href='juego2.html'>Juego Matemática 1° (Kiosco)</a><br>2. <a href='juego.html'>Simulador de Finanzas (Presupuesto)</a><br><br>¿Cuál quieres probar?";
             }
             else if (input.includes('libro') || input.includes('pdf') || input.includes('descargar') || input.includes('material') || input.includes('bibliografia') || input.includes('drive')) {
                 response = "Debido al tamaño de los libros, los hemos mudado a Google Drive para que los descargues rápido. 📚<br><br>Encuentra todo aquí: <a href='" + driveLink + "' target='_blank'>Abrir Carpeta de Materiales</a>.";
