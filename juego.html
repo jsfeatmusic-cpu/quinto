@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafío de Compras Diarias - CPES N°30</title>
+    <title>Simulador Financiero - CPES N°30</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root {
             --bg-dark: #0F172A;
             --bg-card: #1E293B;
-            --primary: #3B82F6; /* Azul gamificado */
-            --accent: #F59E0B; /* Naranja/Oro para resaltar */
+            --primary: #F59E0B; /* Naranja para el juego */
+            --accent: #3B82F6; /* Azul de contraste */
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
             --danger: #EF4444;
             --success: #10B981;
-            --game-bg: #1e293b;
-            --game-border: #334155;
+            --game-border: #475569;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -30,15 +29,14 @@
         }
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             min-height: 100vh;
             padding: 2rem;
             box-sizing: border-box;
         }
-        h1, h2, h3 { color: var(--accent); text-align: center; }
-        h4 { color: var(--primary); margin-bottom: 0.5rem; }
+        h1, h2, h3 { color: var(--primary); text-align: center; }
+        h4 { color: var(--accent); margin-bottom: 0.5rem; }
         
-        /* Botón Volver a la página principal */
         .btn-volver {
             display: inline-flex;
             align-items: center;
@@ -53,18 +51,17 @@
             cursor: pointer;
             transition: all 0.2s;
             margin-bottom: 1.5rem;
-            gap: 8px; /* Espacio para icono */
+            gap: 8px;
         }
-        .btn-volver:hover { background-color: var(--primary); color: var(--text-main); }
+        .btn-volver:hover { background-color: var(--primary); color: var(--bg-dark); }
 
-        /* Pantalla de Perfil */
         #profile-screen {
             background-color: var(--bg-card);
             padding: 3rem;
             border-radius: 12px;
             text-align: center;
             border: 2px solid var(--primary);
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
             margin-top: 2rem;
         }
         .player-input {
@@ -80,7 +77,7 @@
             text-align: center;
         }
         .btn-start {
-            background-color: var(--accent);
+            background-color: var(--primary);
             color: var(--bg-dark);
             border: none;
             padding: 1rem 2rem;
@@ -92,20 +89,18 @@
         }
         .btn-start:hover { transform: scale(1.05); }
 
-        /* Header del Jugador */
         #player-header {
             display: none;
             background: linear-gradient(135deg, var(--bg-card), var(--bg-dark));
             padding: 1rem;
             border-radius: 8px;
-            border-left: 4px solid var(--accent);
+            border-left: 4px solid var(--primary);
             margin-bottom: 2rem;
             justify-content: space-between;
             align-items: center;
         }
-        .player-name-display { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
+        .player-name-display { font-size: 1.2rem; font-weight: bold; color: var(--primary); }
 
-        /* Tarjetas de Contenido y Juego */
         .card {
             background-color: var(--bg-card);
             padding: 1.5rem;
@@ -114,218 +109,218 @@
             border: 1px solid var(--game-border);
         }
 
-        /* Simuladores (Minijuegos) */
         .simulator {
             background-color: #000000;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 8px;
             border: 2px solid var(--text-muted);
             text-align: center;
-            font-family: 'Courier New', Courier, monospace;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.5);
         }
         .sim-display {
-            font-size: 2.5rem;
-            margin: 1.5rem 0;
+            font-size: 3rem;
+            margin: 0.5rem 0;
             color: var(--success);
             font-weight: bold;
             transition: color 0.3s ease;
         }
         .sim-display.negative { color: var(--danger); }
+        .sim-display.warning { color: var(--primary); }
         
         .btn-action {
             background-color: var(--primary);
-            color: white;
+            color: var(--bg-dark);
             border: none;
-            padding: 0.8rem 1.5rem;
+            padding: 0.8rem 1.2rem;
             font-weight: bold;
+            font-size: 1rem;
             border-radius: 6px;
             cursor: pointer;
-            margin: 5px;
+            margin-top: 10px;
+            width: 100%;
             transition: all 0.2s;
         }
-        .btn-action:hover { opacity: 0.8; transform: scale(1.02); }
-        
-        .input-game {
-            padding: 0.5rem;
-            font-size: 1.2rem;
-            border-radius: 4px;
-            border: none;
-            text-align: center;
-            width: 120px;
-            margin-bottom: 10px;
-            background-color: var(--bg-dark);
-            color: var(--accent);
-            border: 1px solid var(--primary);
-        }
+        .btn-action:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        /* Animación para el cambio de presupuesto */
         @keyframes budgetChange {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); color: var(--accent); }
+            50% { transform: scale(1.1); color: white; }
             100% { transform: scale(1); }
         }
-        .animate-budget {
-            animation: budgetChange 0.5s ease;
-        }
+        .animate-budget { animation: budgetChange 0.5s ease; }
 
-        /* Grilla para las opciones de compra */
         .options-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
             margin-top: 1.5rem;
         }
         .option-box {
             background: var(--bg-dark);
-            padding: 1rem;
+            padding: 1.5rem;
             border-radius: 8px;
             border: 2px solid var(--game-border);
             text-align: left;
             transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        .option-box:hover { border-color: var(--primary); }
-        .option-box h4 { margin-top: 0; color: var(--accent); }
-        .option-cost { font-size: 1.2rem; font-weight: bold; color: var(--success); margin: 5px 0; }
-        .option-need { font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
-
+        .option-box:hover { border-color: var(--primary); box-shadow: 0 0 15px rgba(245, 158, 11, 0.2); }
+        .option-box p { margin: 10px 0; font-size: 1.05rem; }
+        .option-cost { font-size: 1.3rem; font-weight: bold; color: var(--success); margin: 10px 0; text-align: center;}
+        
+        /* Ocultar MathJax al cargar para evitar saltos */
+        .math-loading { visibility: hidden; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    
     <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
 
-    <h1>Matemática y Economía</h1>
+    <h1>Simulador de Supervivencia Financiera</h1>
     
     <div id="profile-screen">
-        <h2>Terminal Educativa - CPES N°30</h2>
-        <p>Iniciando simulador de finanzas personales...</p>
-        <h3>Crea tu Perfil de Jugador</h3>
-        <input type="text" id="player-name" class="player-input" placeholder="Tu nombre o apodo..." autocomplete="off">
+        <h2>Ingresa al Sistema</h2>
+        <p>Lee bien cada oferta, haz tus cálculos en papel y elige sabiamente.</p>
+        <input type="text" id="player-name" class="player-input" placeholder="Tu nombre..." autocomplete="off">
         <br>
-        <button class="btn-start" onclick="startGame()">INICIAR DESAFÍO 🚀</button>
+        <button class="btn-start" onclick="startGame()">INICIAR CON $30.000 🚀</button>
     </div>
 
     <div id="main-app" style="display: none;">
         
         <div id="player-header">
             <div>Jugador: <span class="player-name-display" id="display-name"></span></div>
-            <div>Rango: <span style="color: var(--primary);">Analista Financiero</span></div>
-        </div>
-
-        <div class="card">
-            <h2>Misión: Sobrevivir al Día</h2>
-            <p>¡Hola, Investigador! Te damos un presupuesto inicial de <strong>$120.50</strong> para sobrevivir un día típico. Deberás tomar decisiones inteligentes. Algunas son necesarias (NECESIDADES), otras son tentaciones (DESEOS).</p>
-            <p>Tu objetivo es no agotar tu presupuesto. ¡Usa tus habilidades de cálculo con números racionales!</p>
+            <div>Dificultad: <span style="color: var(--danger);">Trampas Matemáticas</span></div>
         </div>
 
         <div class="simulator">
             <h3 style="color: white; margin-top: 0;">Presupuesto Disponible</h3>
-            
-            <div class="sim-display" id="budget-display">$120.50</div>
-            
-            <p id="game-feedback" style="color: var(--text-muted); margin-top: 15px;">Inicia el día y toma tu primera decisión.</p>
+            <div class="sim-display" id="budget-display">$30000</div>
         </div>
 
-        <div id="game-stage">
+        <div id="game-stage" style="margin-top: 2rem;">
             </div>
 
     </div>
 </div>
 
 <script>
-    // --- LÓGICA DE INICIO (Perfil) ---
+    // Iniciar Juego
     function startGame() {
         const nameInput = document.getElementById('player-name').value.trim();
         if (nameInput === "") {
-            alert("Por favor, ingresa un nombre para iniciar el desafío.");
+            alert("Ingresa tu nombre para jugar.");
             return;
         }
         
-        // Ocultar login, mostrar app
         document.getElementById('profile-screen').style.display = 'none';
         document.getElementById('main-app').style.display = 'block';
         document.getElementById('player-header').style.display = 'flex';
-        
-        // Poner el nombre en el header
         document.getElementById('display-name').innerText = nameInput;
         
-        // Iniciar el primer escenario
         loadScenario(0);
     }
 
-    // --- LÓGICA DEL JUEGO ---
-    let budget = 120.50;
-    let attempts = 0;
+    let budget = 30000;
     let currentScenario = 0;
 
-    // Banco de escenarios con precios decimales y tipos de operaciones
+    // BANCO DE ESCENARIOS
     const scenarios = [
         {
-            title: "El Desayuno: Energía para Arrancar",
-            description: "Es hora de desayunar. ¿Qué eliges? (Simple resta decimal)",
+            title: "🍟 Parada en 'McBurger': Calculando Combos",
+            description: "Tienes hambre y vas con un amigo. Lee bien las cantidades y elige la opción que rinda más usando suma y división de fracciones.",
             options: [
-                { name: "Café con 2 facturas", cost: 18.75, type: "need" },
-                { name: "Solo café (más económico)", cost: 9.10, type: "need" },
-                { name: "Desayuno completo (con jugo y tostadas)", cost: 35.50, type: "want" },
-                { name: "Mejor no desayuno (¡ojo con la salud!)", cost: 0.00, type: "want" }
+                { 
+                    desc: "Combo 'Doble Cuarto': Trae \\( \\frac{1}{4} + \\frac{1}{4} \\) lb de carne + Gaseosa de \\( \\frac{1}{2} \\) Litro. Pagas todo tú.", 
+                    cost: 8500 
+                },
+                { 
+                    desc: "Combo 'Mega Mitad': Trae \\( \\frac{1}{2} \\) lb de carne + Gaseosa gigante de \\( \\frac{3}{2} \\) Litros. Cuesta $12.000, pero la pagas a medias con tu amigo (Divides por 2).", 
+                    cost: 6000 
+                },
+                { 
+                    desc: "Comprar 3 hamburguesitas simples de \\( \\frac{1}{8} \\) lb a $3000 cada una.", 
+                    cost: 9000 
+                }
             ]
         },
         {
-            title: "Transporte al CPES N°30",
-            description: "Tienes que ir al colegio. Calcula el costo total de ida y vuelta. (Multiplicación y suma decimal)",
+            title: "🥤 El Supermercado: La trampa de los líquidos",
+            description: "Tu mamá te pide que compres **exactamente 3 Litros** de gaseosa para la cena. ¿Qué combinación es la más económica?",
             options: [
-                { name: "Colectivo (Ida y vuelta: $1.50 * 2 = $3.00)", cost: 3.00, type: "need" },
-                { name: "Tren (Ida y vuelta: $3.25 * 2 = $6.50)", cost: 6.50, type: "need" },
-                { name: "Taxi (Compartido con 3 compañeros, costo total $25.40: $25.40 / 4 = $6.35)", cost: 6.35, type: "want" },
-                { name: "Mejor camino (gratis, pero llego tarde)", cost: 0.00, type: "want" }
+                { 
+                    desc: "Comprar botellitas de \\( \\frac{1}{2} \\) Litro. Cuestan $1500 cada una. (Calcula cuántas necesitas para llegar a 3L).", 
+                    cost: 9000 // 6 botellas * 1500
+                },
+                { 
+                    desc: "Comprar botellas familiares de \\( \\frac{3}{2} \\) Litros (1.5L). Cuestan $3800 cada una. (Calcula cuántas necesitas).", 
+                    cost: 7600 // 2 botellas * 3800
+                },
+                { 
+                    desc: "Comprar una botella gigante de 3 Litros. Precio directo de góndola: $8500.", 
+                    cost: 8500 
+                }
             ]
         },
         {
-            title: "El Almuerzo (con amigos)",
-            description: "Varios compañeros van a comer. ¿Qué decides? (Suma y resta)",
+            title: "🏍️ Repuestos de Moto: Aceite y Espejos",
+            description: "Tienes que hacerle el service a la moto. Necesitas **2 Litros de aceite** y un espejo nuevo.",
             options: [
-                { name: "Sandwich y bebida", cost: 28.85, type: "need" },
-                { name: "Plato del día (más caro, pero más rico)", cost: 42.10, type: "want" },
-                { name: "Ensalada y agua", cost: 19.30, type: "need" },
-                { name: "Traje mi vianda (cubiertos: $2.15)", cost: 2.15, type: "need" }
+                { 
+                    desc: "Opción A: Comprar botellas sueltas de \\( \\frac{1}{2} \\) Litro a $2000 cada una + el espejo a $5000.", 
+                    cost: 13000 // 4 * 2000 + 5000
+                },
+                { 
+                    desc: "Opción B: Bidón de \\( \\frac{5}{2} \\) Litros a $9000 (te sobra aceite) + un espejo de $8000 que tiene un descuento de \\( \\frac{1}{4} \\) de su precio.", 
+                    cost: 15000 // 9000 + (8000 - 2000)
+                },
+                { 
+                    desc: "Opción C: Tres botellas de \\( \\frac{3}{4} \\) Litro a $3000 c/u + Espejo a $5000. (Ojo: verifica si llegas a los 2 litros).", 
+                    cost: 14000 // 3 * 3000 + 5000. (3/4 * 3 = 9/4 = 2.25L. Sí llega)
+                }
             ]
         },
         {
-            title: "Supermercado: Compras Necesarias",
-            description: "Debes comprar algunos básicos. Elige el combo que mejor se adapte a tu presupuesto. (Suma decimal)",
+            title: "🎁 Regalos para amigos",
+            description: "Es el día del amigo y quieres comprar chocolates para **4 amigos**. El kilo (1 kg) de chocolate artesanal cuesta $16.000.",
             options: [
-                { name: "Leche ($2.40), Pan ($1.15) y Docena de huevos ($5.10). Total: $8.65", cost: 8.65, type: "need" },
-                { name: "Solo Leche ($2.40) y Pan ($1.15). Total: $3.55", cost: 3.55, type: "need" },
-                { name: "Docena de huevos ($5.10) y 1kg Manzanas ($4.20). Total: $9.30", cost: 9.30, type: "need" }
-            ]
-        },
-        {
-            title: "Tentación: ¿Deseo o Ahorro?",
-            description: "Aparece una oferta. ¿Usas tus números racionales para calcular el costo de oportunidad? (Suma y resta final)",
-            options: [
-                { name: "Subscripción de juegos ($14.99)", cost: 14.99, type: "want" },
-                { name: "Entrada al cine ($9.50)", cost: 9.50, type: "want" },
-                { name: "Libro de ejercicios ($18.75)", cost: 18.75, type: "need" },
-                { name: "¡Mejor ahorro el dinero!", cost: 0.00, type: "want" }
+                { 
+                    desc: "Comprar cajas individuales de \\( \\frac{1}{8} \\) de kilo a $2500 cada una. Necesitas 4.", 
+                    cost: 10000 // 4 * 2500
+                },
+                { 
+                    desc: "Comprar un bloque entero de \\( \\frac{3}{4} \\) de kilo para que lo compartan. Pagas la parte proporcional del kilo.", 
+                    cost: 12000 // (16000 / 4) * 3
+                },
+                { 
+                    desc: "No comprar nada y hacerles una carta a mano (¡El valor de la amistad!).", 
+                    cost: 0 
+                }
             ]
         }
     ];
 
     function updateBudgetDisplay() {
         const display = document.getElementById('budget-display');
-        display.innerText = `$${budget.toFixed(2)}`; // Formatear a 2 decimales
+        display.innerText = `$${budget}`;
         
+        display.classList.remove('negative', 'warning');
         if (budget < 0) {
-            display.className = "sim-display animate-budget negative";
-        } else if (budget < 20) {
-            display.className = "sim-display animate-budget"; // Alerta, poco presupuesto
-            display.style.color = "var(--danger)";
-        } else {
-            display.className = "sim-display animate-budget";
-            display.style.color = "var(--success)";
+            display.classList.add('negative');
+        } else if (budget < 5000) {
+            display.classList.add('warning');
         }
+        
+        // Disparar animación
+        display.classList.remove('animate-budget');
+        void display.offsetWidth; // Trigger reflow
+        display.classList.add('animate-budget');
     }
 
     function loadScenario(index) {
@@ -333,7 +328,6 @@
             endGame(false);
             return;
         }
-
         if (index >= scenarios.length) {
             endGame(true);
             return;
@@ -342,75 +336,73 @@
         currentScenario = index;
         const scenario = scenarios[index];
         const stage = document.getElementById('game-stage');
-        document.getElementById('game-feedback').innerText = scenario.description;
 
         let optionsHtml = `<div class="card">
-            <h3>Escenario ${index + 1}: ${scenario.title}</h3>
-            <p>${scenario.description}</p>
+            <h2 style="color: var(--primary);">${scenario.title}</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 20px;">${scenario.description}</p>
             <div class="options-grid">`;
 
         scenario.options.forEach((opt, optIndex) => {
             optionsHtml += `
             <div class="option-box">
-                <h4>${opt.name}</h4>
-                <p class="option-cost">-$${opt.cost.toFixed(2)}</p>
-                <p class="option-need">${opt.type === "need" ? "Necesidad Básica" : "Deseo/Tentación"}</p>
-                <button class="btn-action" onclick="makeChoice(${optIndex})">Elegir Opción</button>
+                <p>${opt.desc}</p>
+                <button class="btn-action" onclick="confirmChoice(${optIndex})">Seleccionar esta opción</button>
             </div>`;
         });
 
         optionsHtml += `</div></div>`;
         stage.innerHTML = optionsHtml;
+        
+        // Renderizar ecuaciones matemáticas
         MathJax.typesetPromise();
     }
 
-    function makeChoice(optIndex) {
-        attempts++;
+    function confirmChoice(optIndex) {
         const cost = scenarios[currentScenario].options[optIndex].cost;
         
-        budget -= cost;
-        updateBudgetDisplay();
-
-        // Cargar siguiente escenario
-        loadScenario(currentScenario + 1);
+        // Ventana de confirmación para que vean el precio que acaban de pagar
+        if(confirm(`Has calculado que esta opción cuesta $${cost}. ¿Estás seguro de tu decisión matemática?`)) {
+            budget -= cost;
+            updateBudgetDisplay();
+            
+            // Scroll hacia arriba para ver el presupuesto bajar
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            setTimeout(() => {
+                loadScenario(currentScenario + 1);
+            }, 800);
+        }
     }
 
     function endGame(success) {
         const stage = document.getElementById('game-stage');
-        document.getElementById('game-feedback').innerText = success ? "¡Misión Cumplida!" : "¡Presupuesto Agotado!";
         
-        let endHtml = `<div class="card">`;
+        let endHtml = `<div class="card" style="text-align: center; padding: 3rem;">`;
         if (success) {
             endHtml += `
-                <h2 style="color: var(--success);">¡Sobreviviste! 🎉</h2>
-                <p>Gran manejo financiero, Analista. Has logrado superar el día manteniendo un presupuesto racional final de <strong>$${budget.toFixed(2)}</strong>.</p>
-                <p>Has repasado tus operaciones con números racionales decimales de forma exitosa.</p>
+                <h1 style="color: var(--success); font-size: 3rem;">¡Misión Cumplida! 🎉</h1>
+                <p style="font-size: 1.3rem;">Gran manejo financiero. Has logrado superar todas las trampas matemáticas manteniendo un saldo a favor de <strong>$${budget}</strong>.</p>
+                <p>Las fracciones no son tus enemigas, ¡son tu herramienta para no perder dinero en la vida real!</p>
             `;
         } else {
             endHtml += `
-                <h2 style="color: var(--danger);">¡Oh no! Game Over.</h2>
-                <p>Tu presupuesto se agotó en el escenario ${currentScenario + 1}. Recuerda: al restar un número decimal mayor a uno menor, ¡nos vamos a los negativos!</p>
-                <p>Intenta de nuevo y calcula mejor tus gastos con números racionales. ¡La práctica hace al maestro!</p>
+                <h1 style="color: var(--danger); font-size: 3rem;">¡Bancarrota! 💸</h1>
+                <p style="font-size: 1.3rem;">Tu presupuesto se agotó (quedaste debiendo plata). Caíste en las trampas del supermercado o calculaste mal las fracciones.</p>
+                <p>¡No te rindas! Toma lápiz y papel, suma las fracciones y vuelve a intentarlo.</p>
             `;
         }
         endHtml += `
-            <button class="btn-start" style="margin-top: 1.5rem;" onclick="resetGame()">REINTENTAR DESAFÍO 🔄</button>
+            <button class="btn-start" style="margin-top: 2rem;" onclick="resetGame()">REINTENTAR JUEGO 🔄</button>
         </div>`;
         
         stage.innerHTML = endHtml;
     }
 
     function resetGame() {
-        budget = 120.50;
-        attempts = 0;
+        budget = 30000;
         updateBudgetDisplay();
         loadScenario(0);
     }
-
-    // Iniciar
-    window.onload = function() {
-        // El juego inicia cuando se toca el botón en la pantalla de perfil
-    };
 </script>
 
 </body>
