@@ -244,7 +244,11 @@
         function addMessage(text, sender) {
             const msgDiv = document.createElement('div');
             msgDiv.classList.add('message', sender === 'bot' ? 'bot-msg' : 'user-msg');
-            msgDiv.innerHTML = text;
+            if (sender === 'bot') {
+                msgDiv.innerHTML = text;
+            } else {
+                msgDiv.textContent = text;
+            }
             chatBody.appendChild(msgDiv);
             chatBody.scrollTop = chatBody.scrollHeight;
         }
