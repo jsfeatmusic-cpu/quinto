@@ -206,23 +206,95 @@
         </div>
     </div>
 
-    <div id="cuadraticas" class="tab-content">
+   <div id="cuadraticas" class="tab-content">
         <h2>Funciones Cuadráticas</h2>
         <div class="theory-section">
             <p>La función cuadrática tiene la forma polinómica general:</p>
             <div style="font-size: 1.5rem; text-align: center; margin: 15px 0; background: #1F2937; color: white; padding: 10px; border-radius: 8px;">
                 \( f(x) = ax^2 + bx + c \)
             </div>
-            <p>La gráfica de esta función es siempre una <strong>parábola</strong>. Su concavidad (hacia arriba o hacia abajo) dependerá del signo del coeficiente principal \( a \).</p>
+            <p>La gráfica de esta función es siempre una <strong>parábola</strong>. Su forma, apertura y posición en el plano cartesiano dependen de los valores de sus coeficientes \( a \), \( b \) y \( c \).</p>
         </div>
-        <div class="concept-box">
-            <h4>Elementos clave a calcular:</h4>
-            <ul>
-                <li><strong>Vértice:</strong> El punto máximo o mínimo de la parábola.</li>
-                <li><strong>Raíces (Baskhara):</strong> Los puntos donde la parábola corta al eje X.</li>
-                <li><strong>Ordenada al origen:</strong> El valor de \( c \), donde la gráfica corta al eje Y.</li>
-                <li><strong>Eje de simetría:</strong> La línea vertical que divide a la parábola en dos mitades iguales.</li>
-            </ul>
+
+        <div class="concept-grid">
+            <div class="concept-box" style="border-top-color: #8B5CF6;">
+                <h4 style="color: #8B5CF6;">1. Concavidad (Las Ramas)</h4>
+                <p>El coeficiente principal <strong>\(a\)</strong> nos indica hacia dónde se abren las ramas de la parábola:</p>
+                <ul>
+                    <li>Si <strong>\(a > 0\)</strong> (positivo), las ramas van hacia <strong>arriba</strong> ∪ (la función tiene un mínimo).</li>
+                    <li>Si <strong>\(a < 0\)</strong> (negativo), las ramas van hacia <strong>abajo</strong> ∩ (la función tiene un máximo).</li>
+                </ul>
+            </div>
+            <div class="concept-box" style="border-top-color: #EC4899;">
+                <h4 style="color: #EC4899;">2. Ordenada al Origen</h4>
+                <p>Es el punto exacto donde la parábola corta al <strong>Eje Y</strong> (eje vertical). Siempre coincide con el término independiente <strong>\(c\)</strong>.</p>
+                <p><strong>Punto de corte:</strong> \( (0, c) \)</p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 2rem;">Cálculo de los Puntos Críticos</h3>
+        
+        <div class="concept-box" style="margin-bottom: 1.5rem; border-top-color: #EF4444;">
+            <h4 style="color: #EF4444;">3. Raíces o Ceros (Fórmula de Bhaskara)</h4>
+            <p>Son los puntos donde la gráfica cruza el <strong>Eje X</strong> (eje horizontal). Se calculan igualando la función a cero y aplicando la fórmula resolvente:</p>
+            <div style="font-size: 1.3rem; text-align: center; margin: 15px 0; overflow-x: auto;">
+                \( x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \)
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted);"><em>*Nota: Lo que está dentro de la raíz (\(b^2 - 4ac\)) se llama <strong>Discriminante</strong>. Si da positivo hay dos raíces; si da cero hay una sola raíz; y si da negativo, la parábola "vuela" y no corta al eje X.</em></p>
+        </div>
+
+        <div class="concept-grid">
+            <div class="concept-box" style="border-top-color: #F59E0B;">
+                <h4 style="color: #F59E0B;">4. Vértice</h4>
+                <p>Es la "punta" de la parábola. El punto donde cambia de dirección. Tiene dos coordenadas: \( V = (X_v ; Y_v) \).</p>
+                <p>Primero calculamos la X del vértice con la fórmula:</p>
+                <div style="font-size: 1.2rem; text-align: center; margin: 10px 0;">\( X_v = \frac{-b}{2a} \)</div>
+                <p>Luego, para hallar \( Y_v \), reemplazamos el resultado de \(X_v\) en la función original.</p>
+            </div>
+            <div class="concept-box" style="border-top-color: #14B8A6;">
+                <h4 style="color: #14B8A6;">5. Eje de Simetría</h4>
+                <p>Es una línea imaginaria vertical que actúa como espejo, dividiendo a la parábola en dos mitades exactamente iguales.</p>
+                <p>Como siempre pasa justo por el medio del vértice, su ecuación es simplemente:</p>
+                <div style="font-size: 1.2rem; text-align: center; margin: 10px 0;"><strong>\( x = X_v \)</strong></div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 3rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">📝 Ejemplo Resuelto Paso a Paso</h3>
+        <div class="theory-section" style="background-color: white; border: 1px solid var(--border); border-left: 4px solid #10B981;">
+            <p>Vamos a analizar y graficar la siguiente función: <strong>\( f(x) = x^2 - 4x + 3 \)</strong></p>
+            
+            <p><strong>Paso 1: Identificar a, b y c</strong><br>
+            \( a = 1 \), \( b = -4 \), \( c = 3 \)</p>
+            
+            <p><strong>Paso 2: Concavidad y Ordenada al origen</strong><br>
+            Como \( a = 1 \) (positivo), la parábola va hacia <strong>arriba</strong> ∪.<br>
+            La ordenada al origen es \( c = 3 \). Cortará al eje Y en el punto <strong>(0, 3)</strong>.</p>
+
+            <p><strong>Paso 3: Raíces (Fórmula resolvente)</strong><br>
+            \( x = \frac{-(-4) \pm \sqrt{(-4)^2 - 4 \cdot 1 \cdot 3}}{2 \cdot 1} \)<br>
+            \( x = \frac{4 \pm \sqrt{16 - 12}}{2} \)<br>
+            \( x = \frac{4 \pm \sqrt{4}}{2} = \frac{4 \pm 2}{2} \)<br>
+            <br>
+            Raíz 1: \( x_1 = \frac{4+2}{2} = 3 \)<br>
+            Raíz 2: \( x_2 = \frac{4-2}{2} = 1 \)<br>
+            Los puntos de corte en el eje X son <strong>(1, 0)</strong> y <strong>(3, 0)</strong>.</p>
+
+            <p><strong>Paso 4: Vértice y Eje de simetría</strong><br>
+            \( X_v = \frac{-(-4)}{2 \cdot 1} = \frac{4}{2} = 2 \) (El eje de simetría es \(x = 2\))<br>
+            Para la \(Y_v\), reemplazamos el 2 en las x de la función original:<br>
+            \( Y_v = (2)^2 - 4(2) + 3 = 4 - 8 + 3 = -1 \)<br>
+            El vértice está en el punto <strong>(2, -1)</strong>.</p>
+            
+            <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Polynomialdeg2.svg/500px-Polynomialdeg2.svg.png" alt="Gráfico de una función cuadrática" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid var(--border);">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;"><em>Ejemplo visual: Identificando raíces, ordenada al origen y vértice en el plano cartesiano.</em></p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 3rem;">📺 Videoclase Explicativa</h3>
+        <p>Si quedó alguna duda sobre el proceso analítico o cómo ubicar los puntos en los ejes cartesianos, les dejo este video explicativo para repasar:</p>
+        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); margin-bottom: 2rem;">
+            <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" src="https://www.youtube.com/embed/6JQw45YO3Fs" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
 
