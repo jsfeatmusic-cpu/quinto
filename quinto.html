@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repaso: Funciones Cuadráticas</title>
+    <title>Matemática 5° Año - CPES N°30</title>
+    
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         :root {
-            --primary: #4F46E5;
-            --secondary: #818CF8;
+            --primary: #E11D48; /* Rojo carmesí/rosado fuerte para 5to */
+            --primary-dark: #BE123C;
             --background: #F3F4F6;
+            --bg-card: #FFFFFF;
             --text: #1F2937;
-            --white: #FFFFFF;
+            --text-muted: #6B7280;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --border: #E5E7EB;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -25,376 +32,320 @@
         }
         .container {
             width: 100%;
-            max-width: 800px;
-            background-color: var(--white);
+            max-width: 1000px;
+            background-color: var(--bg-card);
             min-height: 100vh;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
             padding: 2rem;
             box-sizing: border-box;
+            position: relative;
         }
-        h1, h2, h3 {
-            color: var(--primary);
-            text-align: center;
-        }
+        h1, h2, h3, h4 { color: var(--primary); }
+        h1 { text-align: center; border-bottom: 2px solid var(--border); padding-bottom: 1rem;}
+        h4 { margin-bottom: 0.5rem; color: var(--text); }
 
-        /* --- BOTÓN VOLVER A INICIO --- */
+        /* Botón Volver */
         .btn-volver {
-            display: inline-flex;
-            align-items: center;
-            background-color: var(--white);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 1.5rem;
-            gap: 8px; /* Espacio entre icono y texto */
+            display: inline-flex; align-items: center; background-color: transparent;
+            color: var(--primary); border: 2px solid var(--primary);
+            padding: 0.5rem 1rem; font-weight: bold; border-radius: 8px;
+            text-decoration: none; transition: all 0.2s; margin-bottom: 1.5rem;
         }
-        .btn-volver:hover {
-            background-color: var(--primary);
-            color: var(--white);
-            transform: translateY(-2px);
-        }
+        .btn-volver:hover { background-color: var(--primary); color: white; transform: translateY(-2px); }
 
         /* Pestañas */
         .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #E5E7EB;
+            display: flex; justify-content: center; margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border); flex-wrap: wrap; gap: 5px;
         }
         .tab-btn {
-            background: none;
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: #6B7280;
-            transition: all 0.3s ease;
+            background: none; border: none; padding: 0.8rem 1.2rem;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+            color: var(--text-muted); transition: all 0.3s ease;
+            border-radius: 8px 8px 0 0;
         }
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-        }
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Contenido Teórico */
+        .tab-btn:hover { background-color: #FFF1F2; }
+        .tab-btn.active { color: white; background-color: var(--primary); border-bottom: 3px solid var(--primary-dark); }
+        .tab-content { display: none; animation: fadeIn 0.4s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tarjetas de Teoría */
         .theory-section {
-            background-color: #F9FAFB;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid var(--primary);
+            background-color: #FFF1F2; padding: 1.5rem; border-radius: 8px;
+            margin-bottom: 1.5rem; border-left: 4px solid var(--primary); line-height: 1.6;
         }
-        /* Minijuego */
-        .game-container {
-            text-align: center;
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+        .concept-box {
+            background: white; padding: 1.5rem; border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent);
         }
-        .score-board {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: var(--primary);
+        .concept-box ul { padding-left: 20px; }
+        .concept-box li { margin-bottom: 10px; }
+
+        /* Generador de Avisos */
+        .board-container { background-color: #F9FAFB; padding: 2rem; border-radius: 12px; border: 2px dashed #D1D5DB; }
+        .notice-card {
+            background: white; border: 1px solid var(--border); border-left: 5px solid var(--primary);
+            padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: relative;
         }
-        .question-box {
-            font-size: 1.5rem;
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background-color: #EEF2FF;
-            border-radius: 10px;
+        .notice-date { font-size: 0.8rem; color: var(--text-muted); }
+        .notice-title { font-size: 1.2rem; font-weight: bold; color: var(--text); margin: 5px 0; }
+        .notice-link { display: inline-block; margin-top: 10px; color: var(--primary); font-weight: bold; text-decoration: none; background: #FFF1F2; padding: 5px 10px; border-radius: 5px;}
+        .notice-link:hover { text-decoration: underline; }
+        .btn-delete { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.2rem;}
+        
+        .add-form { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;}
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-family: inherit;}
+        .btn-submit { background-color: var(--primary); color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1.1rem;}
+        .btn-submit:hover { background-color: var(--primary-dark); }
+
+        /* --- PANTALLA FLOTANTE (MODAL RECORDATORIO) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; animation: fadeIn 0.3s ease;
         }
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        .modal-box {
+            background: white; padding: 2rem; border-radius: 15px; max-width: 500px; width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); text-align: center; border-top: 8px solid var(--accent);
         }
-        .option-btn {
-            background-color: var(--white);
-            border: 2px solid var(--secondary);
-            color: var(--primary);
-            padding: 1rem;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .modal-box h2 { color: var(--text); margin-top: 0; }
+        .modal-box ul { text-align: left; margin: 20px 0; font-size: 1.1rem; color: #4B5563; }
+        .modal-box li { margin-bottom: 10px; }
+        .btn-close-modal {
+            background-color: var(--primary); color: white; border: none;
+            padding: 12px 30px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer;
         }
-        .option-btn:hover {
-            background-color: var(--primary);
-            color: var(--white);
+        
+        /* Botón flotante para reabrir recordatorio */
+        .btn-floating-reminder {
+            position: fixed; bottom: 20px; left: 20px; background-color: var(--accent); color: white;
+            border: none; border-radius: 50px; padding: 15px 20px; font-size: 1rem; font-weight: bold;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 1000; transition: transform 0.2s;
         }
-        .feedback {
-            margin-top: 1.5rem;
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        .correct { color: #10B981; }
-        .incorrect { color: #EF4444; }
+        .btn-floating-reminder:hover { transform: scale(1.05); }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
-
-    <h1>Funciones Cuadráticas</h1>
-    
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('teoria', this)">📚 Teoría y Repaso</button>
-        <button class="tab-btn" onclick="openTab('juego', this)">🎮 Minijuego</button>
-    </div>
-
-    <div id="teoria" class="tab-content active">
-        <h2>Conceptos Fundamentales</h2>
-        
-        <div class="theory-section">
-            <h3>La Expresión Polinómica</h3>
-            <p>Una función cuadrática se expresa de la forma:</p>
-            <p style="text-align: center; font-size: 1.2rem;">\( f(x) = ax^2 + bx + c \)</p>
-            <p>Donde <strong>a</strong>, <strong>b</strong> y <strong>c</strong> son números reales y \( a \neq 0 \).</p>
-            <ul>
-                <li><strong>a:</strong> Término cuadrático (Indica la concavidad).</li>
-                <li><strong>b:</strong> Término lineal.</li>
-                <li><strong>c:</strong> Término independiente (Ordenada al origen).</li>
-            </ul>
-        </div>
-
-        <div class="theory-section">
-            <h3>Concavidad (Las Ramas)</h3>
-            <p>El valor de <strong>a</strong> nos dice hacia dónde abren las ramas de la parábola:</p>
-            <ul>
-                <li>Si \( a > 0 \), las ramas van hacia <strong>arriba</strong> ∪ (Tiene un mínimo).</li>
-                <li>Si \( a < 0 \), las ramas van hacia <strong>abajo</strong> ∩ (Tiene un máximo).</li>
-            </ul>
-        </div>
-
-        <div class="theory-section">
-            <h3>Vértice y Eje de Simetría</h3>
-            <p>El vértice es el punto máximo o mínimo de la parábola. Sus coordenadas \( V = (x_v, y_v) \) se calculan así:</p>
-            <p>\( x_v = \frac{-b}{2a} \)</p>
-            <p>\( y_v = f(x_v) \) (Reemplazamos \(x_v\) en la función original).</p>
-            <p>El <strong>Eje de simetría</strong> es la recta vertical que pasa por el vértice: \( x = x_v \).</p>
-        </div>
-
-        <div class="theory-section">
-            <h3>Raíces (Fórmula Resolvente o de Bhaskara)</h3>
-            <p>Las raíces son los puntos donde la gráfica corta al eje X. Se calculan igualando la función a cero (\( ax^2 + bx + c = 0 \)) y aplicando:</p>
-            <p style="text-align: center; font-size: 1.2rem;">\( x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \)</p>
-            <p>Al término dentro de la raíz (\( b^2 - 4ac \)) se lo llama <strong>Discriminante (\( \Delta \))</strong>.
-                Si es positivo hay dos raíces, si es cero hay una, y si es negativo no tiene raíces reales.
-            </p>
-        </div>
-
-        <div class="theory-section">
-            <h3>Ejemplos de Ejercicios Completos Resueltos</h3>
-            <p>Repasemos cómo hacer un análisis completo con dos ejemplos prácticos:</p>
-            
-            <div style="background-color: #EEF2FF; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                <h4>Ejemplo 1: f(x) = x² - 4x + 3</h4>
-                <ul>
-                    <li><strong>1. Identificar coeficientes:</strong> \( a = 1 \), \( b = -4 \), \( c = 3 \).</li>
-                    <li><strong>2. Concavidad:</strong> Como \( a = 1 > 0 \), las ramas abren hacia <strong>arriba</strong> ∪ (tiene un mínimo).</li>
-                    <li><strong>3. Ordenada al origen:</strong> Es el valor de \( c \). Corta al eje Y en el punto \( (0, 3) \).</li>
-                    <li><strong>4. Vértice (xᵥ, yᵥ):</strong>
-                        <ul>
-                            <li>\( x_v = \frac{-b}{2a} = \frac{-(-4)}{2(1)} = \frac{4}{2} = 2 \).</li>
-                            <li>\( y_v = f(x_v) = f(2) = (2)^2 - 4(2) + 3 = 4 - 8 + 3 = -1 \).</li>
-                            <li>El vértice es \( V = (2, -1) \).</li>
-                        </ul>
-                    </li>
-                    <li><strong>5. Raíces (Corte con eje X):</strong> Usamos la resolvente.
-                        <ul>
-                            <li>Discriminante: \( \Delta = b^2 - 4ac = (-4)^2 - 4(1)(3) = 16 - 12 = 4 \).</li>
-                            <li>Como \( \Delta > 0 \), tiene dos raíces reales.</li>
-                            <li>\( x = \frac{4 \pm \sqrt{4}}{2(1)} = \frac{4 \pm 2}{2} \).</li>
-                            <li>\( x_1 = \frac{4+2}{2} = \frac{6}{2} = 3 \). Punto: \( (3, 0) \).</li>
-                            <li>\( x_2 = \frac{4-2}{2} = \frac{2}{2} = 1 \). Punto: \( (1, 0) \).</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
-            <div style="background-color: #EEF2FF; padding: 1rem; border-radius: 8px;">
-                <h4>Ejemplo 2: f(x) = -2x² + 8x - 6</h4>
-                <ul>
-                    <li><strong>1. Identificar coeficientes:</strong> \( a = -2 \), \( b = 8 \), \( c = -6 \).</li>
-                    <li><strong>2. Concavidad:</strong> Como \( a = -2 < 0 \), las ramas abren hacia <strong>abajo</strong> ∩ (tiene un máximo).</li>
-                    <li><strong>3. Ordenada al origen:</strong> Es \( c \). Corta al eje Y en el punto \( (0, -6) \).</li>
-                    <li><strong>4. Vértice (xᵥ, yᵥ):</strong>
-                        <ul>
-                            <li>\( x_v = \frac{-b}{2a} = \frac{-8}{2(-2)} = \frac{-8}{-4} = 2 \).</li>
-                            <li>\( y_v = f(2) = -2(2)^2 + 8(2) - 6 = -8 + 16 - 6 = 2 \).</li>
-                            <li>El vértice es \( V = (2, 2) \).</li>
-                        </ul>
-                    </li>
-                    <li><strong>5. Raíces:</strong> Resolvente.
-                        <ul>
-                            <li>Discriminante: \( \Delta = 8^2 - 4(-2)(-6) = 64 - 48 = 16 \).</li>
-                            <li>\( x = \frac{-8 \pm \sqrt{16}}{2(-2)} = \frac{-8 \pm 4}{-4} \).</li>
-                            <li>\( x_1 = \frac{-8+4}{-4} = \frac{-4}{-4} = 1 \). Punto: \( (1, 0) \).</li>
-                            <li>\( x_2 = \frac{-8-4}{-4} = \frac{-12}{-4} = 3 \). Punto: \( (3, 0) \).</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div id="juego" class="tab-content">
-        <div class="game-container">
-            <h2>Desafío Cuadrático</h2>
-            <p>¡Pon a prueba lo que repasaste! Gana 10 puntos por cada respuesta correcta.</p>
-            
-            <div class="score-board">Puntuación: <span id="score">0</span></div>
-            
-            <div class="question-box" id="question-text">
-                </div>
-            
-            <div class="options" id="options-container">
-                </div>
-
-            <div id="feedback-msg" class="feedback"></div>
-            
-            <button class="option-btn" style="margin-top: 2rem; background-color: var(--primary); color: white; display: none;" id="next-btn" onclick="generateQuestion()">Siguiente Pregunta ➡️</button>
-        </div>
+<div id="reminder-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div style="font-size: 4rem; margin-bottom: 10px;">📋</div>
+        <h2>¡Atención Alumnos!</h2>
+        <p>Recuerden sus responsabilidades para la materia:</p>
+        <ul>
+            <li>📝 <strong>Copiar en la carpeta:</strong> Toda la teoría de la sección "Estadística" debe estar copiada a mano.</li>
+            <li>📂 <strong>Trabajos Prácticos:</strong> Revisen la pestaña "Avisos y Materiales" para ver si hay PDFs nuevos para descargar y resolver.</li>
+            <li>✅ <strong>Participación:</strong> Traer las dudas anotadas para debatir en clase.</li>
+        </ul>
+        <button class="btn-close-modal" onclick="closeReminder()">¡Entendido, Prof. Gonzalo!</button>
     </div>
 </div>
 
+<button class="btn-floating-reminder" onclick="openReminder()">📋 Ver Tareas a Copiar</button>
+
+<div class="container">
+    <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
+
+    <h1>Matemática 5° Año</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('estadistica', this)">📊 Estadística</button>
+        <button class="tab-btn" onclick="openTab('cuadraticas', this)">🚀 Funciones Cuadráticas</button>
+        <button class="tab-btn" onclick="openTab('avisos', this)">📢 Avisos y Trabajos</button>
+    </div>
+
+    <div id="estadistica" class="tab-content active">
+        
+        <h2>Conceptos Básicos de Estadística</h2>
+        <div class="theory-section">
+            <p>La <strong>Estadística</strong> es la rama de la matemática que se encarga de recopilar, organizar, analizar e interpretar datos para tomar decisiones informadas. En 5to año comenzaremos por dominar el vocabulario fundamental de cualquier estudio estadístico.</p>
+        </div>
+        
+        <div class="concept-grid">
+            <div class="concept-box">
+                <h4>🌍 Población</h4>
+                <p>Es el <strong>conjunto total</strong> de elementos, individuos o cosas que tienen una característica en común y que son objeto de nuestro estudio.</p>
+                <p><em>Ejemplo: Todos los alumnos del CPES N°30.</em></p>
+            </div>
+            <div class="concept-box">
+                <h4>🎯 Muestra</h4>
+                <p>Es un <strong>subconjunto representativo</strong> de la población. Se utiliza cuando la población es demasiado grande para encuestarla a toda.</p>
+                <p><em>Ejemplo: Los alumnos de 5to año del CPES N°30.</em></p>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 3rem;">Las Variables Estadísticas</h3>
+        <div class="theory-section">
+            <p>Una <strong>Variable Estadística</strong> es la característica o cualidad que estamos investigando u observando en la población. Dependiendo del tipo de respuesta que obtengamos, se clasifican en dos grandes familias:</p>
+        </div>
+
+        <div class="concept-grid">
+            <div class="concept-box" style="border-top-color: #3B82F6;">
+                <h4 style="color: #3B82F6;">1. Variables Cualitativas</h4>
+                <p>Son aquellas que expresan <strong>cualidades, gustos o características</strong>. ¡No se pueden medir con números!</p>
+                <ul>
+                    <li><strong>Nominal:</strong> No tienen un orden establecido (Ej: Color de ojos, deporte favorito, marca de celular).</li>
+                    <li><strong>Ordinal:</strong> Expresan un orden o jerarquía (Ej: Nivel de satisfacción, medallas olímpicas: oro, plata, bronce).</li>
+                </ul>
+            </div>
+            <div class="concept-box" style="border-top-color: #10B981;">
+                <h4 style="color: #10B981;">2. Variables Cuantitativas</h4>
+                <p>Son aquellas que se expresan mediante <strong>cantidades numéricas</strong>. Con ellas se pueden realizar operaciones matemáticas.</p>
+                <ul>
+                    <li><strong>Discretas:</strong> Toman valores enteros aislados. Se cuentan. (Ej: Cantidad de hermanos, número de goles, número de mascotas).</li>
+                    <li><strong>Continuas:</strong> Toman cualquier valor dentro de un intervalo (¡tienen decimales!). Se miden. (Ej: Altura de una persona, peso, tiempo de carrera).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="cuadraticas" class="tab-content">
+        <h2>Funciones Cuadráticas</h2>
+        <div class="theory-section">
+            <p>La función cuadrática tiene la forma polinómica general:</p>
+            <div style="font-size: 1.5rem; text-align: center; margin: 15px 0; background: #1F2937; color: white; padding: 10px; border-radius: 8px;">
+                \( f(x) = ax^2 + bx + c \)
+            </div>
+            <p>La gráfica de esta función es siempre una <strong>parábola</strong>. Su concavidad (hacia arriba o hacia abajo) dependerá del signo del coeficiente principal \( a \).</p>
+        </div>
+        <div class="concept-box">
+            <h4>Elementos clave a calcular:</h4>
+            <ul>
+                <li><strong>Vértice:</strong> El punto máximo o mínimo de la parábola.</li>
+                <li><strong>Raíces (Baskhara):</strong> Los puntos donde la parábola corta al eje X.</li>
+                <li><strong>Ordenada al origen:</strong> El valor de \( c \), donde la gráfica corta al eje Y.</li>
+                <li><strong>Eje de simetría:</strong> La línea vertical que divide a la parábola en dos mitades iguales.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="avisos" class="tab-content">
+        <h2>Subida de PDFs y Trabajos Prácticos</h2>
+        <p>Aquí se publicarán las guías teóricas, los trabajos prácticos para resolver y los avisos importantes de la materia.</p>
+        
+        <div class="board-container">
+            <div class="add-form">
+                <h3 style="margin-top: 0; color: var(--text);">➕ Agregar Nuevo Material (Modo Docente)</h3>
+                <div class="form-group">
+                    <label>Título del Trabajo o Aviso:</label>
+                    <input type="text" id="notice-title" class="form-control" placeholder="Ej: Trabajo Práctico N° 1 - Estadística">
+                </div>
+                <div class="form-group">
+                    <label>Detalles / Instrucciones:</label>
+                    <textarea id="notice-desc" class="form-control" rows="2" placeholder="Ej: Descargar el PDF, copiar en la carpeta y resolver..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Enlace al PDF (Link de Google Drive):</label>
+                    <input type="url" id="notice-link" class="form-control" placeholder="https://drive.google.com/...">
+                </div>
+                <button class="btn-submit" onclick="addNotice()">Publicar en el Tablón</button>
+            </div>
+
+            <div id="notices-list">
+                </div>
+        </div>
+    </div>
+
+</div>
+
 <script>
-    // --- LÓGICA DE PESTAÑAS ---
+    // --- CONTROL DEL RECORDATORIO FLOTANTE ---
+    function closeReminder() {
+        document.getElementById('reminder-modal').classList.add('hidden');
+    }
+
+    function openReminder() {
+        document.getElementById('reminder-modal').classList.remove('hidden');
+    }
+
+    // --- NAVEGACIÓN DE PESTAÑAS ---
     function openTab(tabName, btnElement) {
-        let contents = document.getElementsByClassName("tab-content");
-        for (let i = 0; i < contents.length; i++) {
-            contents[i].classList.remove("active");
-        }
-        
-        let btns = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < btns.length; i++) {
-            btns[i].classList.remove("active");
-        }
-        
-        document.getElementById(tabName).classList.add("active");
-        btnElement.classList.add("active");
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        btnElement.classList.add('active');
     }
 
-    // --- LÓGICA DEL MINIJUEGO ---
-    let score = 0;
-    let currentAnswer = "";
+    // --- TABLÓN DE AVISOS Y PDFs (LOCAL STORAGE) ---
+    const STORAGE_KEY = 'cpes30_avisos_5to';
 
-    function getRandomInt(min, max) {
-        // Excluimos el cero si estamos buscando coeficientes principales
-        let val = Math.floor(Math.random() * (max - min + 1)) + min;
-        return val;
-    }
+    function loadNotices() {
+        const list = document.getElementById('notices-list');
+        const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        list.innerHTML = '';
 
-    function generateQuestion() {
-        document.getElementById('feedback-msg').innerHTML = "";
-        document.getElementById('next-btn').style.display = "none";
-        document.getElementById('options-container').style.pointerEvents = "auto";
-
-        const questionTypes = [
-            'concavidad',
-            'ordenada',
-            'verticeX'
-        ];
-        
-        const type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
-        
-        let a, b, c, questionText, options;
-
-        do { a = getRandomInt(-5, 5); } while (a === 0);
-        b = getRandomInt(-10, 10);
-        c = getRandomInt(-10, 10);
-
-        // Formatear la ecuación para que se vea bien
-        let eqA = a === 1 ? 'x^2' : (a === -1 ? '-x^2' : a + 'x^2');
-        let eqB = b > 0 ? '+' + b + 'x' : (b === 0 ? '' : b + 'x');
-        let eqC = c > 0 ? '+' + c : (c === 0 ? '' : c);
-        let equation = `\\( f(x) = ${eqA} ${eqB} ${eqC} \\)`;
-
-        if (type === 'concavidad') {
-            questionText = `Dada la función ${equation}, ¿hacia dónde se abren sus ramas?`;
-            currentAnswer = a > 0 ? "Hacia Arriba ∪" : "Hacia Abajo ∩";
-            options = ["Hacia Arriba ∪", "Hacia Abajo ∩"];
-        } 
-        else if (type === 'ordenada') {
-            questionText = `En la función ${equation}, ¿cuál es la ordenada al origen?`;
-            currentAnswer = c.toString();
-            options = [c.toString(), (c+2).toString(), (-c).toString(), (b).toString()];
+        if(notices.length === 0) {
+            list.innerHTML = '<p style="text-align:center; color:gray; font-style:italic;">No hay trabajos o PDFs pendientes por ahora.</p>';
+            return;
         }
-        else if (type === 'verticeX') {
-            // Asegurarnos que xv sea entero para no complicar el cálculo mental
-            b = a * getRandomInt(-3, 3) * 2; 
-            eqB = b > 0 ? '+' + b + 'x' : (b === 0 ? '' : b + 'x');
-            equation = `\\( f(x) = ${eqA} ${eqB} ${eqC} \\)`;
+
+        notices.reverse().forEach((notice, index) => {
+            const realIndex = notices.length - 1 - index; 
             
-            let xv = -b / (2 * a);
-            questionText = `¿Cuál es el valor de la coordenada "x" del vértice (\\(x_v\\)) en ${equation}?`;
-            currentAnswer = xv.toString();
-            options = [xv.toString(), (-xv).toString(), (xv+1).toString(), (c).toString()];
-        }
+            let linkHtml = '';
+            if (notice.link && notice.link.trim() !== "") {
+                linkHtml = `<a href="${notice.link}" target="_blank" class="notice-link">📄 Descargar / Ver PDF Adjunto</a>`;
+            }
 
-        // Eliminar duplicados en opciones y mezclar
-        options = [...new Set(options)];
-        while(options.length < 3 && type !== 'concavidad') {
-            options.push((parseInt(currentAnswer) + getRandomInt(1, 5)).toString());
-            options = [...new Set(options)];
-        }
-        options.sort(() => Math.random() - 0.5);
-
-        // Renderizar
-        document.getElementById('question-text').innerHTML = questionText;
-        
-        let optionsHtml = "";
-        options.forEach(opt => {
-            optionsHtml += `<button class="option-btn" onclick="checkAnswer('${opt}', this)">${opt}</button>`;
+            list.innerHTML += `
+                <div class="notice-card">
+                    <button class="btn-delete" onclick="deleteNotice(${realIndex})" title="Eliminar Aviso">✖</button>
+                    <div class="notice-date">${notice.date}</div>
+                    <div class="notice-title">${notice.title}</div>
+                    <div class="notice-desc">${notice.desc}</div>
+                    ${linkHtml}
+                </div>
+            `;
         });
-        document.getElementById('options-container').innerHTML = optionsHtml;
-
-        // Le pedimos a MathJax que vuelva a renderizar las matemáticas inyectadas dinámicamente
-        MathJax.typesetPromise();
     }
 
-    function checkAnswer(selected, btnElement) {
-        document.getElementById('options-container').style.pointerEvents = "none"; // Desactivar clics
-        const feedback = document.getElementById('feedback-msg');
-        
-        if (selected === currentAnswer) {
-            btnElement.style.backgroundColor = "#10B981"; // Verde
-            btnElement.style.color = "white";
-            score += 10;
-            document.getElementById('score').innerText = score;
-            feedback.innerHTML = "¡Excelente! Respuesta correcta. 🎉";
-            feedback.className = "feedback correct";
-        } else {
-            btnElement.style.backgroundColor = "#EF4444"; // Rojo
-            btnElement.style.color = "white";
-            feedback.innerHTML = `Ups... La respuesta correcta era: <strong>${currentAnswer}</strong>. ¡A repasar la teoría! 📚`;
-            feedback.className = "feedback incorrect";
-            score = Math.max(0, score - 5); // Restar puntos sin bajar de cero
-            document.getElementById('score').innerText = score;
+    function addNotice() {
+        const titleInput = document.getElementById('notice-title');
+        const descInput = document.getElementById('notice-desc');
+        const linkInput = document.getElementById('notice-link');
+
+        if (titleInput.value.trim() === '') {
+            alert('Por favor, ingresa al menos un Título para el trabajo.');
+            return;
         }
-        
-        document.getElementById('next-btn').style.display = "inline-block";
+
+        const newNotice = {
+            title: titleInput.value.trim(),
+            desc: descInput.value.trim(),
+            link: linkInput.value.trim(),
+            date: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' })
+        };
+
+        const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        notices.push(newNotice);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(notices));
+
+        // Limpiar formulario
+        titleInput.value = ''; descInput.value = ''; linkInput.value = '';
+
+        loadNotices();
     }
 
-    // Iniciar el juego al cargar
-    window.onload = function() {
-        generateQuestion();
+    function deleteNotice(index) {
+        if(confirm("¿Seguro que deseas borrar este trabajo/aviso?")) {
+            const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            notices.splice(index, 1);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(notices));
+            loadNotices();
+        }
+    }
+
+    // Iniciar al cargar la página
+    window.onload = () => {
+        loadNotices();
+        // El modal de recordatorio ya está visible por defecto en el HTML.
     };
 </script>
 
