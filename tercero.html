@@ -3,17 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnóstico: Números Racionales</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <title>Matemática 3° Año - CPES N°30</title>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady();
+                }
+            }
+        };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         :root {
-            --primary: #7C3AED; /* Violeta vibrante */
-            --secondary: #A78BFA;
+            --primary: #7C3AED; /* Violeta para 3er año */
+            --primary-dark: #5B21B6;
             --background: #F3F4F6;
+            --bg-card: #FFFFFF;
             --text: #1F2937;
-            --white: #FFFFFF;
+            --text-muted: #6B7280;
             --accent: #F59E0B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --border: #E5E7EB;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,225 +44,399 @@
         }
         .container {
             width: 100%;
-            max-width: 900px;
-            background-color: var(--white);
+            max-width: 1000px;
+            background-color: var(--bg-card);
             min-height: 100vh;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
             padding: 2rem;
             box-sizing: border-box;
+            position: relative;
         }
-        h1, h2, h3, h4 {
-            color: var(--primary);
-            text-align: center;
-        }
-        h4 { margin-bottom: 0.5rem; color: #1F2937; }
+        h1, h2, h3, h4 { color: var(--primary); }
+        h1 { text-align: center; border-bottom: 2px solid var(--border); padding-bottom: 1rem;}
+        h4 { margin-bottom: 0.5rem; color: var(--text); }
 
         /* Botón Volver */
         .btn-volver {
-            display: inline-flex;
-            align-items: center;
-            background-color: var(--white);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 1.5rem;
-            gap: 8px;
+            display: inline-flex; align-items: center; background-color: transparent;
+            color: var(--primary); border: 2px solid var(--primary);
+            padding: 0.5rem 1rem; font-weight: bold; border-radius: 8px;
+            text-decoration: none; transition: all 0.2s; margin-bottom: 1.5rem;
         }
-        .btn-volver:hover {
-            background-color: var(--primary);
-            color: var(--white);
-            transform: translateY(-2px);
-        }
+        .btn-volver:hover { background-color: var(--primary); color: white; transform: translateY(-2px); }
 
         /* Pestañas */
         .tabs {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid #E5E7EB;
-            flex-wrap: wrap;
-            gap: 5px;
+            display: flex; justify-content: center; margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border); flex-wrap: wrap; gap: 5px;
         }
         .tab-btn {
-            background: none;
-            border: none;
-            padding: 0.8rem 1.2rem;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            color: #6B7280;
-            transition: all 0.3s ease;
+            background: none; border: none; padding: 0.8rem 1.2rem;
+            font-size: 1rem; font-weight: bold; cursor: pointer;
+            color: var(--text-muted); transition: all 0.3s ease;
             border-radius: 8px 8px 0 0;
         }
         .tab-btn:hover { background-color: #F5F3FF; }
-        .tab-btn.active {
-            color: var(--white);
-            background-color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-        }
+        .tab-btn.active { color: white; background-color: var(--primary); border-bottom: 3px solid var(--primary-dark); }
         .tab-content { display: none; animation: fadeIn 0.4s; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Contenido Teórico */
+        /* Tarjetas de Teoría */
         .theory-section {
-            background-color: #F5F3FF;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid var(--primary);
+            background-color: #F5F3FF; padding: 1.5rem; border-radius: 8px;
+            margin-bottom: 1.5rem; border-left: 4px solid var(--primary); line-height: 1.6;
         }
-        
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+        .concept-box {
+            background: white; padding: 1.5rem; border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--accent);
         }
-
-        .op-box {
-            background: var(--white);
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border-top: 3px solid var(--secondary);
-        }
-        
-        /* Ejemplos Resueltos */
-        .example-card {
-            background-color: var(--white);
-            border: 1px solid #E5E7EB;
-            border-left: 4px solid var(--accent);
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 6px;
+        .concept-box ul { padding-left: 20px; line-height: 1.6; }
+        .concept-box li { margin-bottom: 10px; }
+        .formula-box {
+            background-color: #1F2937; color: white; padding: 1rem;
+            border-radius: 8px; text-align: center; margin: 1rem 0; font-size: 1.2rem; overflow-x: auto;
         }
 
-        /* Juegos */
-        .game-container {
-            text-align: center;
-            background-color: #F9FAFB;
-            padding: 2rem;
-            border-radius: 12px;
-            border: 2px dashed #D1D5DB;
+        /* Guías de Ejercicios */
+        .step-box {
+            background: white; border: 1px solid var(--border); border-left: 4px solid #10B981; padding: 1.5rem;
+            border-radius: 8px; margin-bottom: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        .score-board {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: var(--primary);
+        .step-title { background-color: #10B981; color: white; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-bottom: 15px; font-weight: bold;}
+        .math-step { padding: 10px; background-color: #F9FAFB; border-left: 3px solid var(--accent); margin-bottom: 10px; font-size: 1.1rem; }
+
+        /* Contenedor Video YouTube */
+        .video-container {
+            position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+            border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); margin: 2rem 0;
         }
-        .question-box {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 1.5rem 0;
-            padding: 2rem;
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100px;
-            overflow-x: auto;
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        /* Generador de Avisos (Tablón) */
+        .board-container { background-color: #F9FAFB; padding: 2rem; border-radius: 12px; border: 2px dashed #D1D5DB; }
+        .notice-card {
+            background: white; border: 1px solid var(--border); border-left: 5px solid var(--primary);
+            padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative;
+        }
+        .notice-date { font-size: 0.8rem; color: var(--text-muted); }
+        .notice-title { font-size: 1.2rem; font-weight: bold; color: var(--text); margin: 5px 0; }
+        .notice-link { display: inline-block; margin-top: 10px; color: var(--primary); font-weight: bold; text-decoration: none; background: #F5F3FF; padding: 5px 10px; border-radius: 5px;}
+        .notice-link:hover { text-decoration: underline; }
+        .btn-delete { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.2rem;}
+        
+        .add-form { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;}
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-family: inherit;}
+        .btn-submit { background-color: var(--primary); color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1.1rem;}
+        .btn-submit:hover { background-color: var(--primary-dark); }
+
+        /* --- PANTALLA FLOTANTE (MODAL RECORDATORIO) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; animation: fadeIn 0.3s ease;
+        }
+        .modal-box {
+            background: white; padding: 2rem; border-radius: 15px; max-width: 500px; width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); text-align: center; border-top: 8px solid var(--accent);
+        }
+        .modal-box h2 { color: var(--text); margin-top: 0; }
+        .modal-box ul { text-align: left; margin: 20px 0; font-size: 1.1rem; color: #4B5563; }
+        .modal-box li { margin-bottom: 10px; }
+        .btn-close-modal {
+            background-color: var(--primary); color: white; border: none;
+            padding: 12px 30px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer;
         }
         
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+        /* Botón flotante para reabrir recordatorio */
+        .btn-floating-reminder {
+            position: fixed; bottom: 20px; left: 20px; background-color: var(--accent); color: white;
+            border: none; border-radius: 50px; padding: 15px 20px; font-size: 1rem; font-weight: bold;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 1000; transition: transform 0.2s;
         }
-        .option-btn {
-            background-color: var(--white);
-            border: 2px solid var(--secondary);
-            color: var(--text);
-            padding: 1rem;
-            font-size: 1.3rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            min-height: 60px;
-            display: flex; align-items: center; justify-content: center; /* Centrar MathJax */
-        }
-        .option-btn:hover { background-color: var(--secondary); transform: scale(1.02); color: var(--white); }
-
-        .btn-action {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-action:hover { background-color: #5B21B6; transform: scale(1.02); }
-
-        .feedback {
-            margin-top: 1rem;
-            font-weight: bold;
-            font-size: 1.2rem;
-            min-height: 2rem;
-        }
-        .correct { color: #10B981; }
-        .incorrect { color: #DC2626; }
-        
-        @media (max-width: 600px) {
-            .options-grid { grid-template-columns: 1fr; }
-        }
+        .btn-floating-reminder:hover { transform: scale(1.05); }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
+<div id="reminder-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div style="font-size: 4rem; margin-bottom: 10px;">📐</div>
+        <h2>¡Atención 3er Año!</h2>
+        <p>Recordatorio de responsabilidades para nuestras clases:</p>
+        <ul>
+            <li>📝 <strong>Carpeta Completa:</strong> Toda la teoría y propiedades de Conjuntos Numéricos deben estar copiadas.</li>
+            <li>📺 <strong>Videoclases:</strong> Antes de resolver las guías, revisen los videos explicativos que dejé en cada pestaña.</li>
+            <li>📂 <strong>Avisos:</strong> Revisen siempre la pestaña "Avisos y Materiales" para ver si subí nuevos PDFs.</li>
+        </ul>
+        <button class="btn-close-modal" onclick="closeReminder()">¡Entendido, Prof. Gonzalo!</button>
+    </div>
+</div>
+
+<button class="btn-floating-reminder" onclick="openReminder()">📋 Ver Tareas a Copiar</button>
+
 <div class="container">
-    
     <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
 
-    <h1>Diagnóstico: Números Racionales (\(\mathbb{Q}\))</h1>
+    <h1>Matemática 3° Año</h1>
     
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('teoria', this)">📚 Teoría y Operaciones</button>
-        <button class="tab-btn" onclick="openTab('ejemplos', this)">📝 Guía de Ejemplos</button>
-        <button class="tab-btn" onclick="openTab('juego', this)">🎮 Desafío Racional</button>
+        <button class="tab-btn active" onclick="openTab('racionales', this)">📘 N. Racionales (\(\mathbb{Q}\))</button>
+        <button class="tab-btn" onclick="openTab('reales', this)">📕 N. Reales (\(\mathbb{R}\))</button>
+        <button class="tab-btn" onclick="openTab('avisos', this)">📢 Avisos y Materiales</button>
     </div>
 
-    <div id="teoria" class="tab-content active">
-        <h2>¿Qué es un Número Racional?</h2>
+    <div id="racionales" class="tab-content active">
+        <h2>1. Números Racionales \(\mathbb{Q}\)</h2>
         <div class="theory-section">
-            <p>El conjunto de los <strong>Números Racionales (\(\mathbb{Q}\))</strong> está formado por todos aquellos números que pueden expresarse como el cociente (división) entre dos números enteros, es decir, como una <strong>fracción</strong> \(\frac{a}{b}\), donde \(b\) no puede ser cero.</p>
-            <p>Todo número entero es racional (ej: \(5 = \frac{5}{1}\)), y también lo son los decimales exactos y periódicos.</p>
+            <p>El conjunto de los <strong>Números Racionales (\(\mathbb{Q}\))</strong> está formado por todos aquellos números que pueden expresarse como una <strong>fracción</strong> \(\frac{a}{b}\), donde \(a\) y \(b\) son números enteros y \(b \neq 0\).</p>
+            <p>Incluye a los números enteros (\(\mathbb{Z}\)), los decimales exactos y los decimales periódicos.</p>
+        </div>
+        
+        <div class="concept-grid grid-2">
+            <div class="concept-box" style="border-top-color: #3B82F6;">
+                <h4 style="color: #3B82F6;">Propiedades Clave</h4>
+                <ul>
+                    <li><strong>Densidad:</strong> Entre dos números racionales distintos, ¡siempre existe otro número racional! (Hay infinitos en el medio).</li>
+                    <li><strong>Orden:</strong> Siempre podemos comparar dos fracciones para saber cuál es mayor, menor o si son equivalentes.</li>
+                </ul>
+            </div>
+            <div class="concept-box" style="border-top-color: #EC4899;">
+                <h4 style="color: #EC4899;">Jerarquía de Operaciones</h4>
+                <p>Para resolver ejercicios combinados, el orden estricto es:</p>
+                <ol>
+                    <li>Paréntesis, Corchetes y Llaves.</li>
+                    <li>Potencias y Raíces.</li>
+                    <li>Multiplicaciones y Divisiones.</li>
+                    <li>Sumas y Restas al final.</li>
+                </ol>
+            </div>
         </div>
 
-        <h2>Operaciones Básicas</h2>
-        <div class="grid-2">
-            <div class="op-box">
-                <h4>Suma y Resta</h4>
-                <p><strong>Mismo denominador:</strong> Se suman o restan los numeradores y se mantiene el denominador.<br>
-                \(\frac{a}{c} \pm \frac{b}{c} = \frac{a \pm b}{c}\)</p>
-                <p><strong>Distinto denominador:</strong> Se busca el Mínimo Común Múltiplo (MCM) o se multiplican los denominadores, y se buscan fracciones equivalentes.</p>
+        <h3 style="margin-top: 3rem;">📝 Ejercicio Combinado Resuelto Paso a Paso</h3>
+        <div class="step-box">
+            <div class="step-title">Operaciones con Fracciones, Potencias y Raíces</div>
+            <p><strong>Ejercicio:</strong> Resolver \( \left( \frac{1}{2} - \frac{1}{3} \right)^2 + \sqrt{\frac{4}{9}} \cdot \frac{3}{2} \)</p>
+            
+            <div class="math-step">
+                <strong>Paso 1: Resolver el paréntesis interior (Resta buscando común denominador).</strong><br>
+                MCM entre 2 y 3 es 6. <br>
+                \( \left( \frac{3}{6} - \frac{2}{6} \right)^2 + \sqrt{\frac{4}{9}} \cdot \frac{3}{2} \implies \left( \frac{1}{6} \right)^2 + \sqrt{\frac{4}{9}} \cdot \frac{3}{2} \)
             </div>
-            <div class="op-box">
-                <h4>Multiplicación</h4>
-                <p>Se multiplica derecho: numerador por numerador, y denominador por denominador. ¡Recuerda simplificar si es posible antes de multiplicar!</p>
-                \(\frac{a}{b} \cdot \frac{c}{d} = \frac{a \cdot c}{b \cdot d}\)
+            <div class="math-step">
+                <strong>Paso 2: Resolver las Potencias y las Raíces.</strong><br>
+                Potencia: \( 1^2 = 1 \) y \( 6^2 = 36 \). <br>
+                Raíz: \( \sqrt{4} = 2 \) y \( \sqrt{9} = 3 \). <br>
+                \( \frac{1}{36} + \frac{2}{3} \cdot \frac{3}{2} \)
             </div>
-            <div class="op-box">
-                <h4>División</h4>
-                <p>Se multiplica la primera fracción por la <strong>inversa</strong> de la segunda (o se multiplica cruzado).</p>
-                \(\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \cdot \frac{d}{c}\)
+            <div class="math-step">
+                <strong>Paso 3: Resolver la Multiplicación.</strong><br>
+                Al multiplicar \( \frac{2}{3} \cdot \frac{3}{2} \) podemos simplificar cruzado o multiplicar directo (\(\frac{6}{6}\)). El resultado es \( 1 \).<br>
+                \( \frac{1}{36} + 1 \)
             </div>
-            <div class="op-box">
+            <div class="math-step">
+                <strong>Paso 4: Resolver la Suma final.</strong><br>
+                Convertimos el 1 entero en \( \frac{36}{36} \).<br>
+                \( \frac{1}{36} + \frac{36}{36} = \mathbf{\frac{37}{36}} \)
+            </div>
+        </div>
+
+        <h3>📺 Videoclase: Operaciones Combinadas con Fracciones</h3>
+        <p>Si te quedaron dudas de cómo aplicar la jerarquía o buscar el común denominador, mira este video:</p>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/LgMsDEGLP0I" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div id="reales" class="tab-content">
+        <h2>2. Números Reales \(\mathbb{R}\)</h2>
+        <div class="theory-section">
+            <p>El conjunto de los <strong>Números Reales (\(\mathbb{R}\))</strong> nace de la unión de los números Racionales (\(\mathbb{Q}\)) con los <strong>Números Irracionales (\(\mathbb{I}\))</strong>.</p>
+            <p>Los <strong>Irracionales</strong> son aquellos números que tienen infinitos decimales NO periódicos. Es decir, nunca se repiten en un patrón y, por lo tanto, <strong>NO se pueden escribir como fracción</strong>. (Ejemplos famosos: \( \pi \), el número de oro \( \phi \), y raíces no exactas como \( \sqrt{2}, \sqrt{3}, \sqrt{5} \)).</p>
+        </div>
+
+        <div class="concept-grid grid-2">
+            <div class="concept-box" style="border-top-color: #10B981;">
+                <h4 style="color: #10B981;">Propiedades de la Radicación</h4>
+                <ul style="padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Exponente Fraccionario:</strong> El denominador de la fracción se convierte en el índice de la raíz.<br>\( a^{\frac{m}{n}} = \sqrt[n]{a^m} \)</li>
+                    <li><strong>Raíz de Raíz:</strong> Se multiplican los índices para hacer una sola raíz.<br>\( \sqrt{\sqrt[3]{64}} = \sqrt[6]{64} \)</li>
+                    <li><strong>Simplificación:</strong> Se puede dividir el índice de la raíz y el exponente por un mismo número.</li>
+                </ul>
+            </div>
+            <div class="concept-box" style="border-top-color: #F59E0B;">
+                <h4 style="color: #F59E0B;">Regla de Oro en Suma/Resta</h4>
+                <p><strong>¡Solo se pueden sumar o restar radicales semejantes!</strong></p>
+                <p>Es decir, deben tener exactamente el mismo índice y lo mismo adentro de la raíz.</p>
+                <div class="formula-box" style="font-size: 1rem;">✅ Correcto: \( 5\sqrt{3} + 2\sqrt{3} = 7\sqrt{3} \)<br>❌ Incorrecto: \( \sqrt{2} + \sqrt{3} \) (Queda así, no es \(\sqrt{5}\))</div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 3rem;">📝 Ejercicio Resuelto: Extracción de Factores</h3>
+        <p>A veces los radicales no parecen semejantes, pero podemos extraer factores para simplificarlos y luego sumarlos.</p>
+        <div class="step-box" style="border-left-color: #F59E0B;">
+            <div class="step-title" style="background-color: #F59E0B;">Suma de Irracionales por Extracción</div>
+            <p><strong>Ejercicio:</strong> Simplificar y calcular \( \sqrt{18} + \sqrt{50} - \sqrt{8} \)</p>
+            
+            <div class="math-step">
+                <strong>Paso 1: Factorear los números dentro de la raíz (dividir por números primos).</strong><br>
+                \( 18 = 2 \cdot 3^2 \) <br>
+                \( 50 = 2 \cdot 5^2 \) <br>
+                \( 8 = 2^3 = 2^2 \cdot 2 \)
+            </div>
+            <div class="math-step">
+                <strong>Paso 2: Reemplazar en la raíz y separar (Propiedad distributiva).</strong><br>
+                \( \sqrt{2 \cdot 3^2} + \sqrt{2 \cdot 5^2} - \sqrt{2^2 \cdot 2} \) <br>
+                \( (\sqrt{2} \cdot \sqrt{3^2}) + (\sqrt{2} \cdot \sqrt{5^2}) - (\sqrt{2^2} \cdot \sqrt{2}) \)
+            </div>
+            <div class="math-step">
+                <strong>Paso 3: Simplificar raíces con cuadrados.</strong><br>
+                El cuadrado "cancela" a la raíz cuadrada:<br>
+                \( 3\sqrt{2} + 5\sqrt{2} - 2\sqrt{2} \)
+            </div>
+            <div class="math-step">
+                <strong>Paso 4: Sumar y restar los coeficientes de las raíces semejantes.</strong><br>
+                \( (3 + 5 - 2)\sqrt{2} = \mathbf{6\sqrt{2}} \)
+            </div>
+        </div>
+
+        <h3>📺 Videoclase: Extracción de Factores y Suma</h3>
+        <p>Mira esta explicación en video para entender a fondo cómo factorear y extraer de la raíz:</p>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/jDtw1O1l0L4" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div id="avisos" class="tab-content">
+        <h2>Tablón de Anuncios y Materiales</h2>
+        <p>Aquí se subirán los trabajos prácticos, PDFs teóricos o enlaces a fotos de la pizarra para los alumnos ausentes.</p>
+        
+        <div class="board-container">
+            <div class="add-form">
+                <h3 style="margin-top: 0; color: var(--text);">➕ Agregar Nuevo Aviso (Modo Docente)</h3>
+                <div class="form-group">
+                    <label>Título del Aviso / Trabajo:</label>
+                    <input type="text" id="notice-title" class="form-control" placeholder="Ej: Trabajo Práctico N° 3">
+                </div>
+                <div class="form-group">
+                    <label>Descripción / Instrucciones:</label>
+                    <textarea id="notice-desc" class="form-control" rows="3" placeholder="Ej: Resolver para la próxima clase..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Enlace de Google Drive (PDF / Foto Pizarra):</label>
+                    <input type="url" id="notice-link" class="form-control" placeholder="https://drive.google.com/...">
+                </div>
+                <button class="btn-submit" onclick="addNotice()">Publicar Aviso</button>
+            </div>
+
+            <div id="notices-list"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- CONTROL DEL RECORDATORIO FLOTANTE ---
+    function closeReminder() {
+        document.getElementById('reminder-modal').classList.add('hidden');
+    }
+
+    function openReminder() {
+        document.getElementById('reminder-modal').classList.remove('hidden');
+    }
+
+    // --- NAVEGACIÓN ---
+    function openTab(tabName, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        btnElement.classList.add('active');
+    }
+
+    // --- TABLÓN DE AVISOS (LOCAL STORAGE) ---
+    const STORAGE_KEY = 'cpes30_avisos_3ro';
+
+    function loadNotices() {
+        const list = document.getElementById('notices-list');
+        const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        list.innerHTML = '';
+
+        if(notices.length === 0) {
+            list.innerHTML = '<p style="text-align:center; color:gray; font-style:italic;">No hay avisos pendientes por el momento.</p>';
+            return;
+        }
+
+        // Mostrar del más nuevo al más viejo
+        notices.reverse().forEach((notice, index) => {
+            const realIndex = notices.length - 1 - index; 
+            
+            let linkHtml = '';
+            if (notice.link && notice.link.trim() !== "") {
+                linkHtml = `<a href="${notice.link}" target="_blank" class="notice-link">📎 Abrir Archivo Adjunto (Drive)</a>`;
+            }
+
+            list.innerHTML += `
+                <div class="notice-card">
+                    <button class="btn-delete" onclick="deleteNotice(${realIndex})" title="Eliminar Aviso">✖</button>
+                    <div class="notice-date">${notice.date}</div>
+                    <div class="notice-title">${notice.title}</div>
+                    <div class="notice-desc">${notice.desc}</div>
+                    ${linkHtml}
+                </div>
+            `;
+        });
+    }
+
+    function addNotice() {
+        const titleInput = document.getElementById('notice-title');
+        const descInput = document.getElementById('notice-desc');
+        const linkInput = document.getElementById('notice-link');
+
+        if (titleInput.value.trim() === '') {
+            alert('Por favor, ingresa un Título para el aviso.');
+            return;
+        }
+
+        const newNotice = {
+            title: titleInput.value.trim(),
+            desc: descInput.value.trim(),
+            link: linkInput.value.trim(),
+            date: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' })
+        };
+
+        const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        notices.push(newNotice);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(notices));
+
+        // Limpiar formulario
+        titleInput.value = ''; descInput.value = ''; linkInput.value = '';
+
+        loadNotices();
+    }
+
+    function deleteNotice(index) {
+        if(confirm("¿Estás seguro de que deseas eliminar este aviso?")) {
+            const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            notices.splice(index, 1);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(notices));
+            loadNotices();
+        }
+    }
+
+    // Iniciar al cargar la página
+    window.onload = () => {
+        loadNotices();
+        // El modal ya está visible en el HTML por defecto
+    };
+</script>
+
+</body>
+</html>
                 <h4>Potenciación y Radicación</h4>
                 <p>La potencia y la raíz se distribuyen al numerador y al denominador.</p>
                 \(\left(\frac{a}{b}\right)^n = \frac{a^n}{b^n}\) &nbsp;&nbsp; | &nbsp;&nbsp; \(\sqrt[n]{\frac{a}{b}} = \frac{\sqrt[n]{a}}{\sqrt[n]{b}}\)
