@@ -2,483 +2,501 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kiosco Matemático - CPES N°30</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arena de Enteros - CPES N°30</title>
     <style>
         :root {
-            --bg-shop: #E0F2FE; 
-            --wood-counter: #8B4513; 
-            --wood-light: #A0522D;
-            --primary: #06B6D4; /* Cyan para 1er año */
-            --primary-dark: #0E7490;
-            --accent: #F59E0B;
-            --danger: #EF4444;
-            --success: #10B981;
-            --text-dark: #1F2937;
-            --white: #FFFFFF;
+            --bg-dark: #0f172a;
+            --bg-panel: #1e293b;
+            --primary: #3b82f6;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --text-light: #f8fafc;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0F172A;
             margin: 0;
             padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            touch-action: manipulation; /* Evita zoom al hacer doble tap rápido en celular */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow: hidden;
         }
 
-        .game-container {
+        .game-wrapper {
             width: 100%;
-            max-width: 900px;
-            background-color: var(--bg-shop);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 500px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
             position: relative;
         }
 
-        /* Header */
-        .header-bar {
-            background-color: var(--primary-dark);
-            padding: 10px 20px;
+        /* --- HEADER & STATS --- */
+        .top-bar {
+            padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: white;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 2px solid #312e81;
         }
         .btn-volver {
-            color: white;
+            color: var(--text-light);
             text-decoration: none;
+            font-size: 1.5rem;
             font-weight: bold;
-            border: 2px solid white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            transition: all 0.2s;
         }
-        .btn-volver:hover { background-color: white; color: var(--primary-dark); }
-        .score-board { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
-        .day-display { font-size: 1.2rem; font-weight: bold; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 8px;}
+        .level-info {
+            text-align: right;
+        }
+        .level-text { font-size: 1.2rem; font-weight: bold; color: var(--warning); margin: 0;}
+        .score-text { font-size: 0.9rem; color: #94a3b8; margin: 0;}
 
-        /* Escenario */
-        .shop-stage {
-            height: 400px;
+        /* --- BATTLE ARENA --- */
+        .arena {
+            flex: 1;
             position: relative;
-            background: linear-gradient(to bottom, #E0F2FE 0%, #BAE6FD 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background-image: radial-gradient(circle at center, #312e81 0%, transparent 70%);
         }
 
-        .counter {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 120px;
-            background: linear-gradient(to bottom, var(--wood-light), var(--wood-counter));
-            border-top: 10px solid #5C2E0B;
+        .fighter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45%;
+            transition: transform 0.2s;
+        }
+
+        .sprite {
+            font-size: 5rem;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+            position: relative;
             z-index: 10;
         }
 
-        .character-box {
-            position: absolute;
-            bottom: 100px;
-            left: 50px;
-            width: 180px;
-            height: 250px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            z-index: 5;
-            transform: translateX(-300px);
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .health-bar-bg {
+            width: 100%;
+            height: 15px;
+            background-color: #334155;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #000;
+            overflow: hidden;
         }
-        .character-box.active { transform: translateX(0); }
-        .char-img { max-height: 100%; max-width: 100%; object-fit: contain; }
-        .char-emoji { font-size: 8rem; margin-bottom: -20px; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
-
-        .product-box {
-            position: absolute;
-            bottom: 120px;
-            left: 280px;
-            width: 120px;
-            height: 120px;
-            z-index: 15;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transform: translateY(-50px);
-            transition: all 0.5s ease;
+        .health-bar-fill {
+            height: 100%;
+            background-color: var(--success);
+            width: 100%;
+            transition: width 0.3s ease, background-color 0.3s;
         }
-        .product-box.active { opacity: 1; transform: translateY(0); }
-        .prod-img { max-height: 100%; max-width: 100%; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
-        .prod-emoji { font-size: 5rem; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));}
+        .enemy-health .health-bar-fill { background-color: var(--danger); }
 
-        .speech-bubble {
+        .name-tag { font-weight: bold; margin-bottom: 5px; font-size: 1.1rem;}
+
+        /* Animaciones de Batalla */
+        .attack-hero { animation: heroStrike 0.3s ease-in-out; }
+        .attack-enemy { animation: enemyStrike 0.3s ease-in-out; }
+        .hurt { animation: takeDamage 0.4s ease-in-out; filter: brightness(0.5) sepia(1) hue-rotate(-50deg) saturate(5); }
+
+        @keyframes heroStrike { 0% {transform: translateX(0) scale(1);} 50% {transform: translateX(50px) scale(1.2);} 100% {transform: translateX(0) scale(1);} }
+        @keyframes enemyStrike { 0% {transform: translateX(0) scale(1);} 50% {transform: translateX(-50px) scale(1.2);} 100% {transform: translateX(0) scale(1);} }
+        @keyframes takeDamage { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-10px);} 75% {transform: translateX(10px);} }
+
+        /* Efectos de Daño Flotante */
+        .damage-text {
             position: absolute;
-            top: 20px;
-            left: 200px;
-            background-color: white;
-            border: 3px solid var(--text-dark);
-            border-radius: 20px;
-            padding: 15px 20px;
-            max-width: 400px;
-            font-size: 1.1rem;
+            font-size: 2rem;
             font-weight: bold;
-            color: var(--text-dark);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: #fff;
+            text-shadow: 0 0 5px #000, 0 0 10px var(--danger);
+            pointer-events: none;
+            animation: floatUp 1s ease-out forwards;
             opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.4s ease;
             z-index: 20;
         }
-        .speech-bubble::before {
-            content: ''; position: absolute; bottom: -15px; left: 30px;
-            border-width: 15px 15px 0 0; border-style: solid; border-color: white transparent transparent transparent;
-        }
-        .speech-bubble::after {
-            content: ''; position: absolute; bottom: -19px; left: 28px;
-            border-width: 18px 18px 0 0; border-style: solid; border-color: var(--text-dark) transparent transparent transparent; z-index: -1;
-        }
-        .speech-bubble.active { opacity: 1; transform: scale(1); }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-50px) scale(1.5); } }
 
-        /* Panel Registradora */
-        .register-panel {
-            background-color: #334155;
+        /* --- COMBAT PANEL (PREGUNTAS) --- */
+        .combat-panel {
+            background-color: var(--bg-panel);
+            border-top: 4px solid var(--primary);
             padding: 20px;
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 -10px 20px rgba(0,0,0,0.5);
+            z-index: 30;
+        }
+
+        .question-box {
+            background-color: #0f172a;
+            border: 2px solid #475569;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            color: var(--warning);
+            text-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
-            color: white;
         }
-        .register-title { margin: 0; color: var(--primary); text-align: center; font-size: 1.5rem; }
-        
-        .input-group {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #1E293B;
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 1px solid #475569;
-        }
-        .input-group label { font-size: 1.2rem; font-weight: bold; width: 60%; }
-        .input-group input {
-            width: 35%; padding: 10px; font-size: 1.2rem; border-radius: 6px;
-            border: 2px solid var(--primary); text-align: right;
-            background-color: #0F172A; color: var(--success); font-weight: bold;
-        }
-        .input-group input:focus { outline: none; border-color: var(--accent); }
 
-        .btn-vender {
-            background-color: var(--success); color: white; border: none; padding: 15px;
-            font-size: 1.5rem; font-weight: bold; border-radius: 8px; cursor: pointer;
-            transition: all 0.2s; box-shadow: 0 4px 0 #047857;
+        .btn-option {
+            background-color: #334155;
+            color: #fff;
+            border: 2px solid #475569;
+            border-radius: 12px;
+            padding: 20px 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s;
+            box-shadow: 0 6px 0 #1e293b;
         }
-        .btn-vender:hover { transform: translateY(2px); box-shadow: 0 2px 0 #047857; }
-        .btn-vender:active { transform: translateY(4px); box-shadow: 0 0 0 #047857; }
-
-        .feedback-msg { text-align: center; font-size: 1.2rem; font-weight: bold; min-height: 30px; margin-top: 5px; }
-        .correct { color: var(--success); }
-        .incorrect { color: var(--danger); animation: shake 0.4s; }
-
-        @keyframes shake { 0%, 100% {transform: translateX(0);} 25%, 75% {transform: translateX(-10px);} 50% {transform: translateX(10px);} }
-
-        /* Pantallas de Transición (Días y Fin) */
-        .overlay-screen {
-            display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(15, 23, 42, 0.95); z-index: 50;
-            flex-direction: column; justify-content: center; align-items: center;
-            color: white; text-align: center; padding: 20px; box-sizing: border-box;
+        .btn-option:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #1e293b;
         }
-        .btn-overlay {
-            background-color: var(--primary); color: white; border: none; padding: 15px 30px;
-            font-size: 1.3rem; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px;
+        .btn-option.correct { background-color: var(--success); border-color: #047857; }
+        .btn-option.wrong { background-color: var(--danger); border-color: #991b1b; }
+
+        /* Pantallas Overlays */
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 100; text-align: center; padding: 20px; box-sizing: border-box;
         }
-        .btn-overlay:hover { background-color: var(--primary-dark); }
-        .btn-overlay.success { background-color: var(--success); }
+        .overlay-title { font-size: 3rem; margin-bottom: 10px; }
+        .overlay-text { font-size: 1.2rem; margin-bottom: 30px; color: #cbd5e1; }
+        .btn-main {
+            background-color: var(--primary); color: white; border: none;
+            padding: 15px 40px; font-size: 1.5rem; font-weight: bold; border-radius: 50px;
+            box-shadow: 0 6px 0 #1d4ed8; cursor: pointer;
+        }
+        .btn-main:active { transform: translateY(6px); box-shadow: 0 0 0 #1d4ed8; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="game-container">
+<div class="game-wrapper">
     
-    <div class="header-bar">
-        <a href="index.html" class="btn-volver">🔙 Salir al Menú</a>
-        <div class="day-display" id="day-display">Lunes</div>
-        <div>Caja Fuerte: <span class="score-board">$<span id="score">0</span></span></div>
+    <div class="top-bar">
+        <a href="index.html" class="btn-volver">🔙</a>
+        <div class="level-info">
+            <h3 class="level-text" id="ui-level">Oleada 1</h3>
+            <p class="score-text">Puntos: <span id="ui-score">0</span></p>
+        </div>
     </div>
 
-    <div id="day-screen" class="overlay-screen">
-        <h1 id="day-title" style="color: var(--accent); font-size: 3.5rem; margin-bottom: 10px;">Lunes</h1>
-        <h2 id="day-subtitle" style="font-weight: normal; margin-top: 0;">Un día tranquilo para empezar.</h2>
-        <button class="btn-overlay" onclick="iniciarDia()">A r r a n c a r  T u r n o  ▶</button>
+    <div class="arena" id="arena">
+        
+        <div class="fighter" id="hero-card">
+            <div class="name-tag" style="color: var(--primary);">Tu Héroe</div>
+            <div class="health-bar-bg"><div class="health-bar-fill" id="hero-hp"></div></div>
+            <div class="sprite" id="hero-sprite">🧙‍♂️</div>
+        </div>
+
+        <div class="fighter enemy-health" id="enemy-card">
+            <div class="name-tag" style="color: var(--danger);" id="enemy-name">Limo Oscuro</div>
+            <div class="health-bar-bg"><div class="health-bar-fill" id="enemy-hp"></div></div>
+            <div class="sprite" id="enemy-sprite">👾</div>
+        </div>
+
     </div>
 
-    <div class="shop-stage">
-        <div class="character-box" id="character-box">
-            <img src="" alt="Cliente" class="char-img" id="char-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <div class="char-emoji" id="char-emoji" style="display: none;">🧑</div>
+    <div class="combat-panel">
+        <div class="question-box" id="question-display">
+            -5 + 3 = ?
         </div>
-        <div class="speech-bubble" id="speech-bubble"></div>
-        <div class="product-box" id="product-box">
-            <img src="" alt="Producto" class="prod-img" id="prod-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <div class="prod-emoji" id="prod-emoji" style="display: none;">📦</div>
-        </div>
-        <div class="counter"></div>
+        <div class="options-grid" id="options-container">
+            </div>
     </div>
 
-    <div class="register-panel">
-        <h3 class="register-title">🛒 Caja Registradora</h3>
-        <div class="input-group">
-            <label id="label-q1">Costo TOTAL de la compra: $</label>
-            <input type="number" id="input-q1" placeholder="0">
-        </div>
-        <div class="input-group">
-            <label id="label-q2">VUELTO a entregar: $</label>
-            <input type="number" id="input-q2" placeholder="0">
-        </div>
-        <button class="btn-vender" onclick="verificarVenta()">COBRAR Y ENTREGAR VUELTO 💵</button>
-        <div id="feedback" class="feedback-msg"></div>
+    <div id="start-screen" class="overlay">
+        <h1 class="overlay-title" style="color: var(--primary);">Arena de Enteros</h1>
+        <p class="overlay-text">Resuelve los cálculos para lanzar ataques.<br>¡Ojo con la Regla de los Signos!</p>
+        <button class="btn-main" onclick="startGame()">¡A Luchar!</button>
     </div>
 
-    <div id="end-screen" class="overlay-screen" style="display: none;">
-        <h1 style="color: var(--success); font-size: 3rem;">¡Semana Terminada! 🏆</h1>
-        <h2 id="final-msg"></h2>
-        <p style="font-size: 1.2rem; max-width: 500px;">¡Eres un experto en el mostrador! Calculaste sumas, restas, divisiones y multiplicaciones a una velocidad increíble. Tu negocio es un éxito rotundo.</p>
-        <button class="btn-overlay success" onclick="location.reload()">Jugar Otra Semana 🔄</button>
+    <div id="game-over-screen" class="overlay hidden">
+        <h1 class="overlay-title" style="color: var(--danger);">¡Derrotado! 💀</h1>
+        <p class="overlay-text">El enemigo fue demasiado fuerte.<br>Oleada alcanzada: <span id="final-wave" style="color: white; font-weight:bold;">1</span></p>
+        <button class="btn-main" onclick="resetGame()">Reintentar</button>
     </div>
 
 </div>
 
 <script>
-    // --- BASE DE DATOS: SEMANA, DÍAS Y CLIENTES ---
-    const semana = [
-        {
-            dia: "Lunes",
-            subtitulo: "Un día tranquilo. Ideal para calentar motores.",
-            clientes: [
-                {
-                    clienteImg: "cliente1.png", emojiFallback: "👦", prodImg: "producto_alfajor.png", prodEmoji: "🍩",
-                    texto: "¡Hola! Dame 2 alfajores triples. Cada uno está $800. Te pago con un billete de $2000.",
-                    resp1: 1600, // 2 * 800
-                    resp2: 400  // 2000 - 1600
-                },
-                {
-                    clienteImg: "cliente2.png", emojiFallback: "👩", prodImg: "producto_pan.png", prodEmoji: "🥖",
-                    texto: "Buenas. Llevo 3 jugos a $1000 cada uno y 1 pan de molde a $500. Te doy $5000.",
-                    resp1: 3500, // (3 * 1000) + 500
-                    resp2: 1500 // 5000 - 3500
-                }
-            ]
-        },
-        {
-            dia: "Martes",
-            subtitulo: "Empieza a llegar más gente. ¡Presta atención a las promociones!",
-            clientes: [
-                {
-                    clienteImg: "cliente3.png", emojiFallback: "👵", prodImg: "producto_caramelos.png", prodEmoji: "🍬",
-                    texto: "Hola mijo. Quiero 5 docenas de caramelos. Cada docena cuesta $300. Pago con $2000.",
-                    resp1: 1500, // 5 * 300
-                    resp2: 500  // 2000 - 1500
-                },
-                {
-                    clienteImg: "cliente4.png", emojiFallback: "👨‍🦰", prodImg: "producto_fideos.png", prodEmoji: "🍝",
-                    texto: "Llevo 2 paquetes de fideos a $1200 cada uno, y 1 salsa de tomate a $900. Toma, $5000.",
-                    resp1: 3300, // (2 * 1200) + 900
-                    resp2: 1700 // 5000 - 3300
-                }
-            ]
-        },
-        {
-            dia: "Miércoles",
-            subtitulo: "¡DÍA COMPLICADO! Lleno de pedidos grandes y compras para dividir entre amigos. 🤯",
-            clientes: [
-                {
-                    clienteImg: "cliente1.png", emojiFallback: "👨‍🎓", prodImg: "producto_caja.png", prodEmoji: "📦",
-                    texto: "¡Rápido! Llevo 4 leches a $1100, 2 panes a $800 y 3 quesos a $2000. Te pago con $20000.",
-                    resp1: 12000, // 4400 + 1600 + 6000
-                    resp2: 8000 // 20000 - 12000
-                },
-                {
-                    clienteImg: "cliente2.png", emojiFallback: "👧", prodImg: "producto_snack.png", prodEmoji: "🍿",
-                    texto: "Somos 5 amigos. Llevamos snacks por $8500 y bebidas por $4000. Dividimos en 5 partes iguales. Te pago mi parte con $3000. ¿Cuánto es el total de mi parte y mi vuelto?",
-                    resp1: 2500, // (8500 + 4000) / 5
-                    resp2: 500 // 3000 - 2500
-                },
-                {
-                    clienteImg: "cliente3.png", emojiFallback: "🧔", prodImg: "producto_empanadas.png", prodEmoji: "🥟",
-                    texto: "Quiero media docena (6) de empanadas a $600 cada una, y 2 gaseosas a $1500. Toma un billete de $10000.",
-                    resp1: 6600, // (6 * 600) + 3000
-                    resp2: 3400 // 10000 - 6600
-                }
-            ]
-        },
-        {
-            dia: "Jueves",
-            subtitulo: "Casi es fin de semana. ¡A mantener el ritmo!",
-            clientes: [
-                {
-                    clienteImg: "cliente4.png", emojiFallback: "👷", prodImg: "producto_yerba.png", prodEmoji: "🧉",
-                    texto: "Llevo 2 kilos de yerba a $3500 cada uno y 1 kilo de azúcar a $1200. Pago con $10000.",
-                    resp1: 8200, // 7000 + 1200
-                    resp2: 1800 // 10000 - 8200
-                },
-                {
-                    clienteImg: "cliente1.png", emojiFallback: "👦", prodImg: "producto_choco.png", prodEmoji: "🍫",
-                    texto: "¡Tienen promo! '3 chocolates por $2400 (precio total de los tres)'. Quiero llevar 6 chocolates. Te pago con $5000.",
-                    resp1: 4800, // (2400 / 3) * 6 = 800 * 6 = 4800, o simplemente 2400 * 2
-                    resp2: 200 // 5000 - 4800
-                }
-            ]
-        },
-        {
-            dia: "Viernes",
-            subtitulo: "El último esfuerzo. Todo el colegio viene a comprar.",
-            clientes: [
-                {
-                    clienteImg: "cliente2.png", emojiFallback: "👩‍🏫", prodImg: "producto_regalo.png", prodEmoji: "🎁",
-                    texto: "Hola. Compramos un regalo comunitario de $18000. Somos 6 para dividir el gasto. Te pago solo mi parte con un billete de $5000.",
-                    resp1: 3000, // 18000 / 6
-                    resp2: 2000 // 5000 - 3000
-                },
-                {
-                    clienteImg: "cliente3.png", emojiFallback: "👱‍♂️", prodImg: "producto_utiles.png", prodEmoji: "🖊️",
-                    texto: "Necesito 20 fotocopias a $50 cada una y 3 lapiceras a $400. Toma $5000.",
-                    resp1: 2200, // (20 * 50) + 1200
-                    resp2: 2800 // 5000 - 2200
-                }
-            ]
-        }
-    ];
-
-    let diaActual = 0;
-    let clienteActual = 0;
-    let dineroCaja = 0;
-
-    // --- FUNCIONES DEL JUEGO ---
+    // --- ESTADO DEL JUEGO ---
+    let level = 1;
+    let score = 0;
     
-    function cargarPantallaDia() {
-        const d = semana[diaActual];
-        document.getElementById('day-display').innerText = d.dia;
-        document.getElementById('day-title').innerText = d.dia;
-        
-        // El miércoles es color rojo para asustar un poco
-        if(d.dia === "Miércoles") {
-            document.getElementById('day-title').style.color = "var(--danger)";
-        } else {
-            document.getElementById('day-title').style.color = "var(--accent)";
-        }
+    const MAX_HERO_HP = 100;
+    let heroHP = MAX_HERO_HP;
+    
+    let maxEnemyHP = 30;
+    let enemyHP = 30;
+    
+    let correctAnswer = 0;
+    let isAnimating = false;
 
-        document.getElementById('day-subtitle').innerText = d.subtitulo;
-        document.getElementById('day-screen').style.display = 'flex';
+    // Enemigos por nivel
+    const enemies = ["👾", "🦇", "🐺", "👹", "💀", "🐉", "👽", "👿"];
+    const enemyNames = ["Limo", "Murciélago", "Lobo Feroz", "Ogro", "Esqueleto", "Dragón", "Alien", "Jefe Supremo"];
+
+    // --- LÓGICA MATEMÁTICA ---
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function iniciarDia() {
-        document.getElementById('day-screen').style.display = 'none';
-        clienteActual = 0;
-        cargarCliente();
-    }
+    // Generador de preguntas adaptativo por nivel
+    function generateQuestion() {
+        let qText = "";
+        let ans = 0;
 
-    function cargarCliente() {
-        const data = semana[diaActual].clientes[clienteActual];
-
-        // Reset UI
-        document.getElementById('input-q1').value = '';
-        document.getElementById('input-q2').value = '';
-        document.getElementById('feedback').innerHTML = '';
-        document.getElementById('feedback').className = 'feedback-msg';
-
-        const charBox = document.getElementById('character-box');
-        const speech = document.getElementById('speech-bubble');
-        const prodBox = document.getElementById('product-box');
-        
-        charBox.classList.remove('active');
-        speech.classList.remove('active');
-        prodBox.classList.remove('active');
-
-        // Configurar si es división en lugar de "Costo TOTAL"
-        if(data.texto.includes("mi parte") || data.texto.includes("dividir")) {
-            document.getElementById('label-q1').innerText = "Su PARTE a pagar: $";
-        } else {
-            document.getElementById('label-q1').innerText = "Costo TOTAL de la compra: $";
-        }
-        document.getElementById('label-q2').innerText = "VUELTO a entregar: $";
-
-        // Imágenes/Emojis
-        const charImg = document.getElementById('char-img');
-        const charEmoji = document.getElementById('char-emoji');
-        charImg.style.display = 'block'; charEmoji.style.display = 'none';
-        charImg.src = data.clienteImg;
-        charEmoji.innerText = data.emojiFallback;
-
-        const prodImg = document.getElementById('prod-img');
-        const prodEmoji = document.getElementById('prod-emoji');
-        prodImg.style.display = 'block'; prodEmoji.style.display = 'none';
-        prodImg.src = data.prodImg;
-        prodEmoji.innerText = data.prodEmoji;
-
-        // Animar
-        setTimeout(() => {
-            charBox.classList.add('active');
-            setTimeout(() => {
-                speech.innerHTML = data.texto;
-                speech.classList.add('active');
-                prodBox.classList.add('active');
-            }, 800);
-        }, 100);
-    }
-
-    function verificarVenta() {
-        const data = semana[diaActual].clientes[clienteActual];
-        const in1 = parseInt(document.getElementById('input-q1').value);
-        const in2 = parseInt(document.getElementById('input-q2').value);
-        const feedback = document.getElementById('feedback');
-
-        if (isNaN(in1) || isNaN(in2)) {
-            feedback.innerText = "¡Atención! Completa ambos campos.";
-            feedback.className = "feedback-msg incorrect";
-            return;
-        }
-
-        if (in1 === data.resp1 && in2 === data.resp2) {
-            dineroCaja += data.resp1;
-            document.getElementById('score').innerText = dineroCaja;
+        if (level <= 4) {
+            // Nivel 1-4: Sumas y Restas
+            let n1 = getRandomInt(-15, 15);
+            let n2 = getRandomInt(-15, 15);
+            let op = Math.random() > 0.5 ? '+' : '-';
             
-            feedback.innerHTML = "¡Excelente! ✅ +$" + data.resp1 + " a la caja.";
-            feedback.className = "feedback-msg correct";
-
-            // Avanzar cliente o terminar día
-            clienteActual++;
-            if (clienteActual < semana[diaActual].clientes.length) {
-                setTimeout(cargarCliente, 2000);
+            if (op === '+') {
+                ans = n1 + n2;
+                qText = `${n1} + ${n2 < 0 ? `(${n2})` : n2}`;
             } else {
-                setTimeout(terminarDia, 2000);
+                ans = n1 - n2;
+                qText = `${n1} - ${n2 < 0 ? `(${n2})` : n2}`;
             }
+        } 
+        else if (level <= 8) {
+            // Nivel 5-8: Multiplicación (Regla de signos fuerte)
+            let n1 = getRandomInt(-10, 10);
+            let n2 = getRandomInt(-10, 10);
+            if(n1===0) n1 = 2; if(n2===0) n2 = -3; // Evitar ceros fáciles
+            
+            ans = n1 * n2;
+            qText = `${n1} &times; ${n2 < 0 ? `(${n2})` : n2}`;
+        }
+        else if (level <= 12) {
+            // Nivel 9-12: División Exacta
+            let divisor = getRandomInt(2, 10) * (Math.random() > 0.5 ? 1 : -1);
+            let result = getRandomInt(2, 10) * (Math.random() > 0.5 ? 1 : -1);
+            let dividendo = divisor * result;
+            
+            ans = result;
+            qText = `${dividendo} &divide; ${divisor < 0 ? `(${divisor})` : divisor}`;
+        }
+        else {
+            // Nivel 13+: Modo Infinito Mixto (Combina todo)
+            let ops = ['+', '-', '*', '/'];
+            let op = ops[getRandomInt(0, 3)];
+            
+            if (op === '+') {
+                let n1 = getRandomInt(-30, 30); let n2 = getRandomInt(-30, 30);
+                ans = n1 + n2; qText = `${n1} + ${n2 < 0 ? `(${n2})` : n2}`;
+            } else if (op === '-') {
+                let n1 = getRandomInt(-30, 30); let n2 = getRandomInt(-30, 30);
+                ans = n1 - n2; qText = `${n1} - ${n2 < 0 ? `(${n2})` : n2}`;
+            } else if (op === '*') {
+                let n1 = getRandomInt(-12, 12); let n2 = getRandomInt(-12, 12);
+                ans = n1 * n2; qText = `${n1} &times; ${n2 < 0 ? `(${n2})` : n2}`;
+            } else {
+                let divi = getRandomInt(2, 12) * (Math.random() > 0.5 ? 1 : -1);
+                let res = getRandomInt(2, 12) * (Math.random() > 0.5 ? 1 : -1);
+                ans = res; qText = `${divi * res} &divide; ${divi < 0 ? `(${divi})` : divi}`;
+            }
+        }
+
+        correctAnswer = ans;
+        document.getElementById('question-display').innerHTML = qText;
+
+        // Generar Opciones (trampas inteligentes con signos invertidos)
+        let options = [ans];
+        while (options.length < 4) {
+            let trap;
+            let trapType = getRandomInt(1, 3);
+            if (trapType === 1) trap = ans * -1; // Trampa común: signo al revés
+            else if (trapType === 2) trap = ans + getRandomInt(-5, 5);
+            else trap = ans + getRandomInt(-10, 10);
+            
+            if (!options.includes(trap) && trap !== 0) options.push(trap);
+        }
+
+        // Mezclar
+        options.sort(() => Math.random() - 0.5);
+
+        // Renderizar botones
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'btn-option';
+            btn.innerText = opt;
+            btn.onclick = () => handleAttack(btn, opt);
+            container.appendChild(btn);
+        });
+    }
+
+    // --- LÓGICA DE BATALLA Y ANIMACIONES ---
+    function handleAttack(btnElement, selectedAnswer) {
+        if (isAnimating) return;
+        isAnimating = true;
+
+        const hero = document.getElementById('hero-card');
+        const enemy = document.getElementById('enemy-card');
+        const arena = document.getElementById('arena');
+
+        if (selectedAnswer === correctAnswer) {
+            // Acierto: Heroe ataca
+            btnElement.classList.add('correct');
+            hero.classList.add('attack-hero');
+            
+            setTimeout(() => {
+                enemy.classList.add('hurt');
+                showDamageText(enemy, -10); // Daño fijo por acierto
+                enemyHP -= 10;
+                score += 15 * level;
+                updateUI();
+                
+                if (enemyHP <= 0) {
+                    setTimeout(nextLevel, 600);
+                } else {
+                    setTimeout(() => { resetAnimations(); generateQuestion(); }, 500);
+                }
+            }, 150); // Delay sincronizado con la animación de moverse
+            
         } else {
-            feedback.innerText = "¡Hay un error! Revisa los cálculos.";
-            feedback.className = "feedback-msg incorrect";
-            document.getElementById('input-q1').value = '';
-            document.getElementById('input-q2').value = '';
+            // Error: Enemigo ataca
+            btnElement.classList.add('wrong');
+            
+            // Resaltar el correcto
+            document.querySelectorAll('.btn-option').forEach(b => {
+                if(parseInt(b.innerText) === correctAnswer) b.style.border = "3px solid var(--success)";
+            });
+
+            setTimeout(() => {
+                enemy.classList.add('attack-enemy');
+                setTimeout(() => {
+                    hero.classList.add('hurt');
+                    let damage = 15 + (level * 2);
+                    showDamageText(hero, -damage);
+                    heroHP -= damage;
+                    updateUI();
+                    
+                    if (heroHP <= 0) {
+                        setTimeout(gameOver, 600);
+                    } else {
+                        setTimeout(() => { resetAnimations(); generateQuestion(); }, 800);
+                    }
+                }, 150);
+            }, 300);
         }
     }
 
-    function terminarDia() {
-        diaActual++;
-        if (diaActual < semana.length) {
-            cargarPantallaDia(); // Siguiente día
-        } else {
-            finalizarJuego(); // Fin de la semana
-        }
+    function showDamageText(targetElement, amount) {
+        const dmgTag = document.createElement('div');
+        dmgTag.className = 'damage-text';
+        dmgTag.innerText = amount;
+        
+        // Posicionar sobre el personaje
+        const rect = targetElement.getBoundingClientRect();
+        dmgTag.style.left = (rect.left + rect.width/2 - 20) + 'px';
+        dmgTag.style.top = (rect.top + 20) + 'px';
+        
+        document.body.appendChild(dmgTag);
+        setTimeout(() => dmgTag.remove(), 1000);
     }
 
-    function finalizarJuego() {
-        const endScreen = document.getElementById('end-screen');
-        document.getElementById('final-msg').innerHTML = `Recaudación Total de la Semana: <br><span style="color: var(--success); font-size: 3rem;">$${dineroCaja}</span>`;
-        endScreen.style.display = 'flex';
+    function resetAnimations() {
+        document.getElementById('hero-card').className = 'fighter';
+        document.getElementById('enemy-card').className = 'fighter enemy-health';
+        isAnimating = false;
     }
 
-    // Iniciar el juego al cargar
-    window.onload = cargarPantallaDia;
+    function updateUI() {
+        // Barras de vida
+        let heroPercent = Math.max(0, (heroHP / MAX_HERO_HP) * 100);
+        let enemyPercent = Math.max(0, (enemyHP / maxEnemyHP) * 100);
+        
+        document.getElementById('hero-hp').style.width = heroPercent + '%';
+        document.getElementById('enemy-hp').style.width = enemyPercent + '%';
+        
+        // Color rojo si poca vida hero
+        document.getElementById('hero-hp').style.backgroundColor = heroPercent < 30 ? 'var(--danger)' : 'var(--success)';
+
+        // Textos
+        document.getElementById('ui-level').innerText = "Oleada " + level;
+        document.getElementById('ui-score').innerText = score;
+    }
+
+    function nextLevel() {
+        level++;
+        // Subir dificultad del enemigo
+        maxEnemyHP = 30 + (level * 10);
+        enemyHP = maxEnemyHP;
+        
+        // Curar al héroe un poco como premio
+        heroHP = Math.min(MAX_HERO_HP, heroHP + 20);
+        
+        // Cambiar sprite enemigo
+        let eIndex = (level - 1) % enemies.length;
+        document.getElementById('enemy-sprite').innerText = enemies[eIndex];
+        document.getElementById('enemy-name').innerText = enemyNames[eIndex] + " Lv." + level;
+        
+        resetAnimations();
+        updateUI();
+        generateQuestion();
+    }
+
+    // --- CONTROL DE PANTALLAS ---
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        resetGameVars();
+    }
+
+    function gameOver() {
+        document.getElementById('final-wave').innerText = level;
+        document.getElementById('game-over-screen').classList.remove('hidden');
+    }
+
+    function resetGame() {
+        document.getElementById('game-over-screen').classList.add('hidden');
+        resetGameVars();
+    }
+
+    function resetGameVars() {
+        level = 1;
+        score = 0;
+        heroHP = MAX_HERO_HP;
+        maxEnemyHP = 30;
+        enemyHP = 30;
+        
+        document.getElementById('enemy-sprite').innerText = enemies[0];
+        document.getElementById('enemy-name').innerText = enemyNames[0] + " Lv.1";
+        
+        updateUI();
+        resetAnimations();
+        generateQuestion();
+    }
 
 </script>
 
