@@ -52,7 +52,7 @@
             text-decoration: none; transition: all 0.2s; margin-bottom: 1.5rem;
         }
         .btn-volver:hover { background-color: var(--primary); color: white; transform: translateY(-2px); }
-<button class="tab-btn" onclick="openTab(event, 'boletin')">📊 Asistencias y Notas</button>
+
         /* Pestañas */
         .tabs {
             display: flex; justify-content: center; margin-bottom: 2rem;
@@ -152,6 +152,7 @@
 
 <div class="container">
     <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
+    <button class="tab-btn" onclick="openTab(event, 'boletin')">📊 Asistencias y Notas</button>
 
     <h1>Matemática 5° Año</h1>
     
@@ -342,7 +343,7 @@
     // REEMPLAZA ESTO con el nombre exacto de la pestaña abajo en tu Excel (ej: "Hoja 1" o "3ero")
     const SHEET_TITLE = 'Hoja 1'; 
     
-    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_TITLE}`;
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/1wR4yojz8tHk0MQX0NsZ_-cnwvcKEdOOpQV2Xzhde2V4/gviz/tq?tqx=out:json&sheet=quintomat`;
 
     async function cargarDatosAlumnos() {
         try {
