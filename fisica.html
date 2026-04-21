@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Física 1° Año: Exploración del Universo</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -26,6 +26,7 @@
             padding: 0;
             display: flex;
             justify-content: center;
+            line-height: 1.6;
         }
         .container {
             width: 100%;
@@ -34,73 +35,47 @@
             padding: 2rem;
             box-sizing: border-box;
         }
-        h1, h2, h3 { color: var(--accent); text-align: center; }
-        h4 { color: var(--primary); margin-bottom: 0.5rem; }
+        h1, h2, h3 { color: var(--accent); text-align: center; margin-top: 0; }
+        h1 { border-bottom: 2px solid var(--theory-border); padding-bottom: 1rem; }
+        h4 { color: var(--primary); margin-bottom: 0.5rem; margin-top: 0;}
         
         /* Botón Volver */
         .btn-volver {
-            display: inline-flex;
-            align-items: center;
-            background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 1.5rem;
+            display: inline-flex; align-items: center; background-color: transparent;
+            color: var(--primary); border: 2px solid var(--primary); padding: 0.5rem 1rem;
+            font-size: 1rem; font-weight: bold; border-radius: 8px; text-decoration: none;
+            cursor: pointer; transition: all 0.2s; margin-bottom: 1.5rem;
         }
         .btn-volver:hover { background-color: var(--primary); color: var(--text-main); }
 
         /* Barra del Jugador */
         .player-bar {
             background: linear-gradient(135deg, var(--bg-card), #0f172a);
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent);
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent);
+            margin-bottom: 2rem; display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 10px;
         }
         .player-input {
-            background-color: #000;
-            border: 1px solid var(--primary);
-            color: var(--accent);
-            padding: 0.5rem;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 1rem;
-            outline: none;
+            background-color: #000; border: 1px solid var(--primary); color: var(--accent);
+            padding: 0.5rem; border-radius: 4px; font-weight: bold; font-size: 1rem; outline: none;
         }
         .player-input:focus { border-color: var(--success); }
 
         /* Navegación de Pestañas */
         .mission-tabs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 8px;
-            margin-bottom: 2rem;
+            display: flex; overflow-x: auto; gap: 8px; margin-bottom: 2rem;
+            border-bottom: 2px solid var(--theory-border); scrollbar-width: none;
         }
+        .mission-tabs::-webkit-scrollbar { display: none; }
+        
         .tab-btn {
-            background-color: var(--bg-card);
-            border: 2px solid transparent;
-            padding: 0.8rem 0.5rem;
-            color: var(--text-muted);
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.95rem;
-            text-align: center;
+            background-color: transparent; border: none; padding: 1rem 1.2rem;
+            color: var(--text-muted); font-weight: bold; cursor: pointer;
+            transition: all 0.3s; font-size: 0.95rem; white-space: nowrap;
+            border-bottom: 3px solid transparent;
         }
-        .tab-btn:hover { border-color: var(--primary); color: var(--text-main); }
-        .tab-btn.active { background-color: var(--primary); color: var(--text-main); border-color: var(--primary); }
+        .tab-btn:hover { color: var(--text-main); }
+        .tab-btn.active { color: var(--text-main); border-bottom-color: var(--primary); }
         
         .tab-content { display: none; animation: fadeIn 0.4s; }
         .tab-content.active { display: block; }
@@ -108,45 +83,91 @@
 
         /* Tarjetas de Contenido y Teoría */
         .card {
-            background-color: var(--bg-card);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--theory-border);
+            background-color: var(--bg-card); padding: 1.5rem; border-radius: 8px;
+            margin-bottom: 1.5rem; border: 1px solid var(--theory-border); box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
         
         .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem; margin-top: 1.5rem; margin-bottom: 1.5rem;
         }
         .concept-box {
-            background: var(--bg-dark);
-            padding: 1rem;
-            border-radius: 8px;
-            border-left: 3px solid var(--primary);
+            background: var(--bg-dark); padding: 1.5rem; border-radius: 8px;
+            border-left: 4px solid var(--primary);
         }
-        .concept-box h4 { margin-top: 0; color: var(--accent); font-size: 1.1rem;}
 
         .formula-box {
-            background-color: #000;
-            border: 1px dashed var(--primary);
-            padding: 1rem;
-            text-align: center;
-            border-radius: 6px;
-            margin: 1rem 0;
-            font-size: 1.2rem;
+            background-color: #000; border: 1px dashed var(--primary); padding: 1rem;
+            text-align: center; border-radius: 6px; margin: 1rem 0; font-size: 1.2rem;
         }
 
-        .highlight-text {
-            color: var(--accent);
-            font-weight: bold;
+        .highlight-text { color: var(--accent); font-weight: bold; }
+        .debate-box { border-left-color: var(--accent); background: linear-gradient(180deg, var(--bg-dark) 0%, #1e293b 100%); }
+
+        /* --- FORMULARIOS Y AVISOS --- */
+        .form-control {
+            width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid var(--theory-border);
+            border-radius: 8px; font-size: 1rem; box-sizing: border-box; background-color: var(--bg-dark); color: var(--text-main);
+        }
+        .form-control::placeholder { color: var(--text-muted); }
+        .btn-submit {
+            background: var(--primary); color: white; border: none; padding: 12px;
+            font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; font-size: 1.1rem; transition: 0.2s;
+        }
+        .btn-submit:hover { background: var(--primary-dark); }
+        
+        .notice-card {
+            background: var(--bg-dark); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem;
+            border: 1px solid var(--theory-border); border-left: 5px solid var(--accent); position: relative;
+        }
+        .btn-delete { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--danger); font-size: 1.2rem; cursor: pointer; }
+
+        /* --- MODAL Y BOTÓN FLOTANTE --- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex;
+            align-items: center; justify-content: center; z-index: 2000; padding: 1rem;
+            backdrop-filter: blur(4px);
+        }
+        .modal-box {
+            background: var(--bg-card); padding: 2rem; border-radius: 16px; max-width: 450px;
+            width: 100%; text-align: center; border-top: 6px solid var(--primary); box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .btn-floating {
+            position: fixed; bottom: 20px; right: 20px; background: var(--primary); color: white;
+            border: none; padding: 12px 20px; border-radius: 50px; font-weight: bold;
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4); cursor: pointer; z-index: 1000;
         }
 
+        @media (max-width: 600px) {
+            .container { padding: 1rem; }
+            .card { padding: 1rem; }
+        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
+
+<div id="modal" class="modal-overlay">
+    <div class="modal-box">
+        <div style="font-size: 3rem; margin-bottom: 10px;">⚡</div>
+        <h2 style="color: var(--accent); margin-top:0;">¡Atención Investigadores!</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px; text-align: left;">
+            Para la próxima clase, es <strong>obligatorio</strong> tener copiado en la carpeta el contenido de la pestaña <strong>"Energía y Calor"</strong>:
+        </p>
+        <ul style="text-align: left; padding-left: 20px; color: var(--text-main); margin-bottom: 20px;">
+            <li>Concepto de Energía y el Principio de Conservación.</li>
+            <li>Diferencias entre Fuentes Renovables y No Renovables.</li>
+            <li>Revisar el cuadro de "El Gran Debate Energético" para charlar en clase.</li>
+        </ul>
+        <button class="btn-submit" onclick="document.getElementById('modal').classList.add('hidden')">
+            ¡Entendido, Prof. Gonzalo!
+        </button>
+    </div>
+</div>
+
+<button class="btn-floating" onclick="document.getElementById('modal').classList.remove('hidden')">
+    📋 Misión Actual
+</button>
 
 <div class="container">
     <a href="index.html" class="btn-volver">🔙 Salir al Menú Principal</a>
@@ -162,14 +183,14 @@
     </div>
 
     <div class="mission-tabs">
-        <button class="tab-btn active" onclick="openTab('intro', this)">⚛️ Nociones Básicas</button>
+        <button class="tab-btn active" onclick="openTab('intro', this)">⚛️ Básicas</button>
         <button class="tab-btn" onclick="openTab('energia', this)">🔥 Energía y Calor</button>
-        <button class="tab-btn" onclick="openTab('fuerzas', this)">🚀 Fuerzas y Mov.</button>
+        <button class="tab-btn" onclick="openTab('fuerzas', this)">🚀 Fuerzas</button>
         <button class="tab-btn" onclick="openTab('magnetismo', this)">🧲 Magnetismo</button>
         <button class="tab-btn" onclick="openTab('universo', this)">🌌 El Universo</button>
+        <button class="tab-btn" onclick="openTab('avisos', this)" style="color: var(--accent);">📢 Avisos</button>
     </div>
 
-    <!-- PESTAÑA: NOCIONES BÁSICAS -->
     <div id="intro" class="tab-content active">
         <h2>¿Qué es la Física?</h2>
         <div class="card">
@@ -190,154 +211,125 @@
         </div>
     </div>
 
-    <!-- PESTAÑA: TRANSFORMACIONES ENERGÉTICAS -->
     <div id="energia" class="tab-content">
         <h2>Eje: Transformaciones Energéticas</h2>
         
         <div class="card">
             <h3>La Energía y sus principios</h3>
             <p>La <strong>energía</strong> es la capacidad que tiene un cuerpo para realizar un trabajo o producir un cambio. Se rige por un principio fundamental:</p>
-            <blockquote style="border-left: 4px solid var(--accent); padding-left: 1rem; font-style: italic;">
+            <blockquote style="border-left: 4px solid var(--accent); padding-left: 1rem; font-style: italic; color: var(--accent);">
                 "La energía no se crea ni se destruye, solo se transforma o se transfiere."
             </blockquote>
             
             <div class="grid-cards">
-                <div class="concept-box">
-                    <h4>Fuentes Renovables</h4>
-                    <p>Son inagotables a escala humana o se regeneran rápidamente (Ej: Solar, Eólica, Hidráulica). Tienen menor impacto ambiental.</p>
+                <div class="concept-box" style="border-left-color: var(--success);">
+                    <h4 style="color: var(--success);">🌱 Fuentes Renovables</h4>
+                    <p>Son inagotables a escala humana o se regeneran rápidamente. Tienen menor impacto ambiental (gases de efecto invernadero).</p>
+                    <ul style="color: var(--text-muted); font-size: 0.9rem;">
+                        <li>Energía Solar (Sol)</li>
+                        <li>Energía Eólica (Viento)</li>
+                        <li>Hidráulica (Ríos/Mareas)</li>
+                    </ul>
                 </div>
-                <div class="concept-box">
-                    <h4>Fuentes No Renovables</h4>
-                    <p>Existen en cantidades limitadas y tardan millones de años en formarse (Ej: Petróleo, Carbón, Gas Natural). Generan mayor contaminación.</p>
+                <div class="concept-box" style="border-left-color: var(--danger);">
+                    <h4 style="color: var(--danger);">🛢️ Fuentes No Renovables</h4>
+                    <p>Existen en cantidades limitadas en la Tierra y tardan millones de años en formarse. Generan alta contaminación al quemarse.</p>
+                    <ul style="color: var(--text-muted); font-size: 0.9rem;">
+                        <li>Petróleo y Gas Natural</li>
+                        <li>Carbón Mineral</li>
+                        <li>Uranio (Energía Nuclear)</li>
+                    </ul>
                 </div>
             </div>
+        </div>
+
+        <div class="card" style="border: 1px solid var(--accent);">
+            <h3 style="color: var(--accent);">🗣️ El Gran Debate Energético</h3>
+            <p>A simple vista, la solución parece fácil: <em>"Dejemos de usar petróleo y usemos solo paneles solares y molinos de viento"</em>. Sin embargo, la <strong>transición energética</strong> es uno de los mayores desafíos de la humanidad actual. Reflexionemos sobre estos puntos para el debate en clase:</p>
+            
+            <div class="grid-cards">
+                <div class="concept-box debate-box">
+                    <h4>1. La Intermitencia</h4>
+                    <p>El sol no brilla de noche y el viento no sopla todo el tiempo. ¿Qué hacemos cuando una ciudad entera necesita electricidad a las 3 de la mañana y no hay viento? ¿Cómo almacenamos tanta energía si las baterías gigantes aún son muy caras y contaminantes de fabricar?</p>
+                </div>
+                <div class="concept-box debate-box">
+                    <h4>2. Impacto Oculto (E-Waste)</h4>
+                    <p>Los paneles solares y los generadores eólicos no duran para siempre (tienen una vida útil de 20-30 años). ¿Qué haremos con millones de toneladas de aspas gigantes de fibra de vidrio y paneles electrónicos cuando dejen de funcionar? ¿Es realmente 100% "limpia"?</p>
+                </div>
+                <div class="concept-box debate-box">
+                    <h4>3. El factor económico</h4>
+                    <p>Muchos países en desarrollo dependen de sus reservas de gas y petróleo para mantener su economía a flote y brindar energía barata a sus ciudadanos. ¿Es justo exigirles que apaguen sus industrias si no tienen dinero para construir granjas solares gigantes?</p>
+                </div>
+            </div>
+            <p style="text-align: center; color: var(--text-muted); font-style: italic;">Piensen sus argumentos, porque en clase dividiremos el aula en dos posturas.</p>
         </div>
 
         <div class="card">
             <h3>Calor vs. Temperatura</h3>
-            <p>Aunque los usamos como sinónimos en la vida diaria, en física son cosas muy distintas:</p>
+            <p>Aunque los usamos como sinónimos, en física son distintos:</p>
             <ul>
-                <li><strong>Temperatura:</strong> Es la medida de la energía cinética (movimiento) promedio de las partículas de un cuerpo. Se mide con un termómetro.</li>
-                <li><strong>Calor:</strong> Es la <span class="highlight-text">energía en tránsito</span> que fluye naturalmente de un cuerpo de mayor temperatura a uno de menor temperatura, hasta alcanzar el <strong>equilibrio térmico</strong>.</li>
+                <li><strong>Temperatura:</strong> Medida de la energía cinética (movimiento) de las partículas. Se mide con termómetro.</li>
+                <li><strong>Calor:</strong> Energía en tránsito que fluye de un cuerpo de mayor temperatura a uno de menor, hasta alcanzar el <strong>equilibrio térmico</strong>.</li>
             </ul>
-
-            <div class="formula-box">
-                Unidades de Energía y Calor: <strong>Joule (J)</strong> y <strong>Caloría (cal)</strong>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>Escalas Termométricas</h3>
-            <p>Existen diferentes escalas para medir la temperatura. Las más usadas son Celsius, Fahrenheit y Kelvin.</p>
-            <div class="formula-box">
-                De Celsius a Kelvin:<br>
-                $$ K = ^\circ C + 273.15 $$
-            </div>
-            <p><strong>Conductores y Aislantes:</strong> Los materiales conductores (como los metales) permiten que el calor fluya fácilmente. Los aislantes (como la madera o el telgopor) dificultan ese paso.</p>
         </div>
     </div>
 
-    <!-- PESTAÑA: ACCIONES MECÁNICAS -->
     <div id="fuerzas" class="tab-content">
-        <h2>Eje: Acciones Mecánicas entre Cuerpos</h2>
-        
+        <h2>Eje: Acciones Mecánicas</h2>
         <div class="card">
             <h3>¿Qué es una Fuerza?</h3>
-            <p>Una <strong>fuerza</strong> es toda acción capaz de alterar el estado de movimiento o de reposo de un cuerpo, o de producir en él una deformación. Se mide en <strong>Newtons (N)</strong>.</p>
-            <p>Las fuerzas son <strong>vectores</strong>. Esto significa que para definirlas no basta con un número, necesitamos:</p>
-            <ul>
-                <li><strong>Módulo:</strong> La intensidad (el número).</li>
-                <li><strong>Dirección:</strong> La línea sobre la que actúa (ej: horizontal, vertical).</li>
-                <li><strong>Sentido:</strong> Hacia dónde apunta la flecha (ej: izquierda, derecha).</li>
-            </ul>
+            <p>Una <strong>fuerza</strong> altera el estado de movimiento/reposo de un cuerpo o lo deforma. Se mide en <strong>Newtons (N)</strong>. Son vectores (necesitan módulo, dirección y sentido).</p>
         </div>
-
         <div class="card">
-            <h3>Leyes de Newton y Rozamiento</h3>
-            <p>Sir Isaac Newton definió cómo se mueven los cuerpos:</p>
+            <h3>Leyes de Newton</h3>
             <ol>
-                <li><strong>Inercia:</strong> Todo cuerpo mantiene su estado de reposo o movimiento a menos que una fuerza actúe sobre él.</li>
-                <li><strong>Dinámica:</strong> La aceleración es proporcional a la fuerza e inversamente proporcional a la masa.
-                    <div class="formula-box">$$ F = m \cdot a $$</div>
-                </li>
-                <li><strong>Acción y Reacción:</strong> A toda fuerza de acción le corresponde una de reacción de igual magnitud pero en sentido contrario.</li>
+                <li><strong>Inercia:</strong> Todo cuerpo mantiene su estado a menos que una fuerza actúe sobre él.</li>
+                <li><strong>Dinámica:</strong> \( F = m \cdot a \)</li>
+                <li><strong>Acción y Reacción:</strong> Toda acción tiene una reacción igual y contraria.</li>
             </ol>
-            <p><strong>Fuerza de Rozamiento:</strong> Es una fuerza que siempre se opone al movimiento, generada por el contacto entre dos superficies.</p>
-        </div>
-
-        <div class="card">
-            <h3>Presión y Fluidos</h3>
-            <p>La <strong>presión</strong> es la relación entre la fuerza aplicada y el área sobre la cual actúa. Se mide en Pascales (Pa).</p>
-            <div class="formula-box">$$ P = \frac{F}{A} $$</div>
-            
-            <div class="grid-cards">
-                <div class="concept-box">
-                    <h4>Presión en Líquidos</h4>
-                    <p>A mayor profundidad en un fluido, mayor es la presión, debido al peso del líquido que está por encima.</p>
-                </div>
-                <div class="concept-box">
-                    <h4>Principio de Arquímedes</h4>
-                    <p>Todo cuerpo sumergido recibe un <strong>Empuje</strong> hacia arriba igual al peso del volumen del fluido que desaloja (Flotabilidad).</p>
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- PESTAÑA: PROPIEDADES MAGNÉTICAS -->
     <div id="magnetismo" class="tab-content">
-        <h2>Eje: Propiedades Magnéticas y Eléctricas</h2>
-        
+        <h2>Eje: Magnetismo</h2>
         <div class="card">
             <h3>El Magnetismo</h3>
-            <p>Es el fenómeno físico por el cual ciertos materiales ejercen fuerzas de atracción o repulsión sobre otros. Los <strong>imanes</strong> tienen dos polos: Norte y Sur.</p>
-            <ul>
-                <li>Polos iguales se <strong>repelen</strong>.</li>
-                <li>Polos opuestos se <strong>atraen</strong>.</li>
-            </ul>
-            <p><strong>Líneas de campo:</strong> Son líneas imaginarias que representan la dirección del campo magnético. Salen del polo Norte y entran por el polo Sur del imán.</p>
-        </div>
-
-        <div class="card">
-            <h3>El Campo Magnético Terrestre</h3>
-            <p>¡La Tierra es un imán gigante! Su núcleo de hierro líquido genera un campo magnético que nos protege del viento solar.</p>
-            <p><strong>Las Brújulas y el GPS:</strong> La aguja de una brújula se alinea con este campo. Ojo: El Polo Norte Magnético no está exactamente en el mismo lugar que el Polo Norte Geográfico. Esa diferencia se llama <span class="highlight-text">Declinación Magnética</span>.</p>
-        </div>
-
-        <div class="card">
-            <h3>Electroimanes</h3>
-            <p>Se descubrió que la electricidad y el magnetismo están unidos. Si enrollamos un cable de cobre alrededor de un clavo de hierro y le pasamos corriente eléctrica, ¡se convierte en un imán! A esto se le llama <strong>magnetismo inducido</strong> o electroimán.</p>
+            <p>Fenómeno donde materiales ejercen fuerzas de atracción o repulsión. Polos iguales se repelen, opuestos se atraen.</p>
+            <p><strong>El Campo Magnético Terrestre:</strong> La Tierra es un imán gigante que nos protege del viento solar. Las brújulas se alinean con él.</p>
         </div>
     </div>
 
-    <!-- PESTAÑA: NUESTRO UNIVERSO -->
     <div id="universo" class="tab-content">
         <h2>Eje: Nuestro Universo</h2>
-        
         <div class="card">
-            <h3>Cosmovisiones a través de la Historia</h3>
-            <p>A lo largo de los siglos, la humanidad cambió su forma de entender nuestro lugar en el cosmos:</p>
+            <h3>Cosmovisiones Históricas</h3>
             <div class="grid-cards">
                 <div class="concept-box">
                     <h4>Geocentrismo</h4>
-                    <p>Teoría antigua (Ptolomeo) que afirmaba que la <strong>Tierra estaba inmóvil en el centro del universo</strong> y el Sol, la Luna y las estrellas giraban a su alrededor.</p>
+                    <p>Teoría antigua: La Tierra estaba inmóvil en el centro del universo.</p>
                 </div>
                 <div class="concept-box">
                     <h4>Heliocentrismo</h4>
-                    <p>Revolución científica (Copérnico, Galileo) que demostró que <strong>el Sol es el centro del sistema planetario</strong> y la Tierra es solo un planeta más que órbita a su alrededor.</p>
+                    <p>Revolución científica (Copérnico/Galileo): El Sol es el centro del sistema planetario.</p>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="card">
-            <h3>Cuerpos Celestes</h3>
-            <p>El universo está compuesto por múltiples elementos:</p>
-            <ul>
-                <li><strong>Estrellas:</strong> Esferas de gas caliente (plasma) que emiten luz propia por fusión nuclear (Ej: El Sol).</li>
-                <li><strong>Planetas:</strong> Cuerpos que orbitan una estrella, tienen masa suficiente para ser esféricos y han "limpiado" su órbita de otros objetos.</li>
-                <li><strong>Satélites Naturales:</strong> Cuerpos celestes que orbitan alrededor de los planetas (Ej: La Luna).</li>
-                <li><strong>Asteroides y Cometas:</strong> Restos rocosos o de hielo que vagan por el sistema solar.</li>
-            </ul>
+    <div id="avisos" class="tab-content">
+        <h2 style="border-bottom:none;">Comunicaciones y Archivos</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem; text-align: center;">Muro de transmisión de la base de operaciones.</p>
+        
+        <div class="card" style="border-top: 4px solid var(--primary); background-color: #1e293b;">
+            <h3 style="margin-top: 0; color: white;">🛰️ Emitir Transmisión (Solo Docente)</h3>
+            <input type="text" id="notice-title" class="form-control" placeholder="Título de la misión / Trabajo...">
+            <textarea id="notice-desc" class="form-control" rows="3" placeholder="Instrucciones para los investigadores..."></textarea>
+            <input type="url" id="notice-link" class="form-control" placeholder="Link a Google Drive (PDF / Docs)...">
+            <button class="btn-submit" onclick="addNotice()">Enviar Transmisión</button>
         </div>
+
+        <div id="lista-avisos" style="margin-top: 2rem;">
+            </div>
     </div>
 
 </div>
@@ -350,6 +342,77 @@
         document.getElementById(tabName).classList.add('active');
         btnElement.classList.add('active');
     }
+
+    // --- SISTEMA DE AVISOS (LOCALSTORAGE) ---
+    const STORAGE_KEY = 'cpes30_avisos_fisica1ro';
+
+    function loadNotices() {
+        const list = document.getElementById('lista-avisos');
+        const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        list.innerHTML = '';
+
+        if(notices.length === 0) {
+            list.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-style:italic;">No hay transmisiones pendientes en la base.</p>';
+            return;
+        }
+
+        // Mostrar del más reciente al más antiguo
+        notices.reverse().forEach((notice, index) => {
+            const realIndex = notices.length - 1 - index; 
+            let linkHtml = '';
+            if (notice.link && notice.link.trim() !== "") {
+                linkHtml = `<a href="${notice.link}" target="_blank" style="display:inline-block; margin-top:10px; color:#0f172a; font-weight:bold; text-decoration:none; background:var(--accent); padding:8px 12px; border-radius:6px;">📎 Abrir Archivo de Misión</a>`;
+            }
+
+            list.innerHTML += `
+                <div class="notice-card">
+                    <button class="btn-delete" onclick="deleteNotice(${realIndex})" title="Borrar Transmisión">✖</button>
+                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px;">📅 ${notice.date}</div>
+                    <h4 style="margin: 0 0 10px 0; color: var(--accent); font-size: 1.2rem;">${notice.title}</h4>
+                    <p style="margin: 0; color: var(--text-main);">${notice.desc}</p>
+                    ${linkHtml}
+                </div>
+            `;
+        });
+    }
+
+    function addNotice() {
+        const titleInput = document.getElementById('notice-title');
+        const descInput = document.getElementById('notice-desc');
+        const linkInput = document.getElementById('notice-link');
+
+        if (titleInput.value.trim() === '') {
+            alert('Investigador Jefe, por favor ingrese un Título para el aviso.');
+            return;
+        }
+
+        const newNotice = {
+            title: titleInput.value.trim(),
+            desc: descInput.value.trim(),
+            link: linkInput.value.trim(),
+            date: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' })
+        };
+
+        const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        notices.push(newNotice);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(notices));
+
+        // Limpiar formulario
+        titleInput.value = ''; descInput.value = ''; linkInput.value = '';
+        loadNotices();
+    }
+
+    function deleteNotice(index) {
+        if(confirm("¿Seguro que deseas borrar esta transmisión del servidor?")) {
+            const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            notices.splice(index, 1);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(notices));
+            loadNotices();
+        }
+    }
+
+    // Inicializar al cargar la página
+    window.onload = loadNotices;
 </script>
 
 </body>
