@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Defensor de la Energía</title>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --danger: #FF5252;
+            --bg-top: #87CEEB;
+            --bg-bottom: #E0F7FA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none; /* Evitar selección accidental en móviles */
+        }
+
+        body {
+            background: linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px; /* Optimizado para verse como app en PC también */
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Interfaz de usuario */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.1s ease;
+        }
+
+        #score-display { color: var(--primary); }
+        #lives-display { color: var(--danger); }
+
+        .pop-animation {
+            transform: scale(1.3);
+        }
+
+        /* Jugador y Objetos */
+        #player {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            transition: left 0.05s ease-out; /* Suaviza el movimiento en mouse */
+        }
+
+        .energy-item {
+            position: absolute;
+            font-size: 2.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 4;
+        }
+
+        /* Pantallas de Menú */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hidden { display: none !important; }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Feedback visual */
+        .feedback-text {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.5rem;
+            pointer-events: none;
+            animation: floatUp 1s forwards;
+            z-index: 15;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+
+        .screen-shake {
+            animation: shake 0.3s;
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <div id="ui-layer">
+            <div id="score-display" class="stat-box">Puntos: 0</div>
+            <div id="lives-display" class="stat-box">Planeta: ❤️❤️❤️</div>
+        </div>
+
+        <div id="player">🔋</div> <div id="start-screen" class="screen">
+            <h1>Defensor de la Energía</h1>
+            <p>Atrapa las <strong>Energías Renovables</strong> (☀️, 💨, 💧) para cargar la batería.</p>
+            <p>Evita las <strong>No Renovables</strong> (🪨, 🛢️), ¡contaminan el planeta!</p>
+            <button class="btn" id="start-btn">¡Jugar Ahora!</button>
+        </div>
+
+        <div id="game-over-screen" class="screen hidden">
+            <h1 style="color: var(--danger);">¡Juego Terminado!</h1>
+            <p id="final-score-text">Lograste: 0 puntos</p>
+            <p id="educational-feedback"></p>
+            <button class="btn" id="restart-btn">Volver a Intentar</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Variables Globales ---
+        const gameContainer = document.getElementById('game-container');
+        const player = document.getElementById('player');
+        const scoreDisplay = document.getElementById('score-display');
+        const livesDisplay = document.getElementById('lives-display');
+        const startScreen = document.getElementById('start-screen');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const finalScoreText = document.getElementById('final-score-text');
+        const eduFeedback = document.getElementById('educational-feedback');
+        
+        let score = 0;
+        let lives = 3;
+        let gameLoop;
+        let spawnInterval;
+        let isPlaying = false;
+        let items = [];
+        let speedMultiplier = 1;
+
+        // --- Base de Datos de Energías ---
+        const energies = [
+            { type: 'renewable', emoji: '☀️', name: 'Solar' },
+            { type: 'renewable', emoji: '💨', name: 'Eólica' },
+            { type: 'renewable', emoji: '💧', name: 'Hidráulica' },
+            { type: 'non-renewable', emoji: '🪨', name: 'Carbón' },
+            { type: 'non-renewable', emoji: '🛢️', name: 'Petróleo' }
+        ];
+
+        // --- Controles (Touch y Mouse) ---
+        function movePlayer(clientX) {
+            if (!isPlaying) return;
+            const containerRect = gameContainer.getBoundingClientRect();
+            let newX = clientX - containerRect.left;
+            
+            // Límites
+            if (newX < 30) newX = 30;
+            if (newX > containerRect.width - 30) newX = containerRect.width - 30;
+            
+            player.style.left = `${newX}px`;
+        }
+
+        // Eventos táctiles (Móvil)
+        gameContainer.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Evitar scroll
+            movePlayer(e.touches[0].clientX);
+        }, { passive: false });
+
+        gameContainer.addEventListener('touchstart', (e) => {
+            movePlayer(e.touches[0].clientX);
+        });
+
+        // Eventos ratón (PC)
+        gameContainer.addEventListener('mousemove', (e) => {
+            movePlayer(e.clientX);
+        });
+
+        // --- Lógica del Juego ---
+        function startGame() {
+            score = 0;
+            lives = 3;
+            speedMultiplier = 1;
+            items.forEach(item => item.element.remove());
+            items = [];
+            
+            updateUI();
+            startScreen.classList.add('hidden');
+            gameOverScreen.classList.add('hidden');
+            gameContainer.classList.remove('screen-shake');
+            
+            isPlaying = true;
+            spawnInterval = setInterval(spawnItem, 1200); // Aparece un objeto cada 1.2s
+            gameLoop = requestAnimationFrame(update);
+        }
+
+        function spawnItem() {
+            if (!isPlaying) return;
+
+            const energy = energies[Math.floor(Math.random() * energies.length)];
+            const itemEl = document.createElement('div');
+            itemEl.classList.add('energy-item');
+            itemEl.innerText = energy.emoji;
+            
+            const containerWidth = gameContainer.clientWidth;
+            const startX = Math.random() * (containerWidth - 40); // 40 es el ancho del item
+            
+            itemEl.style.left = `${startX}px`;
+            itemEl.style.top = '-50px';
+            
+            gameContainer.appendChild(itemEl);
+            
+            items.push({
+                element: itemEl,
+                x: startX,
+                y: -50,
+                data: energy,
+                speed: (3 + Math.random() * 2) * speedMultiplier
+            });
+
+            // Aumentar dificultad gradualmente
+            if (score > 0 && score % 50 === 0) {
+                speedMultiplier += 0.05;
+            }
+        }
+
+        function showFeedbackText(text, x, y, color) {
+            const feedback = document.createElement('div');
+            feedback.classList.add('feedback-text');
+            feedback.innerText = text;
+            feedback.style.left = `${x}px`;
+            feedback.style.top = `${y}px`;
+            feedback.style.color = color;
+            gameContainer.appendChild(feedback);
+            
+            setTimeout(() => feedback.remove(), 1000);
+        }
+
+        function updateUI() {
+            scoreDisplay.innerText = `Puntos: ${score}`;
+            livesDisplay.innerText = `Planeta: ${'❤️'.repeat(lives)}`;
+        }
+
+        function popAnimation(element) {
+            element.classList.add('pop-animation');
+            setTimeout(() => element.classList.remove('pop-animation'), 150);
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            cancelAnimationFrame(gameLoop);
+            clearInterval(spawnInterval);
+            
+            finalScoreText.innerText = `Lograste: ${score} puntos`;
+            
+            // Feedback educativo dependiendo del puntaje
+            if (score < 50) {
+                eduFeedback.innerText = "¡Cuidado! Las energías no renovables como el carbón y petróleo se agotan y contaminan. ¡Inténtalo de nuevo!";
+            } else {
+                eduFeedback.innerText = "¡Excelente! Sabes muy bien cómo aprovechar las fuentes inagotables como el sol y el viento.";
+            }
+
+            gameOverScreen.classList.remove('hidden');
+        }
+
+        function update() {
+            if (!isPlaying) return;
+
+            const playerRect = player.getBoundingClientRect();
+            const containerRect = gameContainer.getBoundingClientRect();
+
+            // Posición relativa del jugador dentro del contenedor
+            const playerRelative = {
+                left: playerRect.left - containerRect.left,
+                right: playerRect.right - containerRect.left,
+                top: playerRect.top - containerRect.top,
+                bottom: playerRect.bottom - containerRect.top
+            };
+
+            for (let i = items.length - 1; i >= 0; i--) {
+                let item = items[i];
+                item.y += item.speed;
+                item.element.style.top = `${item.y}px`;
+
+                // Colisión (Hitbox simplificada)
+                const itemCenter = {
+                    x: item.x + 20,
+                    y: item.y + 20
+                };
+
+                if (itemCenter.y > playerRelative.top && itemCenter.y < playerRelative.bottom &&
+                    itemCenter.x > playerRelative.left && itemCenter.x < playerRelative.right) {
+                    
+                    // Colisión detectada
+                    if (item.data.type === 'renewable') {
+                        score += 10;
+                        popAnimation(scoreDisplay);
+                        showFeedbackText('+10', item.x, item.y, 'var(--primary)');
+                    } else {
+                        lives--;
+                        gameContainer.classList.remove('screen-shake');
+                        void gameContainer.offsetWidth; // Trigger reflow
+                        gameContainer.classList.add('screen-shake');
+                        updateUI();
+                        showFeedbackText('¡Cuidado!', item.x, item.y - 20, 'var(--danger)');
+                    }
+
+                    updateUI();
+                    item.element.remove();
+                    items.splice(i, 1);
+
+                    if (lives <= 0) {
+                        gameOver();
+                        return; // Detener loop
+                    }
+                    continue;
+                }
+
+                // Fuera de pantalla por abajo
+                if (item.y > containerRect.height) {
+                    item.element.remove();
+                    items.splice(i, 1);
+                }
+            }
+
+            gameLoop = requestAnimationFrame(update);
+        }
+
+        // Botones de inicio
+        document.getElementById('start-btn').addEventListener('click', startGame);
+        document.getElementById('restart-btn').addEventListener('click', startGame);
+
+    </script>
+</body>
+</html>
