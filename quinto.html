@@ -52,7 +52,7 @@
             text-decoration: none; transition: all 0.2s; margin-bottom: 1.5rem;
         }
         .btn-volver:hover { background-color: var(--primary); color: white; transform: translateY(-2px); }
-
+<button class="tab-btn" onclick="openTab(event, 'boletin')">📊 Asistencias y Notas</button>
         /* Pestañas */
         .tabs {
             display: flex; justify-content: center; margin-bottom: 2rem;
@@ -297,7 +297,98 @@
             <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" src="https://www.youtube.com/embed/6JQw45YO3Fs" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
+<div id="boletin" class="tab-content">
+    <h2 style="border-bottom:none;">Estado de los Investigadores</h2>
+    <p style="color: var(--text-muted); margin-bottom: 2rem; text-align: center;">Aquí pueden consultar sus asistencias y progreso en las misiones.</p>
+    
+    <div class="card">
+        <div style="overflow-x: auto;">
+            <table id="tabla-alumnos" style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background-color: var(--primary); color: white;">
+                        <th style="padding: 12px; border-radius: 8px 0 0 0;">Alumno</th>
+                        <th style="padding: 12px;">% Asistencia</th>
+                        <th style="padding: 12px;">Nota TP 1</th>
+                        <th style="padding: 12px; border-radius: 0 8px 0 0;">Estado Misión</th>
+                    </tr>
+                </thead>
+                <tbody id="datos-alumnos">
+                    <tr><td colspan="4" style="text-align: center; padding: 20px;">Cargando base de datos desde Google Sheets... ⏳</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
+<style>
+    /* Estilos extra para la tabla */
+    #tabla-alumnos th, #tabla-alumnos td {
+        border-bottom: 1px solid var(--theory-border);
+    }
+    #tabla-alumnos tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.05); /* Brillo sutil al pasar el mouse */
+    }
+    .badge {
+        padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: bold;
+    }
+    .badge-ok { background-color: var(--success); color: white; }
+    .badge-peligro { background-color: var(--danger); color: white; }
+</style>
+
+<script>
+    // --- CONEXIÓN CON GOOGLE SHEETS ---
+    // REEMPLAZA ESTO con el ID de tu propio Google Sheet
+    const SHEET_ID = '1wR4yojz8tHk0MQX0NsZ_-cnwvcKEdOOpQV2Xzhde2V4'; 
+    // REEMPLAZA ESTO con el nombre exacto de la pestaña abajo en tu Excel (ej: "Hoja 1" o "3ero")
+    const SHEET_TITLE = 'Hoja 1'; 
+    
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_TITLE}`;
+
+    async function cargarDatosAlumnos() {
+        try {
+            const respuesta = await fetch(SHEET_URL);
+            const texto = await respuesta.text();
+            
+            // Google devuelve el JSON envuelto en una función, hay que limpiarlo un poco
+            const jsonString = texto.substring(texto.indexOf('{'), texto.lastIndexOf('}') + 1);
+            const data = JSON.parse(jsonString);
+            
+            const filas = data.table.rows;
+            const contenedorTbody = document.getElementById('datos-alumnos');
+            contenedorTbody.innerHTML = ''; // Limpiamos el mensaje de "Cargando..."
+
+            filas.forEach(fila => {
+                // Cada celda ('c') tiene un valor ('v'). Ajusta los índices [0], [1] según tus columnas.
+                // Si una celda está vacía en Excel, vendrá como null, por eso el operador ?.
+                const nombre = fila.c[0]?.v || '-';
+                const asistencia = fila.c[1]?.v || '0%';
+                const nota = fila.c[2]?.v || '-';
+                const estado = fila.c[3]?.v || '-';
+
+                // Lógica visual para gamificar: si la asistencia es menor a 60, ponerlo en rojo.
+                const numAsistencia = parseInt(asistencia);
+                let badgeClase = "badge badge-ok";
+                if (numAsistencia < 70) badgeClase = "badge badge-peligro";
+
+                contenedorTbody.innerHTML += `
+                    <tr>
+                        <td style="padding: 12px; font-weight: bold;">${nombre}</td>
+                        <td style="padding: 12px;"><span class="${badgeClase}">${asistencia}</span></td>
+                        <td style="padding: 12px; color: var(--accent); font-weight: bold;">${nota}</td>
+                        <td style="padding: 12px;">${estado}</td>
+                    </tr>
+                `;
+            });
+
+        } catch (error) {
+            console.error("Error al cargar Google Sheets:", error);
+            document.getElementById('datos-alumnos').innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--danger);">❌ Error de conexión con la base de datos central. Intente más tarde.</td></tr>`;
+        }
+    }
+
+    // Ejecutar la carga cuando se inicie la página
+    document.addEventListener('DOMContentLoaded', cargarDatosAlumnos);
+</script>
     <div id="avisos" class="tab-content">
         <h2>Subida de PDFs y Trabajos Prácticos</h2>
         <p>Aquí se publicarán las guías teóricas, los trabajos prácticos para resolver y los avisos importantes de la materia.</p>
