@@ -96,14 +96,37 @@
         
         .card.juego { border-top-color: #F59E0B; background-color: #FFFBEB; }
         .card.juego h3 { color: #D97706; }
-
-        .card.juego2 { border-top-color: #06B6D4; background-color: #ECFEFF; }
-        .card.juego2 h3 { color: #0E7490; }
         
         .card.biblioteca { border-top-color: #8B5CF6; background-color: #F5F3FF; }
         .card.biblioteca h3 { color: #6D28D9; }
 
         footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; }
+
+        /* --- MODAL DE INSTRUCCIONES --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white; padding: 2.5rem; border-radius: 15px;
+            max-width: 500px; width: 90%; text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-top: 6px solid var(--primary-color);
+        }
+        .modal-content h2 { color: var(--primary-color); margin-top: 0; text-align: center; font-size: 1.8rem;}
+        .modal-content ul { padding-left: 0; margin-bottom: 25px; list-style: none; }
+        .modal-content li { margin-bottom: 15px; font-size: 1.05rem; padding-left: 30px; position: relative; }
+        .modal-content li::before { content: '👉'; position: absolute; left: 0; }
+        .btn-close {
+            background: var(--primary-color); color: white; border: none;
+            padding: 12px 20px; border-radius: 25px; font-weight: bold;
+            cursor: pointer; width: 100%; font-size: 1.2rem;
+            transition: background 0.3s;
+        }
+        .btn-close:hover { background: var(--secondary-color); }
 
         /* --- CHATBOT STYLE --- */
         .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
@@ -111,7 +134,9 @@
             background-color: var(--primary-color); color: white; border: none;
             border-radius: 50%; width: 60px; height: 60px; font-size: 1.8rem;
             cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
         }
+        .chat-btn:hover { transform: scale(1.1); }
         .chat-window {
             display: none; position: absolute; bottom: 80px; right: 0;
             width: 320px; height: 450px; background-color: #ffffff;
@@ -133,6 +158,20 @@
 </head>
 <body>
 
+    <div id="welcome-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>¡Misión de Inicio! 🚀</h2>
+            <p>Bienvenido al portal del CPES N°30. Aquí te explicamos cómo funciona tu entrenamiento:</p>
+            <ul>
+                <li><strong>Carpeta al día:</strong> Debes copiar en tu carpeta todos los contenidos teóricos que aparezcan en las aulas.</li>
+                <li><strong>Tablero de Avisos:</strong> Revisa siempre la página principal para estar al tanto de las novedades y tareas.</li>
+                <li><strong>Zona Arcade:</strong> Cada materia tiene su propio juego. ¡Juégalos para repasar lo aprendido y sumar puntos!</li>
+                <li><strong>Biblioteca Drive:</strong> Los libros y apuntes largos están en el Drive para que los descargues fácilmente.</li>
+            </ul>
+            <button onclick="closeModal()" class="btn-close">¡Entendido, Profe!</button>
+        </div>
+    </div>
+
     <header>
         <h1>Colegio Provincial de Educación Secundaria N°30</h1>
         <h2>Matemática, Física y Economía</h2>
@@ -140,25 +179,12 @@
     </header>
 
     <main>
-        <h2 class="section-title">Aulas Interactivas y Desafíos</h2>
+        <h2 class="section-title">Aulas de Clase</h2>
         <div class="grid-cursos">
-            
-            <a href="juego2.html" class="card juego2">
-                <div class="card-icon">🛒</div>
-                <h3>Juego Matemática 1°</h3>
-                <p>¡Atiende el kiosco y calcula el vuelto!</p>
-            </a>
-
-            <a href="juego.html" class="card juego">
-                <div class="card-icon">🎮</div>
-                <h3>Simulador de Finanzas</h3>
-                <p>¡Juego de supervivencia y presupuesto!</p>
-            </a>
-
             <a href="primero.html" class="card">
                 <div class="card-icon">📐</div>
                 <h3>Matemática 1° Año</h3>
-                <p>Misiones y Desafíos (Teoría)</p>
+                <p>Misiones y Desafíos</p>
             </a>
             <a href="fisica.html" class="card fisica">
                 <div class="card-icon">⚛️</div>
@@ -184,6 +210,35 @@
                 <div class="card-icon">📊</div>
                 <h3>Economía</h3>
                 <p>Teoría y Simulaciones</p>
+            </a>
+        </div>
+
+        <h2 class="section-title">Zona Arcade y Desafíos</h2>
+        <div class="grid-cursos">
+            <a href="juego.html" class="card juego">
+                <div class="card-icon">⚔️</div>
+                <h3>Juego Mate 1°</h3>
+                <p>Guerra contra Números Enteros</p>
+            </a>
+            <a href="juego3.html" class="card juego">
+                <div class="card-icon">⚡</div>
+                <h3>Juego Física 1°</h3>
+                <p>Defensor de las Energías</p>
+            </a>
+            <a href="juego4.html" class="card juego">
+                <div class="card-icon">🧩</div>
+                <h3>Juego Mate 3°</h3>
+                <p>Desafío Racional</p>
+            </a>
+            <a href="juego5.html" class="card juego">
+                <div class="card-icon">🎯</div>
+                <h3>Juego Mate 4°</h3>
+                <p>Aventura de Reales</p>
+            </a>
+            <a href="juego6.html" class="card juego">
+                <div class="card-icon">🏆</div>
+                <h3>Juego Mate 5°</h3>
+                <p>Misión Cuadrática</p>
             </a>
         </div>
 
@@ -218,6 +273,19 @@
     </div>
 
     <script>
+        // Lógica del Modal de Inicio
+        window.onload = function() {
+            // Un pequeño retraso para que la animación se note
+            setTimeout(() => {
+                document.getElementById('welcome-modal').classList.add('active');
+            }, 500);
+        };
+
+        function closeModal() {
+            document.getElementById('welcome-modal').classList.remove('active');
+        }
+
+        // Lógica del Chatbot
         const chatWindow = document.getElementById('chat-window');
         const chatBody = document.getElementById('chat-body');
         const userInput = document.getElementById('user-input');
@@ -227,7 +295,7 @@
             chatOpen = !chatOpen;
             chatWindow.style.display = chatOpen ? 'flex' : 'none';
             if (chatOpen && chatBody.innerHTML === "") {
-                addMessage("¡Hola! Soy tu asistente. 🤖 ¿Buscas las aulas de clase, los <strong>Juegos Interactivos</strong> o el Material Bibliográfico en Drive?", 'bot');
+                addMessage("¡Hola! Soy tu profesor virtual. 🤖 ¿Necesitas ayuda sobre cómo funciona la plataforma, buscar un juego o encontrar material en Drive?", 'bot');
             }
         }
 
@@ -253,12 +321,13 @@
             let response = "";
             const driveLink = "https://drive.google.com/drive/folders/1JhXmmbtKzVRUa3umwPE4ZgVL9Eo9Ce9c?usp=drive_link";
 
-            // LOGICA ACTUALIZADA PARA LOS DOS JUEGOS
-            if (input.includes('kiosco') || (input.includes('juego') && input.includes('primero'))) {
-                response = "¡Para 1° Año tenemos el Kiosco Matemático! Entrena tus sumas, restas y vueltos en la caja registradora. 🛒<br><br><a href='juego2.html'>Jugar a Matemática 1°</a>";
+            // NUEVA LÓGICA DE GUÍA E INSTRUCCIONES
+            if (input.includes('guia') || input.includes('ayuda') || input.includes('funciona') || input.includes('hacer') || input.includes('instrucciones')) {
+                response = "¡Te explico rápido! 📝<br><br>1️⃣ <strong>Copiar:</strong> Pasa a tu carpeta los textos de cada aula.<br>2️⃣ <strong>Avisos:</strong> Revisa el inicio por tareas nuevas.<br>3️⃣ <strong>Jugar:</strong> Ve a la Zona Arcade para sumar puntos.<br>4️⃣ <strong>Drive:</strong> Descarga los PDF desde la Biblioteca.";
             }
-            else if (input.includes('juego') || input.includes('jugar') || input.includes('simulador')) {
-                response = "¡Tenemos dos juegos geniales preparados! 🎮<br><br>1. <a href='juego2.html'>Juego Matemática 1° (Kiosco)</a><br>2. <a href='juego.html'>Simulador de Finanzas (Presupuesto)</a><br><br>¿Cuál quieres probar?";
+            // LÓGICA DE JUEGOS ACTUALIZADA
+            else if (input.includes('juego') || input.includes('jugar') || input.includes('guerra') || input.includes('entero')) {
+                response = "¡Tenemos juegos para todos los cursos en la Zona Arcade! 🎮<br><br>- <a href='juego.html'>Guerra de Enteros (Mate 1°)</a><br>- <a href='juego3.html'>Defensor de Energía (Física 1°)</a><br>- <a href='juego4.html'>Juego Mate 3°</a><br>- <a href='juego5.html'>Juego Mate 4°</a><br>- <a href='juego6.html'>Juego Mate 5°</a>";
             }
             else if (input.includes('libro') || input.includes('pdf') || input.includes('descargar') || input.includes('material') || input.includes('bibliografia') || input.includes('drive')) {
                 response = "Debido al tamaño de los libros, los hemos mudado a Google Drive para que los descargues rápido. 📚<br><br>Encuentra todo aquí: <a href='" + driveLink + "' target='_blank'>Abrir Carpeta de Materiales</a>.";
@@ -270,10 +339,10 @@
                 response = "En el aula de <a href='economia.html'>Economía</a> tienes teoría, y en el <a href='" + driveLink + "' target='_blank'>Drive</a> está el apunte completo.";
             }
             else if (input.includes('fisica') || input.includes('física')) {
-                response = "¡Explora el universo en el <a href='fisica.html'>Aula de Física</a>!";
+                response = "¡Explora el universo en el <a href='fisica.html'>Aula de Física</a> y luego prueba el <a href='juego3.html'>Juego de Energía</a>!";
             }
             else {
-                response = "No estoy seguro, pero puedes probar buscando 'juego', 'libro', 'física' o el año de tu curso. ¡O entra directamente a la <a href='" + driveLink + "' target='_blank'>Biblioteca</a>!";
+                response = "No estoy seguro, pero puedes pedirme <strong>ayuda</strong> para saber cómo usar la plataforma, o buscar 'juego', 'libro', 'física' o tu año. ¡O entra a la <a href='" + driveLink + "' target='_blank'>Biblioteca</a>!";
             }
             addMessage(response, 'bot');
         }
