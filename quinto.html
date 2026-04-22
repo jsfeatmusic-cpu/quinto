@@ -10,7 +10,7 @@
 
     <style>
         :root {
-            --primary: #E11D48; /* Rojo carmesí/rosado fuerte para 5to */
+            --primary: #E11D48;
             --primary-dark: #BE123C;
             --background: #F3F4F6;
             --bg-card: #FFFFFF;
@@ -44,7 +44,6 @@
         h1 { text-align: center; border-bottom: 2px solid var(--border); padding-bottom: 1rem;}
         h4 { margin-bottom: 0.5rem; color: var(--text); }
 
-        /* Botón Volver */
         .btn-volver {
             display: inline-flex; align-items: center; background-color: transparent;
             color: var(--primary); border: 2px solid var(--primary);
@@ -53,7 +52,6 @@
         }
         .btn-volver:hover { background-color: var(--primary); color: white; transform: translateY(-2px); }
 
-        /* Pestañas */
         .tabs {
             display: flex; justify-content: center; margin-bottom: 2rem;
             border-bottom: 2px solid var(--border); flex-wrap: wrap; gap: 5px;
@@ -70,7 +68,6 @@
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Tarjetas de Teoría */
         .theory-section {
             background-color: #FFF1F2; padding: 1.5rem; border-radius: 8px;
             margin-bottom: 1.5rem; border-left: 4px solid var(--primary); line-height: 1.6;
@@ -83,7 +80,6 @@
         .concept-box ul { padding-left: 20px; }
         .concept-box li { margin-bottom: 10px; }
 
-        /* Generador de Avisos */
         .board-container { background-color: #F9FAFB; padding: 2rem; border-radius: 12px; border: 2px dashed #D1D5DB; }
         .notice-card {
             background: white; border: 1px solid var(--border); border-left: 5px solid var(--primary);
@@ -103,7 +99,6 @@
         .btn-submit { background-color: var(--primary); color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1.1rem;}
         .btn-submit:hover { background-color: var(--primary-dark); }
 
-        /* --- PANTALLA FLOTANTE (MODAL RECORDATORIO) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px);
@@ -122,7 +117,6 @@
             padding: 12px 30px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer;
         }
         
-        /* Botón flotante para reabrir recordatorio */
         .btn-floating-reminder {
             position: fixed; bottom: 20px; left: 20px; background-color: var(--accent); color: white;
             border: none; border-radius: 50px; padding: 15px 20px; font-size: 1rem; font-weight: bold;
@@ -130,6 +124,13 @@
         }
         .btn-floating-reminder:hover { transform: scale(1.05); }
         .hidden { display: none !important; }
+
+        /* Estilos extra para la tabla */
+        #tabla-alumnos th, #tabla-alumnos td { border-bottom: 1px solid var(--border); }
+        #tabla-alumnos tbody tr:hover { background-color: #F9FAFB; }
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
+        .badge-ok { background-color: var(--success); color: white; }
+        .badge-peligro { background-color: var(--danger); color: white; }
     </style>
 </head>
 <body>
@@ -148,23 +149,21 @@
     </div>
 </div>
 
-<button class="btn-floating-reminder" onclick="openReminder()">📋 Ver Tareas a Copiar</button>
+<button class="btn-floating-reminder" onclick="openReminder()">📋 Ver Tareas</button>
 
 <div class="container">
     <a href="index.html" class="btn-volver">🔙 Volver a Inicio</a>
-    
 
     <h1>Matemática 5° Año</h1>
     
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('estadistica', this)">📊 Estadística</button>
         <button class="tab-btn" onclick="openTab('cuadraticas', this)">🚀 Funciones Cuadráticas</button>
-        <button class="tab-btn" onclick="openTab(event, 'boletin')">📊 Asistencias y Notas</button>
+        <button class="tab-btn" onclick="openTab('boletin', this)">📋 Asistencias y Notas</button>
         <button class="tab-btn" onclick="openTab('avisos', this)">📢 Avisos y Trabajos</button>
     </div>
 
     <div id="estadistica" class="tab-content active">
-        
         <h2>Conceptos Básicos de Estadística</h2>
         <div class="theory-section">
             <p>La <strong>Estadística</strong> es la rama de la matemática que se encarga de recopilar, organizar, analizar e interpretar datos para tomar decisiones informadas. En 5to año comenzaremos por dominar el vocabulario fundamental de cualquier estudio estadístico.</p>
@@ -208,187 +207,144 @@
         </div>
     </div>
 
-   <div id="cuadraticas" class="tab-content">
+    <div id="cuadraticas" class="tab-content">
         <h2>Funciones Cuadráticas</h2>
         <div class="theory-section">
             <p>La función cuadrática tiene la forma polinómica general:</p>
             <div style="font-size: 1.5rem; text-align: center; margin: 15px 0; background: #1F2937; color: white; padding: 10px; border-radius: 8px;">
                 \( f(x) = ax^2 + bx + c \)
             </div>
-            <p>La gráfica de esta función es siempre una <strong>parábola</strong>. Su forma, apertura y posición en el plano cartesiano dependen de los valores de sus coeficientes \( a \), \( b \) y \( c \).</p>
         </div>
 
         <div class="concept-grid">
             <div class="concept-box" style="border-top-color: #8B5CF6;">
-                <h4 style="color: #8B5CF6;">1. Concavidad (Las Ramas)</h4>
+                <h4 style="color: #8B5CF6;">1. Concavidad</h4>
                 <p>El coeficiente principal <strong>\(a\)</strong> nos indica hacia dónde se abren las ramas de la parábola:</p>
                 <ul>
-                    <li>Si <strong>\(a > 0\)</strong> (positivo), las ramas van hacia <strong>arriba</strong> ∪ (la función tiene un mínimo).</li>
-                    <li>Si <strong>\(a < 0\)</strong> (negativo), las ramas van hacia <strong>abajo</strong> ∩ (la función tiene un máximo).</li>
+                    <li>Si <strong>\(a > 0\)</strong>, van hacia <strong>arriba</strong> ∪</li>
+                    <li>Si <strong>\(a < 0\)</strong>, van hacia <strong>abajo</strong> ∩</li>
                 </ul>
             </div>
             <div class="concept-box" style="border-top-color: #EC4899;">
                 <h4 style="color: #EC4899;">2. Ordenada al Origen</h4>
-                <p>Es el punto exacto donde la parábola corta al <strong>Eje Y</strong> (eje vertical). Siempre coincide con el término independiente <strong>\(c\)</strong>.</p>
-                <p><strong>Punto de corte:</strong> \( (0, c) \)</p>
+                <p>Es el punto exacto donde la parábola corta al <strong>Eje Y</strong>. Siempre coincide con el término <strong>\(c\)</strong>.</p>
             </div>
         </div>
 
-        <h3 style="margin-top: 2rem;">Cálculo de los Puntos Críticos</h3>
-        
-        <div class="concept-box" style="margin-bottom: 1.5rem; border-top-color: #EF4444;">
-            <h4 style="color: #EF4444;">3. Raíces o Ceros (Fórmula de Bhaskara)</h4>
-            <p>Son los puntos donde la gráfica cruza el <strong>Eje X</strong> (eje horizontal). Se calculan igualando la función a cero y aplicando la fórmula resolvente:</p>
+        <div class="concept-box" style="margin-top: 1.5rem; border-top-color: #EF4444;">
+            <h4 style="color: #EF4444;">3. Fórmula de Bhaskara</h4>
             <div style="font-size: 1.3rem; text-align: center; margin: 15px 0; overflow-x: auto;">
                 \( x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \)
-            </div>
-            <p style="font-size: 0.9rem; color: var(--text-muted);"><em>*Nota: Lo que está dentro de la raíz (\(b^2 - 4ac\)) se llama <strong>Discriminante</strong>. Si da positivo hay dos raíces; si da cero hay una sola raíz; y si da negativo, la parábola "vuela" y no corta al eje X.</em></p>
-        </div>
-
-        <div class="concept-grid">
-            <div class="concept-box" style="border-top-color: #F59E0B;">
-                <h4 style="color: #F59E0B;">4. Vértice</h4>
-                <p>Es la "punta" de la parábola. El punto donde cambia de dirección. Tiene dos coordenadas: \( V = (X_v ; Y_v) \).</p>
-                <p>Primero calculamos la X del vértice con la fórmula:</p>
-                <div style="font-size: 1.2rem; text-align: center; margin: 10px 0;">\( X_v = \frac{-b}{2a} \)</div>
-                <p>Luego, para hallar \( Y_v \), reemplazamos el resultado de \(X_v\) en la función original.</p>
-            </div>
-            <div class="concept-box" style="border-top-color: #14B8A6;">
-                <h4 style="color: #14B8A6;">5. Eje de Simetría</h4>
-                <p>Es una línea imaginaria vertical que actúa como espejo, dividiendo a la parábola en dos mitades exactamente iguales.</p>
-                <p>Como siempre pasa justo por el medio del vértice, su ecuación es simplemente:</p>
-                <div style="font-size: 1.2rem; text-align: center; margin: 10px 0;"><strong>\( x = X_v \)</strong></div>
-            </div>
-        </div>
-
-        <h3 style="margin-top: 3rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">📝 Ejemplo Resuelto Paso a Paso</h3>
-        <div class="theory-section" style="background-color: white; border: 1px solid var(--border); border-left: 4px solid #10B981;">
-            <p>Vamos a analizar y graficar la siguiente función: <strong>\( f(x) = x^2 - 4x + 3 \)</strong></p>
-            
-            <p><strong>Paso 1: Identificar a, b y c</strong><br>
-            \( a = 1 \), \( b = -4 \), \( c = 3 \)</p>
-            
-            <p><strong>Paso 2: Concavidad y Ordenada al origen</strong><br>
-            Como \( a = 1 \) (positivo), la parábola va hacia <strong>arriba</strong> ∪.<br>
-            La ordenada al origen es \( c = 3 \). Cortará al eje Y en el punto <strong>(0, 3)</strong>.</p>
-
-            <p><strong>Paso 3: Raíces (Fórmula resolvente)</strong><br>
-            \( x = \frac{-(-4) \pm \sqrt{(-4)^2 - 4 \cdot 1 \cdot 3}}{2 \cdot 1} \)<br>
-            \( x = \frac{4 \pm \sqrt{16 - 12}}{2} \)<br>
-            \( x = \frac{4 \pm \sqrt{4}}{2} = \frac{4 \pm 2}{2} \)<br>
-            <br>
-            Raíz 1: \( x_1 = \frac{4+2}{2} = 3 \)<br>
-            Raíz 2: \( x_2 = \frac{4-2}{2} = 1 \)<br>
-            Los puntos de corte en el eje X son <strong>(1, 0)</strong> y <strong>(3, 0)</strong>.</p>
-
-            <p><strong>Paso 4: Vértice y Eje de simetría</strong><br>
-            \( X_v = \frac{-(-4)}{2 \cdot 1} = \frac{4}{2} = 2 \) (El eje de simetría es \(x = 2\))<br>
-            Para la \(Y_v\), reemplazamos el 2 en las x de la función original:<br>
-            \( Y_v = (2)^2 - 4(2) + 3 = 4 - 8 + 3 = -1 \)<br>
-            El vértice está en el punto <strong>(2, -1)</strong>.</p>
-            
-            <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Polynomialdeg2.svg/500px-Polynomialdeg2.svg.png" alt="Gráfico de una función cuadrática" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid var(--border);">
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 10px;"><em>Ejemplo visual: Identificando raíces, ordenada al origen y vértice en el plano cartesiano.</em></p>
             </div>
         </div>
 
         <h3 style="margin-top: 3rem;">📺 Videoclase Explicativa</h3>
-        <p>Si quedó alguna duda sobre el proceso analítico o cómo ubicar los puntos en los ejes cartesianos, les dejo este video explicativo para repasar:</p>
         <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); margin-bottom: 2rem;">
-            <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" src="https://www.youtube.com/embed/6JQw45YO3Fs" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" src="https://www.youtube.com/embed/6JQw45YO3Fs" title="YouTube video player" allowfullscreen></iframe>
         </div>
     </div>
-<div id="boletin" class="tab-content">
-    <h2 style="border-bottom:none;">Estado de los Investigadores</h2>
-    <p style="color: var(--text-muted); margin-bottom: 2rem; text-align: center;">Aquí pueden consultar sus asistencias y progreso en las misiones.</p>
-    
-    <div class="card">
-        <div style="overflow-x: auto;">
-            <table id="tabla-alumnos" style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr style="background-color: var(--primary); color: white;">
-                        <th style="padding: 12px; border-radius: 8px 0 0 0;">Alumno</th>
-                        <th style="padding: 12px;">% Asistencia</th>
-                        <th style="padding: 12px;">Nota TP 1</th>
-                        <th style="padding: 12px; border-radius: 0 8px 0 0;">Estado Misión</th>
-                    </tr>
-                </thead>
-                <tbody id="datos-alumnos">
-                    <tr><td colspan="4" style="text-align: center; padding: 20px;">Cargando base de datos desde Google Sheets... ⏳</td></tr>
-                </tbody>
-            </table>
+
+    <div id="boletin" class="tab-content">
+        <h2 style="border-bottom:none;">Estado de los Investigadores</h2>
+        <p style="color: var(--text-muted); margin-bottom: 2rem; text-align: center;">Aquí pueden consultar sus asistencias y progreso en las misiones.</p>
+        
+        <div class="theory-section" style="background-color: white; border: 1px solid var(--border);">
+            <div style="overflow-x: auto;">
+                <table id="tabla-alumnos" style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background-color: var(--primary); color: white;">
+                            <th style="padding: 12px; border-radius: 8px 0 0 0;">Alumno</th>
+                            <th style="padding: 12px;">% Asistencia</th>
+                            <th style="padding: 12px;">Nota TP 1</th>
+                            <th style="padding: 12px; border-radius: 0 8px 0 0;">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="datos-alumnos">
+                        <tr><td colspan="4" style="text-align: center; padding: 20px;">Cargando base de datos desde Google Sheets... ⏳</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
+    <div id="avisos" class="tab-content">
+        <h2>Subida de PDFs y Trabajos Prácticos</h2>
+        <p>Aquí se publicarán las guías teóricas y los trabajos para resolver.</p>
+        
+        <div class="board-container">
+            <div class="add-form">
+                <h3 style="margin-top: 0; color: var(--text);">➕ Agregar Nuevo Material (Solo Docente)</h3>
+                <div class="form-group">
+                    <label>Título del Trabajo o Aviso:</label>
+                    <input type="text" id="notice-title" class="form-control" placeholder="Ej: Trabajo Práctico N° 1">
+                </div>
+                <div class="form-group">
+                    <label>Detalles / Instrucciones:</label>
+                    <textarea id="notice-desc" class="form-control" rows="2" placeholder="Ej: Descargar el PDF y resolver..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Enlace al PDF (Link Drive):</label>
+                    <input type="url" id="notice-link" class="form-control" placeholder="https://drive.google.com/...">
+                </div>
+                <button class="btn-submit" onclick="addNotice()">Publicar en el Tablón</button>
+            </div>
+            <div id="notices-list"></div>
+        </div>
+    </div>
+
 </div>
 
-<style>
-    /* Estilos extra para la tabla */
-    #tabla-alumnos th, #tabla-alumnos td {
-        border-bottom: 1px solid var(--theory-border);
-    }
-    #tabla-alumnos tbody tr:hover {
-        background-color: rgba(255, 255, 255, 0.05); /* Brillo sutil al pasar el mouse */
-    }
-    .badge {
-        padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: bold;
-    }
-    .badge-ok { background-color: var(--success); color: white; }
-    .badge-peligro { background-color: var(--danger); color: white; }
-</style>
-
 <script>
-    // --- CONEXIÓN CON GOOGLE SHEETS ---
+    // --- 1. CONTROL DE PESTAÑAS ---
+    function openTab(tabName, btnElement) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        btnElement.classList.add('active');
+    }
+
+    // --- 2. MODAL RECORDATORIO ---
+    function closeReminder() { document.getElementById('reminder-modal').classList.add('hidden'); }
+    function openReminder() { document.getElementById('reminder-modal').classList.remove('hidden'); }
+
+    // --- 3. CONEXIÓN CON GOOGLE SHEETS ---
     const SHEET_ID = '1wR4yojz8tHk0MQX0NsZ_-cnwvcKEdOOpQV2Xzhde2V4'; 
-    
-    // IMPORTANTE: Este nombre debe ser EXACTAMENTE IGUAL al de la pestaña de tu Excel
-    // Si tu pestaña se llama "quintomat", dejalo así. Si tiene mayúsculas, respetalas.
-    const SHEET_TITLE = 'HOJA 1'; 
-    
-    // Ahora armamos la URL usando las variables automáticamente
-    const SHEET_URL = `https://docs.google.com/spreadsheets/d/1wR4yojz8tHk0MQX0NsZ_-cnwvcKEdOOpQV2Xzhde2V4}/gviz/tq?tqx=out:json&sheet=HOJA 1`;
+    const SHEET_TITLE = 'quintomat'; // Asegurate de que tu pestaña de excel se llame exactamente así.
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_TITLE}`;
 
     async function cargarDatosAlumnos() {
-        const contenedorTbody = document.getElementById('datos-alumnos');
-        
+        const contenedor = document.getElementById('datos-alumnos');
         try {
             const respuesta = await fetch(SHEET_URL);
-            
-            // Si hay un error de red o permisos, lo atrapamos aquí
-            if (!respuesta.ok) {
-                throw new Error("No se pudo conectar. Verifica que el Google Sheet sea PÚBLICO (Cualquier usuario con el enlace).");
-            }
-
             const texto = await respuesta.text();
             
-            // Google devuelve el JSON envuelto en una función, hay que limpiarlo un poco
+            // Si el texto incluye '<html', significa que no está público
+            if (texto.includes('<html')) {
+                throw new Error("El Excel no está público o el nombre de la pestaña es incorrecto.");
+            }
+
             const jsonString = texto.substring(texto.indexOf('{'), texto.lastIndexOf('}') + 1);
             const data = JSON.parse(jsonString);
             
             const filas = data.table.rows;
-            contenedorTbody.innerHTML = ''; // Limpiamos el mensaje de "Cargando..."
+            contenedor.innerHTML = ''; 
 
-            // Si la tabla está vacía o solo tiene los títulos
             if (!filas || filas.length === 0) {
-                 contenedorTbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alumnos cargados en la lista aún.</td></tr>`;
+                 contenedor.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay datos en la tabla.</td></tr>`;
                  return;
             }
 
             filas.forEach(fila => {
-                // Ajustamos la lectura. Recuerda que Columna A es c[0], B es c[1], etc.
                 const nombre = fila.c[0]?.v || '-';
                 const asistencia = fila.c[1]?.v || '0%';
                 const nota = fila.c[2]?.v || '-';
                 const estado = fila.c[3]?.v || '-';
 
-                // Lógica visual: si la asistencia es menor a 70, lo ponemos en rojo
                 const numAsistencia = parseInt(asistencia);
                 let badgeClase = "badge badge-ok";
-                if (!isNaN(numAsistencia) && numAsistencia < 70) {
-                    badgeClase = "badge badge-peligro";
-                }
+                if (!isNaN(numAsistencia) && numAsistencia < 70) badgeClase = "badge badge-peligro";
 
-                contenedorTbody.innerHTML += `
+                contenedor.innerHTML += `
                     <tr>
                         <td style="padding: 12px; font-weight: bold;">${nombre}</td>
                         <td style="padding: 12px;"><span class="${badgeClase}">${asistencia}</span></td>
@@ -399,123 +355,55 @@
             });
 
         } catch (error) {
-            console.error("Error detallado:", error);
-            contenedorTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--danger);">❌ Error: Asegúrate de que el Excel de Google esté compartido como "Cualquier persona con el enlace".</td></tr>`;
+            console.error("Error Sheet:", error);
+            contenedor.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--danger);">❌ Error de conexión. Verificá que la pestaña en Excel se llame "${SHEET_TITLE}" y el archivo sea "Público con enlace".</td></tr>`;
         }
     }
 
-    // Ejecutar la carga cuando se inicie la página
-    document.addEventListener('DOMContentLoaded', cargarDatosAlumnos);
-</script>
-    <div id="avisos" class="tab-content">
-        <h2>Subida de PDFs y Trabajos Prácticos</h2>
-        <p>Aquí se publicarán las guías teóricas, los trabajos prácticos para resolver y los avisos importantes de la materia.</p>
-        
-        <div class="board-container">
-            <div class="add-form">
-                <h3 style="margin-top: 0; color: var(--text);">➕ Agregar Nuevo Material (Modo Docente)</h3>
-                <div class="form-group">
-                    <label>Título del Trabajo o Aviso:</label>
-                    <input type="text" id="notice-title" class="form-control" placeholder="Ej: Trabajo Práctico N° 1 - Estadística">
-                </div>
-                <div class="form-group">
-                    <label>Detalles / Instrucciones:</label>
-                    <textarea id="notice-desc" class="form-control" rows="2" placeholder="Ej: Descargar el PDF, copiar en la carpeta y resolver..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Enlace al PDF (Link de Google Drive):</label>
-                    <input type="url" id="notice-link" class="form-control" placeholder="https://drive.google.com/...">
-                </div>
-                <button class="btn-submit" onclick="addNotice()">Publicar en el Tablón</button>
-            </div>
-
-            <div id="notices-list">
-                </div>
-        </div>
-    </div>
-
-</div>
-
-<script>
-    // --- CONTROL DEL RECORDATORIO FLOTANTE ---
-    function closeReminder() {
-        document.getElementById('reminder-modal').classList.add('hidden');
-    }
-
-    function openReminder() {
-        document.getElementById('reminder-modal').classList.remove('hidden');
-    }
-
-    // --- NAVEGACIÓN DE PESTAÑAS ---
-    function openTab(tabName, btnElement) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(tabName).classList.add('active');
-        btnElement.classList.add('active');
-    }
-
-    // --- TABLÓN DE AVISOS Y PDFs (LOCAL STORAGE) ---
+    // --- 4. TABLÓN DE AVISOS ---
     const STORAGE_KEY = 'cpes30_avisos_5to';
 
     function loadNotices() {
         const list = document.getElementById('notices-list');
         const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         list.innerHTML = '';
-
         if(notices.length === 0) {
-            list.innerHTML = '<p style="text-align:center; color:gray; font-style:italic;">No hay trabajos o PDFs pendientes por ahora.</p>';
+            list.innerHTML = '<p style="text-align:center; color:gray; font-style:italic;">No hay trabajos pendientes.</p>';
             return;
         }
-
         notices.reverse().forEach((notice, index) => {
             const realIndex = notices.length - 1 - index; 
-            
-            let linkHtml = '';
-            if (notice.link && notice.link.trim() !== "") {
-                linkHtml = `<a href="${notice.link}" target="_blank" class="notice-link">📄 Descargar / Ver PDF Adjunto</a>`;
-            }
-
+            let linkHtml = notice.link ? `<a href="${notice.link}" target="_blank" class="notice-link">📄 Descargar PDF</a>` : '';
             list.innerHTML += `
                 <div class="notice-card">
-                    <button class="btn-delete" onclick="deleteNotice(${realIndex})" title="Eliminar Aviso">✖</button>
+                    <button class="btn-delete" onclick="deleteNotice(${realIndex})">✖</button>
                     <div class="notice-date">${notice.date}</div>
                     <div class="notice-title">${notice.title}</div>
                     <div class="notice-desc">${notice.desc}</div>
                     ${linkHtml}
-                </div>
-            `;
+                </div>`;
         });
     }
 
     function addNotice() {
-        const titleInput = document.getElementById('notice-title');
-        const descInput = document.getElementById('notice-desc');
-        const linkInput = document.getElementById('notice-link');
-
-        if (titleInput.value.trim() === '') {
-            alert('Por favor, ingresa al menos un Título para el trabajo.');
-            return;
-        }
-
-        const newNotice = {
-            title: titleInput.value.trim(),
-            desc: descInput.value.trim(),
-            link: linkInput.value.trim(),
-            date: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' })
-        };
-
+        const title = document.getElementById('notice-title').value.trim();
+        const desc = document.getElementById('notice-desc').value.trim();
+        const link = document.getElementById('notice-link').value.trim();
+        
+        if (!title) return alert('Ingresá un título.');
+        
         const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        notices.push(newNotice);
+        notices.push({ title, desc, link, date: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' }) });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(notices));
-
-        // Limpiar formulario
-        titleInput.value = ''; descInput.value = ''; linkInput.value = '';
-
+        
+        document.getElementById('notice-title').value = '';
+        document.getElementById('notice-desc').value = '';
+        document.getElementById('notice-link').value = '';
         loadNotices();
     }
 
     function deleteNotice(index) {
-        if(confirm("¿Seguro que deseas borrar este trabajo/aviso?")) {
+        if(confirm("¿Borrar este aviso?")) {
             const notices = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
             notices.splice(index, 1);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(notices));
@@ -523,10 +411,10 @@
         }
     }
 
-    // Iniciar al cargar la página
+    // Cargar todo al inicio
     window.onload = () => {
         loadNotices();
-        // El modal de recordatorio ya está visible por defecto en el HTML.
+        cargarDatosAlumnos();
     };
 </script>
 
