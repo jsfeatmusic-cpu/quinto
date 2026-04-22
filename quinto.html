@@ -338,16 +338,26 @@
 
 <script>
     // --- CONEXIÓN CON GOOGLE SHEETS ---
-    // REEMPLAZA ESTO con el ID de tu propio Google Sheet
     const SHEET_ID = '1wR4yojz8tHk0MQX0NsZ_-cnwvcKEdOOpQV2Xzhde2V4'; 
-    // REEMPLAZA ESTO con el nombre exacto de la pestaña abajo en tu Excel (ej: "Hoja 1" o "3ero")
-    const SHEET_TITLE = 'Hoja 1'; 
     
-    const SHEET_URL = `https://docs.google.com/spreadsheets/d/1wR4yojz8tHk0MQX0NsZ_-cnwvcKEdOOpQV2Xzhde2V4/gviz/tq?tqx=out:json&sheet=quintomat`;
+    // IMPORTANTE: Este nombre debe ser EXACTAMENTE IGUAL al de la pestaña de tu Excel
+    // Si tu pestaña se llama "quintomat", dejalo así. Si tiene mayúsculas, respetalas.
+    const SHEET_TITLE = 'HOJA 1'; 
+    
+    // Ahora armamos la URL usando las variables automáticamente
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/1wR4yojz8tHk0MQX0NsZ_-cnwvcKEdOOpQV2Xzhde2V4}/gviz/tq?tqx=out:json&sheet=HOJA 1`;
 
     async function cargarDatosAlumnos() {
+        const contenedorTbody = document.getElementById('datos-alumnos');
+        
         try {
             const respuesta = await fetch(SHEET_URL);
+            
+            // Si hay un error de red o permisos, lo atrapamos aquí
+            if (!respuesta.ok) {
+                throw new Error("No se pudo conectar. Verifica que el Google Sheet sea PÚBLICO (Cualquier usuario con el enlace).");
+            }
+
             const texto = await respuesta.text();
             
             // Google devuelve el JSON envuelto en una función, hay que limpiarlo un poco
@@ -355,21 +365,27 @@
             const data = JSON.parse(jsonString);
             
             const filas = data.table.rows;
-            const contenedorTbody = document.getElementById('datos-alumnos');
             contenedorTbody.innerHTML = ''; // Limpiamos el mensaje de "Cargando..."
 
+            // Si la tabla está vacía o solo tiene los títulos
+            if (!filas || filas.length === 0) {
+                 contenedorTbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay alumnos cargados en la lista aún.</td></tr>`;
+                 return;
+            }
+
             filas.forEach(fila => {
-                // Cada celda ('c') tiene un valor ('v'). Ajusta los índices [0], [1] según tus columnas.
-                // Si una celda está vacía en Excel, vendrá como null, por eso el operador ?.
+                // Ajustamos la lectura. Recuerda que Columna A es c[0], B es c[1], etc.
                 const nombre = fila.c[0]?.v || '-';
                 const asistencia = fila.c[1]?.v || '0%';
                 const nota = fila.c[2]?.v || '-';
                 const estado = fila.c[3]?.v || '-';
 
-                // Lógica visual para gamificar: si la asistencia es menor a 60, ponerlo en rojo.
+                // Lógica visual: si la asistencia es menor a 70, lo ponemos en rojo
                 const numAsistencia = parseInt(asistencia);
                 let badgeClase = "badge badge-ok";
-                if (numAsistencia < 70) badgeClase = "badge badge-peligro";
+                if (!isNaN(numAsistencia) && numAsistencia < 70) {
+                    badgeClase = "badge badge-peligro";
+                }
 
                 contenedorTbody.innerHTML += `
                     <tr>
@@ -382,8 +398,8 @@
             });
 
         } catch (error) {
-            console.error("Error al cargar Google Sheets:", error);
-            document.getElementById('datos-alumnos').innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--danger);">❌ Error de conexión con la base de datos central. Intente más tarde.</td></tr>`;
+            console.error("Error detallado:", error);
+            contenedorTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--danger);">❌ Error: Asegúrate de que el Excel de Google esté compartido como "Cualquier persona con el enlace".</td></tr>`;
         }
     }
 
