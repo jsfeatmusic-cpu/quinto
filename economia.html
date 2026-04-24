@@ -101,6 +101,8 @@
             margin-bottom: 1.5rem;
             border-left: 4px solid var(--primary);
         }
+        .theory-section ul { margin-top: 0.5rem; }
+        .theory-section li { margin-bottom: 0.5rem; line-height: 1.5; }
         
         .grid-cards {
             display: grid;
@@ -129,13 +131,14 @@
         }
         .reflection-card h4 { color: #B45309; text-align: left; }
 
-        /* Juegos */
+        /* Juegos e Interactivos */
         .game-container {
             text-align: center;
             background-color: #FAFAF9;
             padding: 2rem;
             border-radius: 12px;
             border: 2px dashed #D6D3D1;
+            margin-bottom: 2rem;
         }
         .score-board {
             font-size: 1.2rem;
@@ -189,6 +192,8 @@
         .correct { color: #059669; }
         .incorrect { color: #DC2626; }
         
+        .activity-list ul { column-count: 2; gap: 2rem; margin-bottom: 0; padding-left: 1.5rem; }
+        @media (max-width: 600px) { .activity-list ul { column-count: 1; } }
     </style>
 </head>
 <body>
@@ -202,6 +207,8 @@
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('que-es', this)">📊 ¿Qué es?</button>
         <button class="tab-btn" onclick="openTab('conceptos', this)">🔑 Nociones Básicas</button>
+        <button class="tab-btn" onclick="openTab('dinero', this)">💸 El Dinero</button>
+        <button class="tab-btn" onclick="openTab('canasta', this)">🛒 Canasta y Gastos</button>
         <button class="tab-btn" onclick="openTab('reflexion', this)">🤔 Para Reflexionar</button>
         <button class="tab-btn" onclick="openTab('juego', this)">🎮 Simulador</button>
     </div>
@@ -223,7 +230,7 @@
             <div class="concept-box">
                 <h4>🔭 Macroeconomía</h4>
                 <p>Estudia la economía en su <strong>conjunto a nivel global o nacional</strong>. Analiza los grandes agregados económicos.</p>
-                <p><em>Ejemplo: ¿Por qué hay inflación en el país? ¿Cuál es el nivel de desempleo en Argentina este año?</em></p>
+                <p><em>Ejemplo: ¿Por qué hay inflación en el país? ¿Cuál es el nivel de desempleo este año?</em></p>
             </div>
         </div>
     </div>
@@ -236,21 +243,101 @@
             <div class="concept-box">
                 <h4>⏳ La Escasez</h4>
                 <p>Es el problema económico fundamental. Consiste en que <strong>nuestros deseos y necesidades son infinitos, pero los recursos para satisfacerlos son limitados</strong> (tiempo, dinero, materias primas).</p>
-                <p>Si no hubiera escasez, la economía no existiría. ¡Todo sería gratis y para todos!</p>
             </div>
             <div class="concept-box">
                 <h4>⚖️ Costo de Oportunidad</h4>
                 <p>Al elegir algo, siempre renuncias a otra cosa. El costo de oportunidad es <strong>el valor de la mejor alternativa a la que renuncias</strong> cuando tomas una decisión.</p>
-                <p><em>Si con tus ahorros decides comprar un celular, el costo de oportunidad podrían ser las vacaciones que ya no podrás pagar.</em></p>
             </div>
             <div class="concept-box">
                 <h4>🛒 Bienes y Servicios</h4>
-                <p>Son los elementos que satisfacen nuestras necesidades. Los <strong>Bienes</strong> son tangibles (ropa, comida, un auto). Los <strong>Servicios</strong> son intangibles, acciones que otros hacen por nosotros (educación, transporte, corte de pelo).</p>
+                <p>Son los elementos que satisfacen nuestras necesidades. Los <strong>Bienes</strong> son tangibles (ropa, comida, un auto). Los <strong>Servicios</strong> son intangibles, acciones (educación, transporte, streaming).</p>
             </div>
             <div class="concept-box">
                 <h4>📈 Oferta y Demanda</h4>
-                <p>Es el motor del mercado. La <strong>Oferta</strong> es la cantidad de un bien que los vendedores quieren vender. La <strong>Demanda</strong> es la cantidad que los compradores quieren comprar.</p>
-                <p>Generalmente, si algo es muy demandado y hay poco (escasez), su precio sube.</p>
+                <p>Es el motor del mercado. La <strong>Oferta</strong> es la cantidad que los vendedores quieren vender. La <strong>Demanda</strong> es la cantidad que los compradores quieren comprar.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="dinero" class="tab-content">
+        <h2>El Dinero y su Evolución</h2>
+        
+        <div class="theory-section">
+            <p>El dinero es cualquier elemento aceptado de forma generalizada por una sociedad para el intercambio de bienes y servicios. Para ser verdaderamente "dinero", debe cumplir tres funciones principales:</p>
+            <ul>
+                <li><strong>Medio de cambio:</strong> Evita que tengamos que intercambiar vacas por zapatos (trueque).</li>
+                <li><strong>Unidad de cuenta:</strong> Nos permite medir y comparar el valor de cosas muy distintas (ponerles "precio").</li>
+                <li><strong>Reserva de valor:</strong> Te permite guardar el fruto de tu trabajo hoy para gastarlo en el futuro sin que se pudra (como pasaría si ahorraras en tomates).</li>
+            </ul>
+        </div>
+
+        <h3>Historia: ¿Cómo llegamos a las billeteras virtuales?</h3>
+        <div class="grid-cards">
+            <div class="concept-box">
+                <h4>🤝 1. El Trueque</h4>
+                <p>Intercambio directo de un bien por otro. Era ineficiente: requería que ambas personas necesitaran exactamente lo que el otro ofrecía (doble coincidencia de necesidades).</p>
+            </div>
+            <div class="concept-box">
+                <h4>🧂 2. Dinero Mercancía</h4>
+                <p>Se empezaron a usar bienes con valor propio que todos querían: sal (origen de la palabra "salario"), ganado, cacao, y posteriormente <strong>oro y plata</strong> por ser divisibles y duraderos.</p>
+            </div>
+            <div class="concept-box">
+                <h4>📄 3. Dinero Fiduciario</h4>
+                <p>Son los billetes y monedas actuales. Ya no están respaldados en oro. Su valor proviene exclusivamente de la <strong>confianza</strong> (fe) de la gente y de que son emitidos por un Banco Central legalmente.</p>
+            </div>
+            <div class="concept-box">
+                <h4>💻 4. Dinero Digital</h4>
+                <p>La forma más moderna. El dinero dejó de ser físico para convertirse en registros digitales en bancos, billeteras virtuales y criptomonedas. Es rápido y global.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="canasta" class="tab-content">
+        <h2>Canasta Básica y Presupuesto</h2>
+        
+        <div class="theory-section">
+            <h3>¿Qué es la Canasta Básica?</h3>
+            <p>Es un conjunto ideal de bienes y servicios indispensables para que una persona o familia pueda cubrir sus necesidades vitales. Los organismos oficiales (como el INDEC) la calculan relevando los precios de los supermercados (IPC) para determinar quiénes cubren sus necesidades.</p>
+            <ul>
+                <li><strong>CBA (Canasta Básica Alimentaria):</strong> Mide únicamente el costo de los alimentos para no desnutrirse. Quien no logra pagar esta canasta está por debajo de la <strong>Línea de Indigencia</strong>.</li>
+                <li><strong>CBT (Canasta Básica Total):</strong> Incluye la comida (CBA) más bienes y servicios no alimentarios (ropa, transporte, educación, salud). Quien no la cubre se encuentra por debajo de la <strong>Línea de Pobreza</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="game-container" style="background-color: #EEF2FF; border-color: #A5B4FC;">
+            <h2 style="color: #4F46E5;">👥 Actividad Grupal: Controlando la Billetera</h2>
+            <p>Para administrar tu dinero, el primer paso es saber en qué se te va. En grupos, repasen los siguientes conceptos y resuelvan la actividad.</p>
+            
+            <div class="grid-cards" style="text-align: left;">
+                <div class="concept-box" style="border-top-color: #EF4444;">
+                    <h4>📌 Gastos Fijos</h4>
+                    <p>Son regulares, obligatorios y su monto es predecible o siempre el mismo mes a mes.</p>
+                    <p><em>Ej: Alquiler, internet, cuota de la escuela.</em></p>
+                </div>
+                <div class="concept-box" style="border-top-color: #3B82F6;">
+                    <h4>📊 Gastos Variables</h4>
+                    <p>Son necesarios y suceden todos los meses, pero su monto cambia según cuánto consumas.</p>
+                    <p><em>Ej: Supermercado, luz, gas.</em></p>
+                </div>
+                <div class="concept-box" style="border-top-color: #F59E0B;">
+                    <h4>🐜 Gastos Hormiga</h4>
+                    <p>Gastos muy pequeños, invisibles y casi diarios que parecen inofensivos, pero sumados a fin de mes representan un dineral.</p>
+                    <p><em>Ej: Kiosco, cafés al paso, microtransacciones.</em></p>
+                </div>
+            </div>
+            
+            <div class="activity-list" style="margin-top: 2rem; padding: 1.5rem; background: white; border-radius: 8px; text-align: left; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <p style="margin-top: 0; color: var(--primary); font-size: 1.1rem;"><strong>💬 Para debatir en el pizarrón:</strong> Clasifiquen los siguientes gastos en <em>Fijo</em>, <em>Variable</em> o <em>Hormiga</em>.</p>
+                <ul>
+                    <li>Suscripción mensual de Netflix/Spotify.</li>
+                    <li>Compra semanal en el supermercado.</li>
+                    <li>Un alfajor o gaseosa en el recreo.</li>
+                    <li>Factura del servicio de agua.</li>
+                    <li>Cargar diamantes o pases de batalla en Mobile Legends.</li>
+                    <li>Zapatillas nuevas porque se rompieron las viejas.</li>
+                    <li>Seguro del auto.</li>
+                    <li>El chicle que compras esperando el colectivo.</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -261,22 +348,21 @@
 
         <div class="reflection-card">
             <h4>La Paradoja del Valor (Agua vs. Diamantes)</h4>
-            <p>El agua es absolutamente esencial para la vida humana; sin ella morimos en pocos días. Los diamantes, en cambio, no son esenciales, son solo piedras brillantes decorativas.</p>
-            <p><strong>Pregunta:</strong> Si el agua es mucho más importante que un diamante, ¿por qué el agua es tan barata y los diamantes cuestan millones?</p>
-            <p><em>Pista: Piensa en el concepto de "escasez". ¿Qué hay en mayor abundancia en el planeta?</em></p>
+            <p>El agua es absolutamente esencial para la vida humana; sin ella morimos en pocos días. Los diamantes no son esenciales.</p>
+            <p><strong>Pregunta:</strong> Si el agua es más importante que un diamante, ¿por qué el agua es tan barata y los diamantes cuestan millones?</p>
+            <p><em>Pista: Piensa en el concepto de "escasez".</em></p>
         </div>
 
         <div class="reflection-card">
             <h4>El Efecto Cobra (Incentivos Perversos)</h4>
-            <p>Durante la época colonial en la India, había demasiadas cobras venenosas en una ciudad. El gobierno decidió ofrecer una recompensa en dinero por cada cobra muerta que la gente entregara.</p>
-            <p>Al principio fue un éxito. Pero luego, la gente empezó a <strong>criar cobras en secreto</strong> para matarlas y cobrar la recompensa. Cuando el gobierno se dio cuenta y canceló el pago, los criadores soltaron a todas sus cobras en la ciudad.</p>
-            <p><strong>Pregunta:</strong> ¿Qué nos enseña esto sobre cómo reaccionan las personas a los incentivos económicos (dinero)?</p>
+            <p>El gobierno de una ciudad ofreció dinero a cambio de cobras muertas para reducir la plaga. La gente empezó a <strong>criar cobras en secreto</strong> para matarlas y cobrar. Al suspenderse el pago, soltaron las cobras y la plaga empeoró.</p>
+            <p><strong>Pregunta:</strong> ¿Qué nos enseña esto sobre cómo reaccionan las personas a los incentivos económicos?</p>
         </div>
 
         <div class="reflection-card">
             <h4>Sueldos Desiguales</h4>
-            <p>Un médico cirujano salva vidas todos los días estudiando durante más de 10 años. Un futbolista famoso juega un partido a la semana por entretenimiento.</p>
-            <p><strong>Pregunta:</strong> ¿Por qué el futbolista gana millones más que el médico? ¿Es el mercado "injusto" o se rige por la ley de la oferta y la demanda de personas que están dispuestas a pagar una entrada de estadio vs. una consulta médica?</p>
+            <p>Un cirujano salva vidas estudiando 10 años. Un futbolista famoso juega un partido a la semana por entretenimiento.</p>
+            <p><strong>Pregunta:</strong> ¿Por qué el futbolista gana millones más? Analiza la oferta de personas con ese talento y la demanda de la gente dispuesta a pagar entradas/suscripciones vs. consultas médicas.</p>
         </div>
     </div>
 
@@ -313,10 +399,10 @@
     let scoreJuego = 0;
     let currentCorrectIndex = -1;
 
-    // Banco de preguntas
+    // Banco de preguntas expandido
     const scenarios = [
         {
-            q: "Tienes $10.000 ahorrados. Decides ir a un recital de tu banda favorita en lugar de comprarte ropa nueva. ¿Cuál es tu Costo de Oportunidad?",
+            q: "Tienes $10.000 ahorrados. Decides ir a un recital en lugar de comprarte ropa nueva. ¿Cuál es tu Costo de Oportunidad?",
             options: [
                 "Los $10.000 que gastaste en la entrada.",
                 "La ropa nueva que dejaste de comprar.",
@@ -324,10 +410,10 @@
                 "La alegría de ver a la banda."
             ],
             correct: 1,
-            exp: "El Costo de Oportunidad no es el dinero en sí, sino la MEJOR ALTERNATIVA a la que renunciaste (la ropa)."
+            exp: "El Costo de Oportunidad es la MEJOR ALTERNATIVA a la que renunciaste (la ropa)."
         },
         {
-            q: "De repente, una helada destruye gran parte de la cosecha de tomates en el país. ¿Qué pasará probablemente con el precio del tomate en las verdulerías?",
+            q: "Una helada destruye gran parte de la cosecha de tomates. ¿Qué pasará con el precio del tomate en las verdulerías?",
             options: [
                 "El precio bajará para que la gente compre rápido.",
                 "El precio se mantendrá igual.",
@@ -335,40 +421,51 @@
                 "El Estado regalará los tomates restantes."
             ],
             correct: 2,
-            exp: "Cuando la oferta disminuye (hay menos tomates) pero la demanda sigue igual, los precios suben."
+            exp: "Cuando la oferta disminuye (menos tomates) pero la demanda sigue igual, los precios suben por escasez."
         },
         {
-            q: "Analizar el nivel de inflación de Argentina durante el último año es un estudio que corresponde a la...",
+            q: "Un billete de mil pesos cuesta centavos fabricarlo en papel y tinta. ¿Por qué aceptamos usarlo para comprar bienes mucho más valiosos?",
             options: [
-                "Microeconomía",
-                "Macroeconomía",
-                "Contabilidad de empresas",
-                "Psicología económica"
-            ],
-            correct: 1,
-            exp: "La inflación es un fenómeno general de los precios a nivel nacional, por lo tanto, es un tema de la Macroeconomía."
-        },
-        {
-            q: "Se pone de moda un nuevo modelo de zapatillas en TikTok. Millones de jóvenes quieren comprarlas. Si las fábricas no pueden producir más rápido de lo normal, ¿qué ocurrirá?",
-            options: [
-                "Habrá exceso de oferta de zapatillas.",
-                "El precio de esas zapatillas disminuirá.",
-                "Habrá un faltante y el precio probablemente suba (aumento de demanda).",
-                "Las fábricas quebrarán por el estrés."
+                "Porque está hecho de un papel mágico.",
+                "Porque el banco central guarda oro por el mismo valor del billete.",
+                "Porque es dinero fiduciario: confiamos en que otros lo aceptarán por ley.",
+                "Porque el valor intrínseco del papel es muy alto."
             ],
             correct: 2,
-            exp: "Un aumento drástico en la demanda sin aumento de la oferta genera escasez momentánea y hace que los precios suban."
+            exp: "El dinero moderno es fiduciario (viene de la palabra fe/confianza). Se basa en la confianza y el respaldo institucional, no en oro físico."
+        },
+        {
+            q: "Si una familia no logra generar los ingresos suficientes en un mes para poder comprar la Canasta Básica Alimentaria (CBA), se dice que...",
+            options: [
+                "Se encuentra por debajo de la línea de pobreza.",
+                "Se encuentra por debajo de la línea de indigencia.",
+                "Tiene demasiados gastos fijos.",
+                "Sufre de exceso de oferta."
+            ],
+            correct: 1,
+            exp: "La Canasta Básica Alimentaria (CBA) delimita la línea de indigencia. La Canasta Básica Total (CBT) delimita la pobreza."
+        },
+        {
+            q: "Todos los días compras un alfajor y recargas un poco de crédito para un juego en tu celular. Al final del mes te quedas sin ahorros. ¿Qué tipo de gasto es este?",
+            options: [
+                "Gasto Fijo",
+                "Gasto Variable",
+                "Costo de Oportunidad",
+                "Gasto Hormiga"
+            ],
+            correct: 3,
+            exp: "Los gastos hormiga son desembolsos minúsculos, repetitivos y prescindibles que agujerean el presupuesto silenciosamente."
         },
         {
             q: "¿Por qué decimos que la Escasez es el problema principal de la economía?",
             options: [
                 "Porque los gobiernos roban el dinero.",
-                "Porque nuestros deseos no tienen límite, pero los recursos del planeta sí.",
-                "Porque la gente no sabe ahorrar su salario.",
-                "Porque hay personas ricas y personas pobres."
+                "Porque nuestros deseos son ilimitados, pero los recursos son limitados.",
+                "Porque la gente no sabe ahorrar.",
+                "Porque hay escasez de dinero en los bancos."
             ],
             correct: 1,
-            exp: "La esencia de la economía es administrar recursos limitados frente a necesidades que siempre crecen y son ilimitadas."
+            exp: "La esencia de la economía es administrar recursos limitados frente a necesidades infinitas."
         }
     ];
 
@@ -379,15 +476,12 @@
         document.getElementById('next-btn-juego').style.display = "none";
         document.getElementById('options-container').style.pointerEvents = "auto";
         
-        // Elegir pregunta aleatoria
         const randomIndex = Math.floor(Math.random() * scenarios.length);
         currentQuestionData = scenarios[randomIndex];
         currentCorrectIndex = currentQuestionData.correct;
 
-        // Renderizar pregunta
         document.getElementById('scenario-display').innerHTML = currentQuestionData.q;
         
-        // Renderizar botones
         let optionsHtml = "";
         for (let i = 0; i < currentQuestionData.options.length; i++) {
             optionsHtml += `<button class="option-btn" onclick="checkAnswer(this, ${i})">${currentQuestionData.options[i]}</button>`;
@@ -398,23 +492,20 @@
     function checkAnswer(btnElement, selectedIndex) {
         document.getElementById('options-container').style.pointerEvents = "none";
         const feedback = document.getElementById('feedback-juego');
-
         let buttons = document.querySelectorAll('.option-btn');
 
         if (selectedIndex === currentCorrectIndex) {
-            btnElement.style.backgroundColor = "#10B981"; // Verde
+            btnElement.style.backgroundColor = "#10B981";
             btnElement.style.color = "white";
             scoreJuego += 1;
             feedback.innerHTML = `¡Correcto! ✅<br><span style="font-size:1rem; font-weight:normal; color: var(--text);">${currentQuestionData.exp}</span>`;
             feedback.className = "feedback correct";
         } else {
-            btnElement.style.backgroundColor = "#DC2626"; // Rojo
+            btnElement.style.backgroundColor = "#DC2626";
             btnElement.style.color = "white";
             scoreJuego = 0;
             feedback.innerHTML = `Incorrecto. Piensa como economista.<br><span style="font-size:1rem; font-weight:normal; color: var(--text);">${currentQuestionData.exp}</span>`;
             feedback.className = "feedback incorrect";
-            
-            // Mostrar cuál era la correcta
             buttons[currentCorrectIndex].style.border = "3px solid #10B981";
         }
 
@@ -422,7 +513,6 @@
         document.getElementById('next-btn-juego').style.display = "inline-block";
     }
 
-    // Iniciar juego al cargar
     window.onload = function() {
         generateScenario();
     };
