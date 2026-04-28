@@ -1,5 +1,4 @@
 // --- CONFIGURACIÓN ---
-// REEMPLAZA ESTA URL POR LA NUEVA QUE GENERASTE EN EL PASO 1
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzVbK1lDCnt9MUVOzREwxboTBWQRTodOPcqHsZ0MBB6pNUILM6oiB24L3WDMsYTWSdxKQ/exec';
 
 // --- 1. CONTROL DE PESTAÑAS ---
@@ -30,33 +29,43 @@ async function loadNotices() {
     list.innerHTML = '<p style="text-align:center; color:var(--text-muted);">📡 Sincronizando avisos con el servidor...</p>';
     
     try {
-        // Al quitar mode: 'no-cors', la petición se hace normal y permite leer el JSON
-        const response = await fetch(WEB_APP_URL);
-        const data = await response.json(); 
+        // Añadimos redirect: 'follow' para que JS maneje correctamente la redirección de Google Script
+        const response = await fetch(WEB_APP_URL, {
+            method: 'GET',
+            redirect: 'follow' 
+        });
+
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        // Leer primero como texto puro previene errores ocultos de parseo de JSON
+        const textData = await response.text();
+        const data = JSON.parse(textData); 
 
         list.innerHTML = '';
         
-        if(data.length === 0) {
+        if (!Array.isArray(data) || data.length === 0) {
             list.innerHTML = '<p style="text-align:center; color:gray; font-style:italic;">No hay trabajos pendientes.</p>';
             return;
         }
         
-        // Invertimos para que los más nuevos salgan arriba
         data.reverse().forEach(notice => {
-            let linkHtml = notice.link ? `<a href="${notice.link}" target="_blank" class="notice-link">📄 Descargar PDF</a>` : '';
+            // Evitar renderizar filas vacías de la planilla
+            if(!notice.title) return;
+
+            let linkHtml = notice.link ? `<a href="${notice.link}" target="_blank" class="notice-link">📄 Ver Trabajo</a>` : '';
             list.innerHTML += `
                 <div class="notice-card">
                     <button class="btn-delete" onclick="deleteNotice(${notice.row})" title="Borrar Aviso">✖</button>
-                    <div class="notice-date">${notice.date}</div>
+                    <div class="notice-date">${notice.date || ''}</div>
                     <div class="notice-title">${notice.title}</div>
-                    <div class="notice-desc">${notice.desc}</div>
+                    <div class="notice-desc">${notice.desc || ''}</div>
                     ${linkHtml}
                 </div>
             `;
         });
     } catch (e) {
-        console.error("Error en la conexión:", e);
-        list.innerHTML = `<p style="color: var(--danger); text-align:center;">⚠️ Error de conexión: ${e.message}</p>`;
+        console.error("Error detallado:", e);
+        list.innerHTML = `<p style="color: var(--danger); text-align:center;">⚠️ No se pudieron cargar los trabajos pendientes. Detalles en consola.</p>`;
     }
 }
 
@@ -83,7 +92,6 @@ async function addNotice() {
     try {
         await fetch(WEB_APP_URL, {
             method: 'POST',
-            // Usamos text/plain para evadir el preflight CORS de Google
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload)
         });
@@ -91,7 +99,7 @@ async function addNotice() {
         titleInput.value = '';
         descInput.value = '';
         linkInput.value = '';
-        await loadNotices();
+        await loadNotices(); // Recarga la lista automáticamente
 
     } catch (error) {
         alert("Error de red al intentar publicar el aviso.");
@@ -101,7 +109,6 @@ async function addNotice() {
     }
 }
 
-// Esta función se llama directamente desde el HTML generado dinámicamente
 window.deleteNotice = async function(rowNumber) {
     if(confirm("¿Seguro que deseas borrar este aviso para todos los alumnos?")) {
         try {
@@ -121,8 +128,6 @@ window.deleteNotice = async function(rowNumber) {
     }
 };
 
-// Event Listener para el botón de agregar
+// Event Listeners
 document.getElementById('btn-add-notice').addEventListener('click', addNotice);
-
-// Cargar los avisos al iniciar
 window.addEventListener('DOMContentLoaded', loadNotices);
