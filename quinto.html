@@ -204,29 +204,29 @@
         <div class="theory-section">
             <p>La función cuadrática tiene la forma polinómica general:</p>
             <div style="font-size: 1.5rem; text-align: center; margin: 15px 0; background: #1F2937; color: white; padding: 10px; border-radius: 8px;">
-                \( f(x) = ax^2 + bx + c \)
+                $ f(x) = ax^2 + bx + c $
             </div>
         </div>
 
         <div class="concept-grid">
             <div class="concept-box" style="border-top-color: #8B5CF6;">
                 <h4 style="color: #8B5CF6;">1. Concavidad</h4>
-                <p>El coeficiente principal <strong>\(a\)</strong> nos indica hacia dónde se abren las ramas de la parábola:</p>
+                <p>El coeficiente principal <strong>a</strong> nos indica hacia dónde se abren las ramas de la parábola:</p>
                 <ul>
-                    <li>Si <strong>\(a > 0\)</strong>, van hacia <strong>arriba</strong> ∪</li>
-                    <li>Si <strong>\(a < 0\)</strong>, van hacia <strong>abajo</strong> ∩</li>
+                    <li>Si <strong>$a > 0$</strong>, van hacia <strong>arriba</strong> ∪</li>
+                    <li>Si <strong>$a < 0$</strong>, van hacia <strong>abajo</strong> ∩</li>
                 </ul>
             </div>
             <div class="concept-box" style="border-top-color: #EC4899;">
                 <h4 style="color: #EC4899;">2. Ordenada al Origen</h4>
-                <p>Es el punto exacto donde la parábola corta al <strong>Eje Y</strong>. Siempre coincide con el término <strong>\(c\)</strong>.</p>
+                <p>Es el punto exacto donde la parábola corta al <strong>Eje Y</strong>. Siempre coincide con el término <strong>c</strong>.</p>
             </div>
         </div>
 
         <div class="concept-box" style="margin-top: 1.5rem; border-top-color: #EF4444;">
             <h4 style="color: #EF4444;">3. Fórmula de Bhaskara</h4>
             <div style="font-size: 1.3rem; text-align: center; margin: 15px 0; overflow-x: auto;">
-                \( x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \)
+                $$ x_{1,2} = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} $$
             </div>
         </div>
 
@@ -292,7 +292,7 @@
                 data = JSON.parse(text); 
             } catch (parseError) {
                 console.error("Respuesta inesperada de Google:", text);
-                throw new Error("Respuesta no válida del servidor.");
+                throw new Error("Respuesta no válida del servidor. Posible problema de permisos en Apps Script.");
             }
 
             list.innerHTML = '';
@@ -347,7 +347,6 @@
                 body: JSON.stringify(payload)
             });
 
-            // Dar tiempo a Google Sheets de registrar los datos
             setTimeout(() => {
                 titleInput.value = '';
                 descInput.value = '';
@@ -385,7 +384,6 @@
         }
     }
 
-    // Cargar todo al inicio (Solo loadNotices, ya que quitamos cargarDatosAlumnos)
     window.onload = () => {
         loadNotices();
     };
