@@ -1,284 +1,457 @@
-/* --- VARIABLES DE TEMA (Base Espacial / Dark Mode) --- */
-:root {
-    --bg-main: #0f172a;       /* Fondo general oscuro */
-    --bg-card: #1e293b;       /* Fondo de tarjetas */
-    --primary: #2563eb;       /* Azul primario */
-    --accent: #38bdf8;        /* Celeste neón para destacar */
-    --danger: #ef4444;        /* Rojo para borrar/errores */
-    --success: #10b981;       /* Verde para aciertos */
-    --text-main: #f8fafc;     /* Texto principal claro */
-    --text-muted: #94a3b8;    /* Texto secundario gris */
-    --theory-border: #334155; /* Bordes sutiles */
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sopa de Letras - Energías | CPES N°30</title>
+    <style>
+        :root {
+            --primary-color: #E11D48; /* Color de Física */
+            --secondary-color: #BE123C;
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --success-color: #10B981;
+        }
 
-/* --- ESTILOS BASE --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
 
-body {
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    line-height: 1.6;
-}
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
 
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 2rem;
-}
+        header h1 { margin: 0; font-size: 2rem; }
+        header p { margin: 10px 0 0 0; font-size: 1.2rem; color: #FFE4E6; }
 
-/* --- HEADER Y NAVEGACIÓN --- */
-.main-header {
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--accent);
-    padding: 1.5rem 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
+        .btn-volver {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            transition: background 0.3s;
+        }
 
-.header-content {
-    max-width: 1000px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
+        .btn-volver:hover { background-color: rgba(255, 255, 255, 0.4); }
 
-.header-content h1 {
-    font-size: 1.5rem;
-    color: var(--text-main);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
+        main { 
+            max-width: 1000px; 
+            margin: 2rem auto; 
+            padding: 0 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+        }
 
-.stats-bar {
-    display: flex;
-    gap: 1.5rem;
-    font-size: 0.9rem;
-    background: #000;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    border: 1px solid var(--theory-border);
-}
+        .game-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--primary-color);
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-/* --- PESTAÑAS (TABS) --- */
-.tabs-container {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin: 2rem 0;
-    padding: 0 1rem;
-}
+        /* Cuadrícula de la Sopa de Letras */
+        #grid {
+            display: grid;
+            gap: 2px;
+            background-color: #E5E7EB;
+            padding: 4px;
+            border-radius: 8px;
+            touch-action: none; /* Previene scroll al jugar en móviles */
+        }
 
-.tab-btn {
-    background: var(--bg-card);
-    color: var(--text-muted);
-    border: 1px solid var(--theory-border);
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
+        .cell {
+            width: 35px;
+            height: 35px;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            transition: background-color 0.2s, color 0.2s;
+        }
 
-.tab-btn:hover {
-    background: #2a3b52;
-    color: var(--text-main);
-}
+        .cell.selected {
+            background-color: #FDA4AF;
+            color: var(--secondary-color);
+        }
 
-.tab-btn.active {
-    background: var(--primary);
-    color: var(--text-main);
-    border-color: var(--accent);
-    box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-}
+        .cell.found {
+            background-color: var(--success-color);
+            color: white;
+        }
 
-/* Ocultar contenido por defecto y mostrar el activo */
-.tab-content {
-    display: none;
-    animation: fadeIn 0.4s ease-in-out;
-}
+        /* Lista de Palabras */
+        .words-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--secondary-color);
+            min-width: 250px;
+        }
 
-.tab-content.active {
-    display: block;
-}
+        .words-container h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            text-align: center;
+        }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+        .word-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-/* --- BOTONES GENERALES --- */
-.btn-nav, .btn-action, .btn-refresh {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    transition: 0.3s;
-}
+        .word-item {
+            font-size: 1.1rem;
+            padding: 8px 12px;
+            background-color: #F3F4F6;
+            border-radius: 6px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
 
-.btn-nav:hover, .btn-action:hover, .btn-refresh:hover {
-    background: var(--accent);
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
-}
+        .word-item::before {
+            content: '⚡';
+            margin-right: 8px;
+            font-size: 0.9rem;
+        }
 
-.btn-delete {
-    background: transparent;
-    color: var(--text-muted);
-    border: none;
-    float: right;
-    cursor: pointer;
-    font-size: 1.2rem;
-}
+        .word-item.found {
+            text-decoration: line-through;
+            background-color: #D1FAE5;
+            color: #065F46;
+            opacity: 0.7;
+        }
 
-.btn-delete:hover { color: var(--danger); }
+        .word-item.found::before { content: '✅'; }
 
-/* --- LABORATORIO TEÓRICO --- */
-.theory-block {
-    background: var(--bg-card);
-    border-radius: 12px;
-    margin-bottom: 2rem;
-    border: 1px solid var(--theory-border);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    overflow: hidden;
-}
+        /* Modal de Victoria */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white; padding: 2.5rem; border-radius: 15px;
+            text-align: center; max-width: 400px; width: 90%;
+            border-top: 6px solid var(--success-color);
+        }
+        .modal-content h2 { color: var(--success-color); font-size: 2rem; margin-top: 0;}
+        .btn-restart {
+            background: var(--primary-color); color: white; border: none;
+            padding: 12px 25px; border-radius: 25px; font-weight: bold;
+            cursor: pointer; font-size: 1.1rem; margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .btn-restart:hover { background: var(--secondary-color); }
 
-.theory-header {
-    background: linear-gradient(90deg, #1e293b, var(--primary));
-    padding: 1rem 1.5rem;
-    border-bottom: 2px solid var(--accent);
-}
+        @media (max-width: 768px) {
+            .cell { width: 28px; height: 28px; font-size: 1rem; }
+            main { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
 
-.theory-body {
-    padding: 2rem;
-}
+    <header>
+        <h1>Misión: Búsqueda de Energías</h1>
+        <p>Encuentra las fuentes de energía renovables y no renovables</p>
+        <a href="index.html" class="btn-volver">⬅ Volver al Portal</a>
+    </header>
 
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin: 1.5rem 0;
-}
+    <main>
+        <div class="game-container">
+            <div id="grid"></div>
+        </div>
 
-.info-item {
-    background: rgba(0,0,0,0.3);
-    padding: 1rem;
-    border-radius: 8px;
-    border-left: 3px solid var(--accent);
-}
+        <div class="words-container">
+            <h3>Palabras a Encontrar</h3>
+            <ul class="word-list" id="word-list">
+                </ul>
+        </div>
+    </main>
 
-.highlight-box {
-    background: rgba(56, 189, 248, 0.1);
-    border-left: 4px solid var(--accent);
-    padding: 1.5rem;
-    border-radius: 0 8px 8px 0;
-    margin: 1.5rem 0;
-}
+    <div id="win-modal" class="modal">
+        <div class="modal-content">
+            <h2>¡Misión Cumplida! 🏆</h2>
+            <p>Has encontrado todas las fuentes de energía. ¡Excelente trabajo!</p>
+            <button class="btn-restart" onclick="initGame()">Jugar de Nuevo</button>
+            <br><br>
+            <a href="index.html" style="color: var(--text-muted);">Volver al inicio</a>
+        </div>
+    </div>
 
-.energy-list li {
-    margin-bottom: 0.8rem;
-    margin-left: 1.5rem;
-    color: #cbd5e1;
-}
+    <script>
+        const wordsToFind = [
+            "SOLAR", "EOLICA", "BIOMASA", "HIDRAULICA", "GEOTERMICA", // Renovables
+            "CARBON", "PETROLEO", "GAS", "NUCLEAR" // No renovables
+        ];
+        
+        const gridSize = 14;
+        let grid = [];
+        let isSelecting = false;
+        let startCell = null;
+        let selectedCells = [];
+        let wordsFound = 0;
 
-.comparison-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
+        // Direcciones: [fila, columna]
+        const directions = [
+            [0, 1], [1, 0], [1, 1], [-1, 1], // Derecha, Abajo, Diag Abajo-Der, Diag Arriba-Der
+            [0, -1], [-1, 0], [-1, -1], [1, -1] // Izquierda, Arriba, Diag Arriba-Izq, Diag Abajo-Izq
+        ];
 
-.source-card {
-    padding: 1.5rem;
-    border-radius: 12px;
-}
+        function initGame() {
+            wordsFound = 0;
+            document.getElementById('win-modal').classList.remove('active');
+            generateEmptyGrid();
+            placeWords();
+            fillEmptySpaces();
+            renderGrid();
+            renderWordList();
+        }
 
-.renewable { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); }
-.non-renewable { background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); }
+        function generateEmptyGrid() {
+            grid = Array.from({ length: gridSize }, () => Array(gridSize).fill(''));
+        }
 
-/* --- FORMULARIOS Y MISIONES --- */
-.admin-panel {
-    background: var(--bg-card);
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid var(--theory-border);
-    margin-bottom: 2rem;
-}
+        function placeWords() {
+            let sortedWords = [...wordsToFind].sort((a, b) => b.length - a.length); // Colocar palabras largas primero
+            
+            sortedWords.forEach(word => {
+                let placed = false;
+                let attempts = 0;
+                
+                while (!placed && attempts < 200) {
+                    const dir = directions[Math.floor(Math.random() * directions.length)];
+                    const row = Math.floor(Math.random() * gridSize);
+                    const col = Math.floor(Math.random() * gridSize);
+                    
+                    if (canPlaceWord(word, row, col, dir)) {
+                        for (let i = 0; i < word.length; i++) {
+                            grid[row + i * dir[0]][col + i * dir[1]] = word[i];
+                        }
+                        placed = true;
+                    }
+                    attempts++;
+                }
+            });
+        }
 
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 1rem;
-}
+        function canPlaceWord(word, row, col, dir) {
+            for (let i = 0; i < word.length; i++) {
+                const newRow = row + i * dir[0];
+                const newCol = col + i * dir[1];
+                
+                if (newRow < 0 || newRow >= gridSize || newCol < 0 || newCol >= gridSize) {
+                    return false; // Fuera de límites
+                }
+                if (grid[newRow][newCol] !== '' && grid[newRow][newCol] !== word[i]) {
+                    return false; // Intersección inválida
+                }
+            }
+            return true;
+        }
 
-input, textarea {
-    background: var(--bg-main);
-    color: var(--text-main);
-    border: 1px solid var(--theory-border);
-    padding: 0.8rem;
-    border-radius: 6px;
-    font-size: 1rem;
-}
+        function fillEmptySpaces() {
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for (let r = 0; r < gridSize; r++) {
+                for (let c = 0; c < gridSize; c++) {
+                    if (grid[r][c] === '') {
+                        grid[r][c] = letters.charAt(Math.floor(Math.random() * letters.length));
+                    }
+                }
+            }
+        }
 
-input:focus, textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-}
+        function renderGrid() {
+            const gridElement = document.getElementById('grid');
+            gridElement.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            gridElement.innerHTML = '';
 
-.notices-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
+            for (let r = 0; r < gridSize; r++) {
+                for (let c = 0; c < gridSize; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.textContent = grid[r][c];
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    
+                    // Eventos para mouse
+                    cell.addEventListener('mousedown', handlePointerDown);
+                    cell.addEventListener('mouseenter', handlePointerEnter);
+                    
+                    // Eventos para táctil (móviles)
+                    cell.addEventListener('touchstart', handleTouchStart, {passive: false});
+                    
+                    gridElement.appendChild(cell);
+                }
+            }
+            
+            // Eventos globales para terminar selección
+            document.addEventListener('mouseup', handlePointerUp);
+            document.addEventListener('touchend', handlePointerUp);
+            document.addEventListener('touchmove', handleTouchMove, {passive: false});
+        }
 
-.notice-card {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid var(--theory-border);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    border-left: 4px solid var(--primary);
-}
+        function renderWordList() {
+            const listElement = document.getElementById('word-list');
+            listElement.innerHTML = '';
+            wordsToFind.forEach(word => {
+                const li = document.createElement('li');
+                li.className = 'word-item';
+                li.id = `word-${word}`;
+                li.textContent = word;
+                listElement.appendChild(li);
+            });
+        }
 
-/* --- JUEGO / ENTRENAMIENTO --- */
-.game-module {
-    text-align: center;
-    background: var(--bg-card);
-    padding: 3rem 2rem;
-    border-radius: 12px;
-    border: 1px solid var(--theory-border);
-}
+        // Lógicas de Selección
+        function getCell(row, col) {
+            return document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+        }
 
-#pregunta-texto {
-    font-size: 1.3rem;
-    margin-bottom: 2rem;
-    color: var(--accent);
-}
+        function clearSelection() {
+            document.querySelectorAll('.cell.selected').forEach(c => c.classList.remove('selected'));
+            selectedCells = [];
+        }
 
-.options-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 400px;
-    margin: 0 auto;
-}
+        function handlePointerDown(e) {
+            if(e.target.classList.contains('found')) return; // No reiniciar sobre ya encontradas
+            isSelecting = true;
+            startCell = { row: parseInt(e.target.dataset.row), col: parseInt(e.target.dataset.col) };
+            clearSelection();
+            selectCell(e.target);
+        }
 
-@media (max-width: 768px) {
-    .comparison-grid { grid-template-columns: 1fr; }
-    .header-content { flex-direction: column; text-align: center; }
-}
+        function handlePointerEnter(e) {
+            if (!isSelecting) return;
+            const endRow = parseInt(e.target.dataset.row);
+            const endCol = parseInt(e.target.dataset.col);
+            calculateLine(startCell.row, startCell.col, endRow, endCol);
+        }
+        
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (target && target.classList.contains('cell')) {
+                handlePointerDown({target: target});
+            }
+        }
+
+        function handleTouchMove(e) {
+            if (!isSelecting) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (target && target.classList.contains('cell')) {
+                const endRow = parseInt(target.dataset.row);
+                const endCol = parseInt(target.dataset.col);
+                calculateLine(startCell.row, startCell.col, endRow, endCol);
+            }
+        }
+
+        function calculateLine(r1, c1, r2, c2) {
+            clearSelection();
+            const rowDiff = r2 - r1;
+            const colDiff = c2 - c1;
+            
+            // Validar que sea línea recta (horizontal, vertical o diagonal 45 grados)
+            if (r1 === r2 || c1 === c2 || Math.abs(rowDiff) === Math.abs(colDiff)) {
+                const rowStep = rowDiff === 0 ? 0 : rowDiff / Math.abs(rowDiff);
+                const colStep = colDiff === 0 ? 0 : colDiff / Math.abs(colDiff);
+                const steps = Math.max(Math.abs(rowDiff), Math.abs(colDiff));
+
+                for (let i = 0; i <= steps; i++) {
+                    const r = r1 + (i * rowStep);
+                    const c = c1 + (i * colStep);
+                    selectCell(getCell(r, c));
+                }
+            } else {
+                // Si no es línea recta, solo selecciona la inicial
+                selectCell(getCell(r1, c1));
+            }
+        }
+
+        function selectCell(cell) {
+            if (cell && !cell.classList.contains('found')) {
+                cell.classList.add('selected');
+                selectedCells.push(cell);
+            }
+        }
+
+        function handlePointerUp() {
+            if (!isSelecting) return;
+            isSelecting = false;
+            
+            // Construir palabra seleccionada (derecho y al revés)
+            const selectedWord = selectedCells.map(c => c.textContent).join('');
+            const reversedWord = selectedWord.split('').reverse().join('');
+
+            let foundWord = null;
+            if (wordsToFind.includes(selectedWord)) foundWord = selectedWord;
+            else if (wordsToFind.includes(reversedWord)) foundWord = reversedWord;
+
+            // Verificar si ya fue encontrada antes
+            const wordElement = foundWord ? document.getElementById(`word-${foundWord}`) : null;
+
+            if (foundWord && wordElement && !wordElement.classList.contains('found')) {
+                // Palabra correcta
+                selectedCells.forEach(c => {
+                    c.classList.remove('selected');
+                    c.classList.add('found');
+                });
+                
+                wordElement.classList.add('found');
+                wordsFound++;
+
+                if (wordsFound === wordsToFind.length) {
+                    setTimeout(() => {
+                        document.getElementById('win-modal').classList.add('active');
+                    }, 500);
+                }
+            } else {
+                // Selección incorrecta, limpiar
+                clearSelection();
+            }
+        }
+
+        // Iniciar el juego al cargar
+        window.onload = initGame;
+    </script>
+</body>
+</html>
