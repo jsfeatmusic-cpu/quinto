@@ -40,10 +40,10 @@
         <button class="tab-btn" data-target="avisos">📢 Avisos y Trabajos</button>
     </div>
 
-    <div id="estadistica" class="tab-content active">
+   <div id="estadistica" class="tab-content active">
         <h2>Conceptos Básicos de Estadística</h2>
         <div class="theory-section">
-            <p>La <strong>Estadística</strong> es la rama de la matemática que se encarga de recopilar, organizar, analizar e interpretar datos para tomar decisiones informadas. En 5to año comenzaremos por dominar el vocabulario fundamental de cualquier estudio estadístico.</p>
+            <p>La <strong>Estadística</strong> es la rama de la matemática que se encarga de recopilar, organizar, analizar e interpretar datos para tomar decisiones informadas. En 5to año comenzaremos por dominar el vocabulario fundamental.</p>
         </div>
         
         <div class="concept-grid">
@@ -61,25 +61,75 @@
 
         <h3 style="margin-top: 3rem;">Las Variables Estadísticas</h3>
         <div class="theory-section">
-            <p>Una <strong>Variable Estadística</strong> es la característica o cualidad que estamos investigando u observando en la población. Dependiendo del tipo de respuesta que obtengamos, se clasifican en dos grandes familias:</p>
+            <p>Una <strong>Variable Estadística</strong> es la característica o cualidad que estamos investigando. Se clasifican en dos grandes familias:</p>
         </div>
 
         <div class="concept-grid">
             <div class="concept-box" style="border-top-color: #3B82F6;">
                 <h4 style="color: #3B82F6;">1. Variables Cualitativas</h4>
-                <p>Son aquellas que expresan <strong>cualidades, gustos o características</strong>. ¡No se pueden medir con números!</p>
+                <p>Expresan <strong>cualidades o características</strong>. ¡No se miden con números!</p>
                 <ul>
-                    <li><strong>Nominal:</strong> No tienen un orden establecido (Ej: Color de ojos, deporte favorito, marca de celular).</li>
-                    <li><strong>Ordinal:</strong> Expresan un orden o jerarquía (Ej: Nivel de satisfacción, medallas olímpicas: oro, plata, bronce).</li>
+                    <li><strong>Nominal:</strong> Sin orden (Ej: Color de ojos, deporte).</li>
+                    <li><strong>Ordinal:</strong> Con jerarquía (Ej: Nivel de satisfacción).</li>
                 </ul>
             </div>
             <div class="concept-box" style="border-top-color: #10B981;">
                 <h4 style="color: #10B981;">2. Variables Cuantitativas</h4>
-                <p>Son aquellas que se expresan mediante <strong>cantidades numéricas</strong>. Con ellas se pueden realizar operaciones matemáticas.</p>
+                <p>Se expresan mediante <strong>cantidades numéricas</strong>.</p>
                 <ul>
-                    <li><strong>Discretas:</strong> Toman valores enteros aislados. Se cuentan. (Ej: Cantidad de hermanos, número de goles, número de mascotas).</li>
-                    <li><strong>Continuas:</strong> Toman cualquier valor dentro de un intervalo (¡tienen decimales!). Se miden. (Ej: Altura de una persona, peso, tiempo de carrera).</li>
+                    <li><strong>Discretas:</strong> Valores enteros aislados. Se cuentan. (Ej: Cantidad de hermanos).</li>
+                    <li><strong>Continuas:</strong> Admiten decimales. Se miden. (Ej: Altura, peso).</li>
                 </ul>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 3rem;">Armado de Tabla de Valores (Frecuencias)</h3>
+        <div class="theory-section">
+            <p>Una vez recolectados los datos, necesitamos organizarlos en una <strong>Tabla de Frecuencias</strong> para poder interpretarlos correctamente y calcular sus porcentajes.</p>
+        </div>
+
+        <div class="concept-grid">
+            <div class="concept-box" style="border-top-color: #F59E0B;">
+                <h4 style="color: #F59E0B;">Frecuencia Absoluta ($f_i$)</h4>
+                <p>Es el <strong>número exacto de veces</strong> que aparece o se repite un determinado valor en nuestro estudio.</p>
+                <p><em>Ej: 8 alumnos sacaron un 7 en la prueba. La frecuencia absoluta es 8.</em></p>
+            </div>
+            <div class="concept-box" style="border-top-color: #06B6D4;">
+                <h4 style="color: #06B6D4;">Frecuencia Relativa ($h_i$)</h4>
+                <p>Es la división entre la frecuencia absoluta ($f_i$) y el total de datos ($n$). Representa la <strong>proporción</strong> que ocupa ese dato en el total.</p>
+                <div style="font-size: 1.2rem; text-align: center; margin: 10px 0;">
+                    $ h_i = \frac{f_i}{n} $
+                </div>
+            </div>
+            <div class="concept-box" style="border-top-color: #8B5CF6;">
+                <h4 style="color: #8B5CF6;">Porcentaje (%)</h4>
+                <p>Se obtiene multiplicando la frecuencia relativa por 100. Nos indica qué parte del 100% total representa cada valor.</p>
+                <div style="font-size: 1.2rem; text-align: center; margin: 10px 0;">
+                    $ \% = h_i \cdot 100 $
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 3rem;">Medidas de Tendencia Central</h3>
+        <div class="theory-section">
+            <p>Son parámetros estadísticos que nos indican hacia qué valor se "agrupan" o concentran los datos de nuestra distribución.</p>
+        </div>
+
+        <div class="concept-grid">
+            <div class="concept-box" style="border-top-color: #EF4444;">
+                <h4 style="color: #EF4444;">📊 Media Aritmética (Promedio)</h4>
+                <p>Se calcula sumando todos los datos obtenidos y dividiendo el resultado por la cantidad total de datos ($n$). Se representa con $\bar{x}$.</p>
+                <div style="font-size: 1.2rem; text-align: center; margin: 10px 0;">
+                    $ \bar{x} = \frac{x_1 + x_2 + ... + x_n}{n} $
+                </div>
+            </div>
+            <div class="concept-box" style="border-top-color: #EC4899;">
+                <h4 style="color: #EC4899;">🎯 Mediana (Me)</h4>
+                <p>Es el valor que ocupa la <strong>posición central</strong> cuando ordenamos todos los datos de menor a mayor. Deja exactamente la mitad (50%) de los datos por debajo y la otra mitad por encima.</p>
+            </div>
+            <div class="concept-box" style="border-top-color: #14B8A6;">
+                <h4 style="color: #14B8A6;">🔥 Moda (Mo)</h4>
+                <p>Es el valor de la variable que <strong>más se repite</strong> en nuestra muestra, es decir, el que tiene la mayor frecuencia absoluta ($f_i$).</p>
             </div>
         </div>
     </div>
