@@ -2,350 +2,80 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Educativo - CPES N°30</title>
-    <style>
-        :root {
-            --primary-color: #2563EB; 
-            --secondary-color: #1E40AF; 
-            --bg-color: #F3F4F6;
-            --card-bg: #FFFFFF;
-            --text-main: #1F2937;
-            --text-muted: #6B7280;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-            padding-bottom: 80px; 
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            text-align: center;
-            padding: 3rem 1rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        header h1 { margin: 0; font-size: 2.2rem; letter-spacing: 1px; }
-        header h2 { margin: 10px 0 0 0; font-size: 1.5rem; font-weight: 400; color: #DBEAFE; }
-
-        .profesor-badge {
-            display: inline-block;
-            margin-top: 1.5rem;
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            backdrop-filter: blur(5px);
-        }
-
-        main { max-width: 1000px; margin: 3rem auto; padding: 0 1rem; }
-
-        .section-title {
-            text-align: center;
-            color: var(--primary-color);
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #E5E7EB;
-            padding-bottom: 1rem;
-        }
-
-        .grid-cursos, .grid-biblioteca {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            text-decoration: none;
-            color: var(--text-main);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-top: 4px solid var(--primary-color);
-            display: block;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-            border-top-color: #F59E0B;
-        }
-
-        .card-icon { font-size: 3rem; margin-bottom: 1rem; }
-        .card h3 { margin: 0 0 0.5rem 0; font-size: 1.5rem; color: var(--primary-color); }
-        .card p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
-
-        /* Colores Específicos para Tarjetas */
-        .card.economia { border-top-color: #10B981; }
-        .card.economia h3 { color: #059669; }
-        
-        .card.fisica { border-top-color: #E11D48; }
-        .card.fisica h3 { color: #BE123C; }
-        
-        .card.juego { border-top-color: #F59E0B; background-color: #FFFBEB; }
-        .card.juego h3 { color: #D97706; }
-        
-        .card.biblioteca { border-top-color: #8B5CF6; background-color: #F5F3FF; }
-        .card.biblioteca h3 { color: #6D28D9; }
-
-        footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; }
-
-        /* --- MODAL DE INSTRUCCIONES --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s;
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: white; padding: 2.5rem; border-radius: 15px;
-            max-width: 500px; width: 90%; text-align: left;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            border-top: 6px solid var(--primary-color);
-        }
-        .modal-content h2 { color: var(--primary-color); margin-top: 0; text-align: center; font-size: 1.8rem;}
-        .modal-content ul { padding-left: 0; margin-bottom: 25px; list-style: none; }
-        .modal-content li { margin-bottom: 15px; font-size: 1.05rem; padding-left: 30px; position: relative; }
-        .modal-content li::before { content: '👉'; position: absolute; left: 0; }
-        .btn-close {
-            background: var(--primary-color); color: white; border: none;
-            padding: 12px 20px; border-radius: 25px; font-weight: bold;
-            cursor: pointer; width: 100%; font-size: 1.2rem;
-            transition: background 0.3s;
-        }
-        .btn-close:hover { background: var(--secondary-color); }
-
-        /* --- CHATBOT STYLE --- */
-        .chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
-        .chat-btn {
-            background-color: var(--primary-color); color: white; border: none;
-            border-radius: 50%; width: 60px; height: 60px; font-size: 1.8rem;
-            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-        .chat-btn:hover { transform: scale(1.1); }
-        .chat-window {
-            display: none; position: absolute; bottom: 80px; right: 0;
-            width: 320px; height: 450px; background-color: #ffffff;
-            border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-            flex-direction: column; overflow: hidden; border: 1px solid #E5E7EB;
-        }
-        .chat-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white; padding: 15px; font-weight: bold;
-        }
-        .chat-body { flex: 1; padding: 15px; overflow-y: auto; background-color: #F9FAFB; display: flex; flex-direction: column; gap: 10px; }
-        .message { max-width: 85%; padding: 10px 14px; border-radius: 15px; font-size: 0.95rem; }
-        .bot-msg { background-color: #E0E7FF; color: #1E40AF; align-self: flex-start; }
-        .user-msg { background-color: var(--primary-color); color: white; align-self: flex-end; }
-        .chat-input-area { display: flex; padding: 10px; border-top: 1px solid #E5E7EB; }
-        .chat-input-area input { flex: 1; padding: 10px; border: 1px solid #D1D5DB; border-radius: 20px; outline: none; }
-        .chat-input-area button { background-color: var(--primary-color); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; margin-left: 8px; cursor: pointer; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Física: Exploración del Universo | CPES N° 30</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="fisica.css">
 </head>
 <body>
 
-    <div id="welcome-modal" class="modal-overlay">
-        <div class="modal-content">
-            <h2>¡Misión de Inicio! 🚀</h2>
-            <p>Bienvenido al portal del CPES N°30. Aquí te explicamos cómo funciona tu entrenamiento:</p>
-            <ul>
-                <li><strong>Carpeta al día:</strong> Debes copiar en tu carpeta todos los contenidos teóricos que aparezcan en las aulas.</li>
-                <li><strong>Tablero de Avisos:</strong> Revisa siempre la página principal para estar al tanto de las novedades y tareas.</li>
-                <li><strong>Zona Arcade:</strong> Cada materia tiene su propio juego. ¡Juégalos para repasar lo aprendido y sumar puntos!</li>
-                <li><strong>Biblioteca Drive:</strong> Los libros y apuntes largos están en el Drive para que los descargues fácilmente.</li>
-            </ul>
-            <button onclick="closeModal()" class="btn-close">¡Entendido, Profe!</button>
-        </div>
-    </div>
-
-    <header>
-        <h1>Colegio Provincial de Educación Secundaria N°30</h1>
-        <h2>Matemática, Física y Economía</h2>
-        <div class="profesor-badge">Profesor: Schroder Gonzalo</div>
-    </header>
-
-    <main>
-        <h2 class="section-title">Aulas de Clase</h2>
-        <div class="grid-cursos">
-            <a href="primero.html" class="card">
-                <div class="card-icon">📐</div>
-                <h3>Matemática 1° Año</h3>
-                <p>Misiones y Desafíos</p>
-            </a>
-            <a href="fisica.html" class="card fisica">
-                <div class="card-icon">⚛️</div>
-                <h3>Física 1° Año</h3>
-                <p>Fenómenos del Universo</p>
-            </a>
-            <a href="tercero.html" class="card">
-                <div class="card-icon">✖️</div>
-                <h3>Matemática 3° Año</h3>
-                <p>Números Racionales</p>
-            </a>
-            <a href="cuarto.html" class="card">
-                <div class="card-icon">📈</div>
-                <h3>Matemática 4° Año</h3>
-                <p>Números Reales</p>
-            </a>
-            <a href="quinto.html" class="card">
-                <div class="card-icon">🚀</div>
-                <h3>Matemática 5° Año</h3>
-                <p>Funciones Cuadráticas</p>
-            </a>
-            <a href="economia.html" class="card economia">
-                <div class="card-icon">📊</div>
-                <h3>Economía</h3>
-                <p>Teoría y Simulaciones</p>
-            </a>
-        </div>
-
-        <h2 class="section-title">Zona Arcade y Desafíos</h2>
-        <div class="grid-cursos">
-            <a href="juego.html" class="card juego">
-                <div class="card-icon">⚔️</div>
-                <h3>Juego Mate 1°</h3>
-                <p>Guerra contra Números Enteros</p>
-            </a>
-            <a href="juego3.html" class="card juego">
-                <div class="card-icon">⚡</div>
-                <h3>Juego Física 1°</h3>
-                <p>Defensor de las Energías</p>
-            </a>
-            <a href="juego4.html" class="card juego">
-                <div class="card-icon">🧩</div>
-                <h3>Juego Mate 3°</h3>
-                <p>Desafío Racional</p>
-            </a>
-            <a href="juego5.html" class="card juego">
-                <div class="card-icon">🎯</div>
-                <h3>Juego Mate 4°</h3>
-                <p>Aventura de Reales</p>
-            </a>
-            <a href="juego6.html" class="card juego">
-                <div class="card-icon">🏆</div>
-                <h3>Juego Mate 5°</h3>
-                <p>Misión Cuadrática</p>
-            </a>
-        </div>
-
-        <h2 class="section-title">📚 Biblioteca Digital</h2>
-        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
-            Todo el material bibliográfico y apuntes oficiales en nuestra carpeta de Google Drive.
-        </p>
-        
-        <div class="grid-biblioteca">
-            <a href="https://drive.google.com/drive/folders/1JhXmmbtKzVRUa3umwPE4ZgVL9Eo9Ce9c?usp=drive_link" target="_blank" class="card biblioteca">
-                <div class="card-icon">📁</div>
-                <h3>Carpeta de Materiales</h3>
-                <p>Acceder a los libros de Matemática, Economía y Guías de Estudio.</p>
-            </a>
-        </div>
-    </main>
-
-    <footer>
-        <p>Material de uso exclusivo para los alumnos del CPES N°30.</p>
-    </footer>
-
-    <div class="chat-widget">
-        <div class="chat-window" id="chat-window">
-            <div class="chat-header">👨‍🏫 Prof. Gonzalo Virtual</div>
-            <div class="chat-body" id="chat-body"></div>
-            <div class="chat-input-area">
-                <input type="text" id="user-input" placeholder="Pregunta algo..." onkeypress="handleKeyPress(event)">
-                <button onclick="sendMessage()">➤</button>
+    <header class="main-header">
+        <div class="header-content">
+            <a href="index.html" class="btn-nav">🛸 Base Estelar</a>
+            <h1>Módulo de Física 1° Año</h1>
+            <div class="stats-bar">
+                <span>Rango: <strong id="rango-user">Cadete Espacial</strong></span>
+                <span>Energía: <strong id="energia-val">100%</strong></span>
             </div>
         </div>
-        <button class="chat-btn" onclick="toggleChat()">💬</button>
-    </div>
+    </header>
 
-    <script>
-        // Lógica del Modal de Inicio
-        window.onload = function() {
-            // Un pequeño retraso para que la animación se note
-            setTimeout(() => {
-                document.getElementById('welcome-modal').classList.add('active');
-            }, 500);
-        };
+    <nav class="tabs-container">
+        <button class="tab-btn active" onclick="openTab('misiones', this)">📡 Transmisiones</button>
+        <button class="tab-btn" onclick="openTab('teoria', this)">📚 Laboratorio</button>
+        <button class="tab-btn" onclick="openTab('entrenamiento', this)">🎮 Simulador</button>
+    </nav>
 
-        function closeModal() {
-            document.getElementById('welcome-modal').classList.remove('active');
-        }
+    <main class="container">
+        
+        <section id="misiones" class="tab-content active">
+            <div class="admin-panel">
+                <h3>🛠 Panel de Comandos (Profesor)</h3>
+                <div class="input-group">
+                    <input type="text" id="notice-title" placeholder="Título de la Misión (ej: Las Leyes de Newton)">
+                    <textarea id="notice-desc" placeholder="Descripción detallada de la tarea..."></textarea>
+                    <input type="text" id="notice-link" placeholder="Enlace a Drive o PDF (opcional)">
+                    <button class="btn-action" onclick="addNotice()">Emitir Misión al Satélite</button>
+                </div>
+            </div>
 
-        // Lógica del Chatbot
-        const chatWindow = document.getElementById('chat-window');
-        const chatBody = document.getElementById('chat-body');
-        const userInput = document.getElementById('user-input');
-        let chatOpen = false;
+            <div class="notices-header">
+                <h2>🛰 Misiones Recibidas</h2>
+                <button class="btn-refresh" onclick="loadNotices()">🔄 Sincronizar</button>
+            </div>
+            <div id="lista-avisos" class="notices-grid">
+                </div>
+        </section>
 
-        function toggleChat() {
-            chatOpen = !chatOpen;
-            chatWindow.style.display = chatOpen ? 'flex' : 'none';
-            if (chatOpen && chatBody.innerHTML === "") {
-                addMessage("¡Hola! Soy tu profesor virtual. 🤖 ¿Necesitas ayuda sobre cómo funciona la plataforma, buscar un juego o encontrar material en Drive?", 'bot');
-            }
-        }
+        <section id="teoria" class="tab-content">
+            <h2>Expediciones del Conocimiento</h2>
+            <div class="theory-grid">
+                <article class="theory-card">
+                    <h3>⚛️ El Modelo Atómico</h3>
+                    <p>Todo lo que ves está hecho de átomos. Imagina que el núcleo es el Sol y los electrones son planetas orbitando a velocidades increíbles.</p>
+                    <div class="formula">$$E = mc^2$$</div>
+                </article>
+                <article class="theory-card">
+                    <h3>🌌 Materia y Energía</h3>
+                    <p>La materia no se crea ni se destruye, solo se transforma. Es la ley fundamental que rige nuestras estaciones espaciales.</p>
+                </article>
+            </div>
+        </section>
 
-        function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+        <section id="entrenamiento" class="tab-content">
+            <div class="game-module">
+                <h2>Centro de Entrenamiento</h2>
+                <div class="question-container">
+                    <p id="pregunta-texto">Cargando sistema de entrenamiento...</p>
+                    <div id="opciones-contenedor" class="options-grid"></div>
+                </div>
+                <div id="feedback-juego" class="feedback"></div>
+            </div>
+        </section>
 
-        function sendMessage() {
-            const text = userInput.value.trim();
-            if (text === '') return;
-            addMessage(text, 'user');
-            userInput.value = '';
-            setTimeout(() => getBotResponse(text.toLowerCase()), 600);
-        }
+    </main>
 
-        function addMessage(text, sender) {
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('message', sender === 'bot' ? 'bot-msg' : 'user-msg');
-            msgDiv.innerHTML = text;
-            chatBody.appendChild(msgDiv);
-            chatBody.scrollTop = chatBody.scrollHeight;
-        }
-
-        function getBotResponse(input) {
-            let response = "";
-            const driveLink = "https://drive.google.com/drive/folders/1JhXmmbtKzVRUa3umwPE4ZgVL9Eo9Ce9c?usp=drive_link";
-
-            // NUEVA LÓGICA DE GUÍA E INSTRUCCIONES
-            if (input.includes('guia') || input.includes('ayuda') || input.includes('funciona') || input.includes('hacer') || input.includes('instrucciones')) {
-                response = "¡Te explico rápido! 📝<br><br>1️⃣ <strong>Copiar:</strong> Pasa a tu carpeta los textos de cada aula.<br>2️⃣ <strong>Avisos:</strong> Revisa el inicio por tareas nuevas.<br>3️⃣ <strong>Jugar:</strong> Ve a la Zona Arcade para sumar puntos.<br>4️⃣ <strong>Drive:</strong> Descarga los PDF desde la Biblioteca.";
-            }
-            // LÓGICA DE JUEGOS ACTUALIZADA
-            else if (input.includes('juego') || input.includes('jugar') || input.includes('guerra') || input.includes('entero')) {
-                response = "¡Tenemos juegos para todos los cursos en la Zona Arcade! 🎮<br><br>- <a href='juego.html'>Guerra de Enteros (Mate 1°)</a><br>- <a href='juego3.html'>Defensor de Energía (Física 1°)</a><br>- <a href='juego4.html'>Juego Mate 3°</a><br>- <a href='juego5.html'>Juego Mate 4°</a><br>- <a href='juego6.html'>Juego Mate 5°</a>";
-            }
-            else if (input.includes('libro') || input.includes('pdf') || input.includes('descargar') || input.includes('material') || input.includes('bibliografia') || input.includes('drive')) {
-                response = "Debido al tamaño de los libros, los hemos mudado a Google Drive para que los descargues rápido. 📚<br><br>Encuentra todo aquí: <a href='" + driveLink + "' target='_blank'>Abrir Carpeta de Materiales</a>.";
-            }
-            else if (input.includes('matematica') || input.includes('mate')) {
-                response = "Tenemos misiones desde 1° a 5° año. También puedes encontrar el libro de Matemática en la <a href='" + driveLink + "' target='_blank'>Biblioteca Drive</a>.";
-            }
-            else if (input.includes('economia') || input.includes('economía')) {
-                response = "En el aula de <a href='economia.html'>Economía</a> tienes teoría, y en el <a href='" + driveLink + "' target='_blank'>Drive</a> está el apunte completo.";
-            }
-            else if (input.includes('fisica') || input.includes('física')) {
-                response = "¡Explora el universo en el <a href='fisica.html'>Aula de Física</a> y luego prueba el <a href='juego3.html'>Juego de Energía</a>!";
-            }
-            else {
-                response = "No estoy seguro, pero puedes pedirme <strong>ayuda</strong> para saber cómo usar la plataforma, o buscar 'juego', 'libro', 'física' o tu año. ¡O entra a la <a href='" + driveLink + "' target='_blank'>Biblioteca</a>!";
-            }
-            addMessage(response, 'bot');
-        }
-    </script>
+    <script src="fisica.js"></script>
 </body>
 </html>
