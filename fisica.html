@@ -2,75 +2,145 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Física: Exploración del Universo | CPES N° 30</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio de Física | CPES N° 30</title>
+    <link rel="stylesheet" href="fisica.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <link rel="stylesheet" href="fisica.css">
 </head>
 <body>
 
     <header class="main-header">
         <div class="header-content">
-            <a href="index.html" class="btn-nav">🛸 Base Estelar</a>
-            <h1>Módulo de Física 1° Año</h1>
+            <a href="index.html" class="btn-nav">🛸 Regresar a Base</a>
+            <h1>Módulo de Exploración Física</h1>
             <div class="stats-bar">
-                <span>Rango: <strong id="rango-user">Cadete Espacial</strong></span>
-                <span>Energía: <strong id="energia-val">100%</strong></span>
+                <span>Estación: <strong>Tres Lagos</strong></span>
+                <span>Estado: <strong id="status-base" style="color:var(--accent);">Sincronizado</strong></span>
             </div>
         </div>
     </header>
 
     <nav class="tabs-container">
-        <button class="tab-btn active" onclick="openTab('misiones', this)">📡 Transmisiones</button>
-        <button class="tab-btn" onclick="openTab('teoria', this)">📚 Laboratorio</button>
-        <button class="tab-btn" onclick="openTab('entrenamiento', this)">🎮 Simulador</button>
+        <button class="tab-btn active" onclick="openTab('teoria', this)">📚 Laboratorio Teórico</button>
+        <button class="tab-btn" onclick="openTab('misiones', this)">📡 Transmisiones</button>
+        <button class="tab-btn" onclick="openTab('entrenamiento', this)">🎮 Entrenamiento</button>
     </nav>
 
     <main class="container">
         
-        <section id="misiones" class="tab-content active">
+        <section id="teoria" class="tab-content active">
+            
+            <article class="theory-block">
+                <div class="theory-header">
+                    <h2>⚛️ Módulo 01: ¿Qué es la Física?</h2>
+                </div>
+                <div class="theory-body">
+                    <p>La palabra <strong>Física</strong> proviene del griego <em>physis</em>, que significa "naturaleza". Es la ciencia fundamental que estudia las leyes que rigen el universo, desde las partículas más diminutas dentro de un átomo hasta las galaxias más gigantescas en el espacio profundo.</p>
+                    
+                    <h3>¿Qué estudia exactamente?</h3>
+                    <p>La física no se queda quieta; investiga cuatro pilares fundamentales de nuestra realidad:</p>
+                    <div class="info-grid">
+                        <div class="info-item"><strong>Materia:</strong> De qué están hechas las cosas y cómo se comportan.</div>
+                        <div class="info-item"><strong>Energía:</strong> La capacidad de producir cambios o movimiento.</div>
+                        <div class="info-item"><strong>Espacio:</strong> El escenario donde ocurren los fenómenos.</div>
+                        <div class="info-item"><strong>Tiempo:</strong> La duración y orden de los eventos.</div>
+                    </div>
+                    
+                </div>
+            </article>
+
+            <article class="theory-block">
+                <div class="theory-header">
+                    <h2>⚡ Módulo 02: El Motor del Universo (La Energía)</h2>
+                </div>
+                <div class="theory-body">
+                    <p>En física, la <strong>Energía</strong> se define como la capacidad de un sistema para realizar un trabajo. Sin energía, nada se movería, nada brillaría y la vida no sería posible. Es la "moneda de cambio" de la naturaleza.</p>
+                    
+                    <div class="highlight-box">
+                        <h3>Principio de Conservación de la Energía</h3>
+                        <p>Este es el pilar más importante: <em>"La energía no se crea ni se destruye, solo se transforma de una forma a otra."</em></p>
+                        <p>Esto significa que la cantidad total de energía en el universo es siempre la misma. Cuando golpeas una pelota, la energía química de tus músculos se transforma en energía de movimiento (cinética) y un poco de calor por el roce.</p>
+                    </div>
+                    
+                </div>
+            </article>
+
+            <article class="theory-block">
+                <div class="theory-header">
+                    <h2>🌀 Módulo 03: Formas de Energía</h2>
+                </div>
+                <div class="theory-body">
+                    <p>La energía es como un actor que cambia de disfraz. Aquí están sus formas más comunes:</p>
+                    <ul class="energy-list">
+                        <li><strong>Cinética:</strong> La energía que poseen los cuerpos en movimiento (un viento fuerte, un auto andando).</li>
+                        <li><strong>Potencial:</strong> Energía almacenada lista para usarse (una piedra en la cima de una montaña, un resorte estirado).</li>
+                        <li><strong>Térmica:</strong> Se manifiesta como calor (vibración de las moléculas).</li>
+                        <li><strong>Química:</strong> Almacenada en los enlaces de los alimentos, pilas o combustibles.</li>
+                        <li><strong>Eléctrica:</strong> El movimiento de electrones a través de un conductor.</li>
+                        <li><strong>Radiante:</strong> Energía que viaja en ondas, como la luz del Sol o el Wi-Fi.</li>
+                        <li><strong>Nuclear:</strong> Almacenada en el núcleo de los átomos.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="theory-block">
+                <div class="theory-header">
+                    <h2>🌍 Módulo 04: Fuentes Renovables y No Renovables</h2>
+                </div>
+                <div class="theory-body">
+                    <p>Para nuestra civilización, es vital saber de dónde sacamos la energía. Se dividen en dos grandes grupos:</p>
+                    
+                    <div class="comparison-grid">
+                        <div class="source-card renewable">
+                            <h3>✅ Renovables (Limpias)</h3>
+                            <p>Son inagotables a escala humana y dañan poco el ambiente.</p>
+                            <ul>
+                                <li><strong>Solar:</strong> Paneles que captan la luz del sol.</li>
+                                <li><strong>Eólica:</strong> Molinos que aprovechan el viento (muy común en nuestra Patagonia).</li>
+                                <li><strong>Hidráulica:</strong> Aprovecha la fuerza del agua cayendo.</li>
+                                <li><strong>Geotérmica:</strong> Calor interno de la Tierra.</li>
+                            </ul>
+                        </div>
+                        <div class="source-card non-renewable">
+                            <h3>⚠️ No Renovables</h3>
+                            <p>Existen en cantidades limitadas y su uso suele contaminar el planeta.</p>
+                            <ul>
+                                <li><strong>Combustibles Fósiles:</strong> Petróleo, gas natural y carbón.</li>
+                                <li><strong>Nuclear:</strong> Uso de uranio para generar calor masivo.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                </div>
+            </article>
+        </section>
+
+        <section id="misiones" class="tab-content">
             <div class="admin-panel">
-                <h3>🛠 Panel de Comandos (Profesor)</h3>
+                <h3>🛠 Centro de Emisión de Misiones</h3>
                 <div class="input-group">
-                    <input type="text" id="notice-title" placeholder="Título de la Misión (ej: Las Leyes de Newton)">
-                    <textarea id="notice-desc" placeholder="Descripción detallada de la tarea..."></textarea>
-                    <input type="text" id="notice-link" placeholder="Enlace a Drive o PDF (opcional)">
-                    <button class="btn-action" onclick="addNotice()">Emitir Misión al Satélite</button>
+                    <input type="text" id="notice-title" placeholder="Título de la Misión...">
+                    <textarea id="notice-desc" rows="3" placeholder="Instrucciones para los cadetes..."></textarea>
+                    <input type="text" id="notice-link" placeholder="Link a recurso externo (opcional)...">
+                    <button class="btn-action" onclick="addNotice()">Emitir al Satélite</button>
                 </div>
             </div>
 
             <div class="notices-header">
-                <h2>🛰 Misiones Recibidas</h2>
-                <button class="btn-refresh" onclick="loadNotices()">🔄 Sincronizar</button>
+                <h2>🛰 Historial de Transmisiones</h2>
+                <button class="btn-refresh" onclick="loadNotices()">Sincronizar</button>
             </div>
-            <div id="lista-avisos" class="notices-grid">
-                </div>
-        </section>
-
-        <section id="teoria" class="tab-content">
-            <h2>Expediciones del Conocimiento</h2>
-            <div class="theory-grid">
-                <article class="theory-card">
-                    <h3>⚛️ El Modelo Atómico</h3>
-                    <p>Todo lo que ves está hecho de átomos. Imagina que el núcleo es el Sol y los electrones son planetas orbitando a velocidades increíbles.</p>
-                    <div class="formula">$$E = mc^2$$</div>
-                </article>
-                <article class="theory-card">
-                    <h3>🌌 Materia y Energía</h3>
-                    <p>La materia no se crea ni se destruye, solo se transforma. Es la ley fundamental que rige nuestras estaciones espaciales.</p>
-                </article>
-            </div>
+            <div id="lista-avisos" class="notices-grid"></div>
         </section>
 
         <section id="entrenamiento" class="tab-content">
             <div class="game-module">
-                <h2>Centro de Entrenamiento</h2>
-                <div class="question-container">
-                    <p id="pregunta-texto">Cargando sistema de entrenamiento...</p>
+                <h2>Simulador de Diagnóstico</h2>
+                <div id="quiz-container">
+                    <p id="pregunta-texto">Iniciando sistemas de evaluación...</p>
                     <div id="opciones-contenedor" class="options-grid"></div>
                 </div>
-                <div id="feedback-juego" class="feedback"></div>
             </div>
         </section>
 
