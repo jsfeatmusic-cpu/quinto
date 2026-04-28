@@ -124,13 +124,6 @@
         }
         .btn-floating-reminder:hover { transform: scale(1.05); }
         .hidden { display: none !important; }
-
-        /* Estilos extra para la tabla */
-        #tabla-alumnos th, #tabla-alumnos td { border-bottom: 1px solid var(--border); }
-        #tabla-alumnos tbody tr:hover { background-color: #F9FAFB; }
-        .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; }
-        .badge-ok { background-color: var(--success); color: white; }
-        .badge-peligro { background-color: var(--danger); color: white; }
     </style>
 </head>
 <body>
@@ -159,7 +152,6 @@
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('estadistica', this)">📊 Estadística</button>
         <button class="tab-btn" onclick="openTab('cuadraticas', this)">🚀 Funciones Cuadráticas</button>
-      
         <button class="tab-btn" onclick="openTab('avisos', this)">📢 Avisos y Trabajos</button>
     </div>
 
@@ -244,29 +236,6 @@
         </div>
     </div>
 
-    <div id="boletin" class="tab-content">
-        <h2 style="border-bottom:none;">Estado de los Investigadores</h2>
-        <p style="color: var(--text-muted); margin-bottom: 2rem; text-align: center;">Aquí pueden consultar sus asistencias y progreso en las misiones.</p>
-        
-        <div class="theory-section" style="background-color: white; border: 1px solid var(--border);">
-            <div style="overflow-x: auto;">
-                <table id="tabla-alumnos" style="width: 100%; border-collapse: collapse; text-align: left;">
-                    <thead>
-                        <tr style="background-color: var(--primary); color: white;">
-                            <th style="padding: 12px; border-radius: 8px 0 0 0;">Alumno</th>
-                            <th style="padding: 12px;">% Asistencia</th>
-                            <th style="padding: 12px;">Nota TP 1</th>
-                            <th style="padding: 12px; border-radius: 0 8px 0 0;">Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="datos-alumnos">
-                        <tr><td colspan="4" style="text-align: center; padding: 20px;">Cargando base de datos desde Google Sheets... ⏳</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
     <div id="avisos" class="tab-content">
         <h2>Subida de PDFs y Trabajos Prácticos</h2>
         <p>Aquí se publicarán las guías teóricas y los trabajos para resolver.</p>
@@ -307,14 +276,11 @@
     function closeReminder() { document.getElementById('reminder-modal').classList.add('hidden'); }
     function openReminder() { document.getElementById('reminder-modal').classList.remove('hidden'); }
 
-    
-
-    // --- 4. TABLÓN DE AVISOS (CONEXIÓN API APPS SCRIPT) ---
-    // ⚠️ Importante: Verifica que este enlace apunte a la implementación de Apps Script configurada para leer "Hoja 2"
+    // --- 3. TABLÓN DE AVISOS (CONEXIÓN API APPS SCRIPT) ---
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwj9hK2jP7ba8A_QKhozECMX3z3cIyVxk08OuJq2CkF5LuIF4Ti5ASoNAs1_klBROlK/exec';
 
     async function loadNotices() {
-        const list = document.getElementById('notices-list');v
+        const list = document.getElementById('notices-list');
         list.innerHTML = '<p style="text-align:center; color:var(--text-muted);">📡 Sincronizando avisos con el servidor...</p>';
         
         try {
@@ -419,10 +385,9 @@
         }
     }
 
-    // Cargar todo al inicio
+    // Cargar todo al inicio (Solo loadNotices, ya que quitamos cargarDatosAlumnos)
     window.onload = () => {
         loadNotices();
-        cargarDatosAlumnos();
     };
 </script>
 
