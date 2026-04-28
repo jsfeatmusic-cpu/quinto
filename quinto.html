@@ -159,7 +159,7 @@
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab('estadistica', this)">📊 Estadística</button>
         <button class="tab-btn" onclick="openTab('cuadraticas', this)">🚀 Funciones Cuadráticas</button>
-        <button class="tab-btn" onclick="openTab('boletin', this)">📋 Asistencias y Notas</button>
+      
         <button class="tab-btn" onclick="openTab('avisos', this)">📢 Avisos y Trabajos</button>
     </div>
 
@@ -307,65 +307,14 @@
     function closeReminder() { document.getElementById('reminder-modal').classList.add('hidden'); }
     function openReminder() { document.getElementById('reminder-modal').classList.remove('hidden'); }
 
-    // --- 3. CONEXIÓN CON GOOGLE SHEETS (TABLA BOLETÍN) ---
-    const SHEET_ID = '1wR4yojz8tHk0MQX0NsZ_-cnwvcKEdOOpQV2Xzhde2V4'; 
-    const SHEET_TITLE = 'quintomat'; // Asegurate de que tu pestaña de excel se llame exactamente así.
-    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_TITLE}`;
-
-    async function cargarDatosAlumnos() {
-        const contenedor = document.getElementById('datos-alumnos');
-        try {
-            const respuesta = await fetch(SHEET_URL);
-            const texto = await respuesta.text();
-            
-            // Si el texto incluye '<html', significa que no está público
-            if (texto.includes('<html')) {
-                throw new Error("El Excel no está público o el nombre de la pestaña es incorrecto.");
-            }
-
-            const jsonString = texto.substring(texto.indexOf('{'), texto.lastIndexOf('}') + 1);
-            const data = JSON.parse(jsonString);
-            
-            const filas = data.table.rows;
-            contenedor.innerHTML = ''; 
-
-            if (!filas || filas.length === 0) {
-                 contenedor.innerHTML = `<tr><td colspan="4" style="text-align:center;">No hay datos en la tabla.</td></tr>`;
-                 return;
-            }
-
-            filas.forEach(fila => {
-                const nombre = fila.c[0]?.v || '-';
-                const asistencia = fila.c[1]?.v || '0%';
-                const nota = fila.c[2]?.v || '-';
-                const estado = fila.c[3]?.v || '-';
-
-                const numAsistencia = parseInt(asistencia);
-                let badgeClase = "badge badge-ok";
-                if (!isNaN(numAsistencia) && numAsistencia < 70) badgeClase = "badge badge-peligro";
-
-                contenedor.innerHTML += `
-                    <tr>
-                        <td style="padding: 12px; font-weight: bold;">${nombre}</td>
-                        <td style="padding: 12px;"><span class="${badgeClase}">${asistencia}</span></td>
-                        <td style="padding: 12px; color: var(--accent); font-weight: bold;">${nota}</td>
-                        <td style="padding: 12px;">${estado}</td>
-                    </tr>
-                `;
-            });
-
-        } catch (error) {
-            console.error("Error Sheet:", error);
-            contenedor.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--danger);">❌ Error de conexión. Verificá que la pestaña en Excel se llame "${SHEET_TITLE}" y el archivo sea "Público con enlace".</td></tr>`;
-        }
-    }
+    
 
     // --- 4. TABLÓN DE AVISOS (CONEXIÓN API APPS SCRIPT) ---
     // ⚠️ Importante: Verifica que este enlace apunte a la implementación de Apps Script configurada para leer "Hoja 2"
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxEjIT4VvMXkn3wXikZIrKNpoyL153U56Mh0puo0Kzy_RSwAoRn30YvQ3MDdn6iRb8ACA/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwj9hK2jP7ba8A_QKhozECMX3z3cIyVxk08OuJq2CkF5LuIF4Ti5ASoNAs1_klBROlK/exec';
 
     async function loadNotices() {
-        const list = document.getElementById('notices-list');
+        const list = document.getElementById('notices-list');v
         list.innerHTML = '<p style="text-align:center; color:var(--text-muted);">📡 Sincronizando avisos con el servidor...</p>';
         
         try {
