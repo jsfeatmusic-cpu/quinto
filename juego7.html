@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEO Simulator: Economía Austral | CPES N°30</title>
+    <style>
+        :root {
+            --primary: #6D28D9; /* Violeta Económico */
+            --secondary: #4C1D95;
+            --money: #10B981; /* Verde Dinero */
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 { margin: 0; font-size: 2rem; display: flex; justify-content: center; align-items: center; gap: 10px;}
+        header p { margin: 5px 0 0 0; color: #DDD6FE; }
+
+        .btn-volver {
+            display: inline-block; margin-top: 10px; padding: 0.5rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2); color: white; text-decoration: none;
+            border-radius: 50px; font-weight: bold; transition: 0.3s; cursor: pointer; border: none;
+        }
+        .btn-volver:hover { background: rgba(255, 255, 255, 0.3); }
+
+        main {
+            flex-grow: 1; padding: 2rem 1rem;
+            max-width: 900px; margin: 0 auto; width: 100%; box-sizing: border-box;
+        }
+
+        /* HUD: Barra de Estado */
+        .hud-container {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--card-bg); padding: 15px 25px; border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px;
+            border-bottom: 4px solid var(--primary); flex-wrap: wrap; gap: 10px;
+        }
+
+        .stat { font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; gap: 8px;}
+        .stat-money { color: var(--money); font-size: 1.5rem; }
+        .stat-month { color: var(--primary); }
+
+        /* Pantallas del Juego */
+        .game-panel {
+            background: var(--card-bg); border-radius: 15px; padding: 2rem;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); display: none;
+        }
+        .game-panel.active { display: block; animation: fadeIn 0.4s; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Panel de Noticias (Mercado) */
+        .news-alert {
+            background: #EFF6FF; border-left: 5px solid #3B82F6; padding: 15px;
+            border-radius: 8px; margin-bottom: 20px; font-size: 1.1rem;
+        }
+
+        /* Controles de Producción */
+        .control-group { margin-bottom: 20px; background: #F9FAFB; padding: 15px; border-radius: 10px; }
+        .control-group label { display: block; font-weight: bold; margin-bottom: 10px; color: var(--primary); }
+        .slider-container { display: flex; align-items: center; gap: 15px; }
+        input[type="range"] { flex-grow: 1; accent-color: var(--primary); }
+        .slider-value { font-size: 1.2rem; font-weight: bold; background: white; padding: 5px 15px; border-radius: 5px; border: 1px solid #E5E7EB; min-width: 60px; text-align: center;}
+
+        /* Cartas de Decisión (Costo de Oportunidad) */
+        .decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .decision-card {
+            border: 2px solid #E5E7EB; border-radius: 10px; padding: 15px; cursor: pointer;
+            transition: 0.3s; text-align: center; background: white;
+        }
+        .decision-card:hover { border-color: var(--primary); background: #F5F3FF; transform: translateY(-3px); }
+        .decision-card.selected { border-color: var(--money); background: #ECFDF5; box-shadow: 0 0 0 2px var(--money); }
+        .decision-card h4 { margin: 0 0 10px 0; color: var(--secondary); }
+        .decision-card p { font-size: 0.9rem; color: #6B7280; margin: 0 0 10px 0; }
+        .cost-badge { background: #FEE2E2; color: #991B1B; padding: 4px 8px; border-radius: 5px; font-weight: bold; font-size: 0.8rem; }
+
+        .btn-action {
+            background: var(--primary); color: white; border: none; width: 100%;
+            padding: 15px; border-radius: 10px; font-size: 1.2rem; font-weight: bold;
+            cursor: pointer; transition: 0.3s; margin-top: 20px;
+        }
+        .btn-action:hover { background: var(--secondary); transform: scale(1.02); }
+
+        /* Reporte de Fin de Mes */
+        .report-box { text-align: center; }
+        .profit { color: var(--money); font-size: 2rem; font-weight: bold; margin: 15px 0; }
+        .loss { color: var(--danger); font-size: 2rem; font-weight: bold; margin: 15px 0; }
+        .report-details { background: #F9FAFB; padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 20px; }
+        
+        /* Modal General (Teoría / Tutorial) */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white; padding: 2rem; border-radius: 15px; max-width: 500px;
+            width: 90%; max-height: 85vh; overflow-y: auto; text-align: center;
+        }
+        .modal-content h2 { color: var(--primary); margin-top: 0; }
+        
+        /* Opciones de Quiz Teórico */
+        .quiz-option {
+            display: block; width: 100%; padding: 12px; margin-bottom: 10px;
+            background: #F3F4F6; border: 2px solid #E5E7EB; border-radius: 8px;
+            font-size: 1rem; cursor: pointer; transition: 0.2s; font-weight: bold;
+        }
+        .quiz-option:hover { background: #E0E7FF; border-color: var(--primary); }
+        .quiz-option.correct { background: #D1FAE5; border-color: var(--money); color: #065F46; }
+        .quiz-option.wrong { background: #FEE2E2; border-color: var(--danger); color: #991B1B; }
+
+        @media (max-width: 600px) {
+            .decision-grid { grid-template-columns: 1fr; }
+            .hud-container { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏭 Simulador CEO: Patagonia</h1>
+        <p>Gestiona tu fábrica de chocolates. Aplica la economía para no quebrar.</p>
+        <div>
+            <button class="btn-volver" onclick="openTutorial()">📘 Ver Conceptos</button>
+            <a href="index.html" class="btn-volver">⬅ Volver al Portal</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="hud-container">
+            <div class="stat stat-month">📅 Mes: <span id="hud-month">1</span>/12</div>
+            <div class="stat">📦 Stock: <span id="hud-stock">0</span></div>
+            <div class="stat stat-money">💵 $<span id="hud-money">5000</span></div>
+        </div>
+
+        <div id="panel-planning" class="game-panel active">
+            <h2 style="color: var(--primary); margin-top: 0;">Planificación del Mes</h2>
+            
+            <div id="market-news" class="news-alert">
+                <strong>📰 Reporte del Mercado:</strong> Inicio de operaciones. La demanda es estable.
+            </div>
+
+            <div class="control-group">
+                <label>1. Producción (Escasez de Recursos)</label>
+                <p style="font-size: 0.9rem; color: #6B7280; margin-top: -5px;">Costo de producción: $10 por chocolate.</p>
+                <div class="slider-container">
+                    <input type="range" id="slider-prod" min="0" max="500" value="100" step="10" oninput="updateSliders()">
+                    <div class="slider-value" id="val-prod">100</div>
+                </div>
+                <div style="text-align: right; font-size: 0.9rem; color: var(--danger); font-weight: bold; margin-top: 5px;">
+                    Costo Total: $<span id="cost-prod">1000</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>2. Fijar Precio (Oferta y Demanda)</label>
+                <p style="font-size: 0.9rem; color: #6B7280; margin-top: -5px;">Si el precio es muy alto y la demanda baja, no venderás nada.</p>
+                <div class="slider-container">
+                    <input type="range" id="slider-price" min="10" max="100" value="25" step="1" oninput="updateSliders()">
+                    <div class="slider-value">$<span id="val-price">25</span></div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>3. Decisión Estratégica (Costo de Oportunidad)</label>
+                <p style="font-size: 0.9rem; color: #6B7280; margin-top: -5px;">Solo puedes elegir UNA opción. Lo que dejas de ganar/hacer es tu costo de oportunidad.</p>
+                <div class="decision-grid" id="decision-box">
+                    </div>
+            </div>
+
+            <button class="btn-action" onclick="finishMonth()">Avanzar Mes ⏩</button>
+        </div>
+
+        <div id="panel-report" class="game-panel">
+            <div class="report-box">
+                <h2>📊 Cierre de Mes</h2>
+                <div id="report-icon" style="font-size: 4rem;">📈</div>
+                <div id="report-money" class="profit">+$0</div>
+                
+                <div class="report-details">
+                    <p>📦 Unidades Vendidas: <strong id="rep-sold">0</strong></p>
+                    <p>🗑️ Unidades Sobrantes: <strong id="rep-stock">0</strong> (Se guardan en inventario)</p>
+                    <p>💡 Impacto del Costo de Oportunidad: <strong id="rep-opp">Ninguno</strong></p>
+                </div>
+
+                <button class="btn-action" onclick="nextMonth()">Ir al Siguiente Mes</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="tutorial-modal" class="modal">
+        <div class="modal-content" style="text-align: left;">
+            <h2 style="text-align: center;">📘 Guía de Economía</h2>
+            
+
+[Image of supply and demand curve]
+
+            <p><strong>1. Oferta y Demanda:</strong> La oferta es cuánto chocolate produces. La demanda es cuánto quiere comprar la gente. Si el precio es bajo, la demanda sube. Si la demanda es alta (ej. turismo), ¡puedes subir el precio!</p>
+            <p><strong>2. Escasez:</strong> Tus recursos (dinero) son limitados. No puedes producir infinito.</p>
+            
+            <p><strong>3. Costo de Oportunidad:</strong> Al elegir una opción (ej. Publicidad), renuncias a los beneficios de la otra opción (ej. Mejorar maquinaria). ¡Elige sabiamente según el contexto!</p>
+            <p><strong>4. Bienes y Servicios:</strong> Tu chocolate es un <em>Bien</em> (tangible). La publicidad que pagas es un <em>Servicio</em> (intangible).</p>
+            <p><strong>5. Dinero:</strong> Es el medio de intercambio universal. ¡Cuídalo o tu empresa quebrará!</p>
+            <button class="btn-action" onclick="closeTutorial()">Entendido</button>
+        </div>
+    </div>
+
+    <div id="quiz-modal" class="modal">
+        <div class="modal-content">
+            <h2>🕵️‍♂️ Auditoría de Inversores</h2>
+            <p>Para recibir un subsidio de <strong>$2000</strong>, debes demostrar tus conocimientos económicos.</p>
+            <h3 id="quiz-question" style="color: var(--secondary); margin: 20px 0;">¿Pregunta?</h3>
+            <div id="quiz-options">
+                </div>
+        </div>
+    </div>
+
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="end-title">Fin del Juego</h2>
+            <p id="end-msg">Mensaje</p>
+            <h1 id="end-score" style="color: var(--money); font-size: 3rem; margin: 10px 0;">$0</h1>
+            <button class="btn-action" onclick="location.reload()">Jugar de Nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        // --- ESTADO DEL JUEGO ---
+        let state = {
+            month: 1,
+            money: 5000,
+            stock: 0,
+            productionCost: 10,
+            baseDemand: 150, // Cuántos comprarían a precio normal
+            currentDemandModifier: 1.0,
+            selectedDecision: null
+        };
+
+        // --- EVENTOS DE MERCADO ---
+        const marketEvents = [
+            { text: "Temporada normal. Las ventas en el pueblo son estables.", demandMod: 1.0 },
+            { text: "¡Fiesta Nacional del Trekking! Llegaron miles de turistas.", demandMod: 2.0 }, // Alta demanda
+            { text: "Ola de frío polar. La gente se queda en casa y no sale a comprar.", demandMod: 0.5 }, // Baja demanda
+            { text: "Una influencer local recomendó tus chocolates en Instagram.", demandMod: 1.5 },
+            { text: "Crisis de inflación nacional. La gente recorta gastos.", demandMod: 0.6 },
+            { text: "Llegada de cruceros internacionales a la región.", demandMod: 1.8 }
+        ];
+
+        // --- DECISIONES (Costo de Oportunidad) ---
+        const decisions = [
+            {
+                id: 'mkt',
+                title: 'Contratar Publicidad Local',
+                desc: 'Aumenta un poco la demanda, pero cuesta dinero fijo. (Servicio)',
+                cost: 500,
+                effect: () => { state.currentDemandModifier += 0.3; return "Demanda impulsada por publicidad."; }
+            },
+            {
+                id: 'tech',
+                title: 'Mantenimiento de Máquinas',
+                desc: 'Reduce el costo de producción para el próximo mes.',
+                cost: 800,
+                effect: () => { state.productionCost -= 2; return "Costo de producción reducido a $" + state.productionCost + "."; }
+            },
+            {
+                id: 'none',
+                title: 'Ahorrar Dinero',
+                desc: 'No gastas nada adicional. Proteges tu capital.',
+                cost: 0,
+                effect: () => { return "Decidiste ahorrar. No hubo impactos extra."; }
+            }
+        ];
+
+        // --- AUDITORÍAS TEÓRICAS ---
+        const quizzes = [
+            {
+                q: "El chocolate que fabricas se considera un...",
+                options: [
+                    { text: "Bien económico (Tangible y satisface una necesidad)", correct: true },
+                    { text: "Servicio (Intangible)", correct: false },
+                    { text: "Costo de Oportunidad", correct: false }
+                ]
+            },
+            {
+                q: "¿Qué es el Costo de Oportunidad?",
+                options: [
+                    { text: "El valor de la mejor opción a la que renuncias al tomar una decisión.", correct: true },
+                    { text: "El costo de comprar máquinas nuevas.", correct: false },
+                    { text: "El impuesto que te cobra el gobierno por vender.", correct: false }
+                ]
+            },
+            {
+                q: "Si la Demanda por tus chocolates sube mucho (ej. hay turismo), ¿qué pasa normalmente con el precio?",
+                options: [
+                    { text: "Tiende a subir, porque hay escasez del producto frente a tantos compradores.", correct: true },
+                    { text: "Tiende a bajar, porque hay mucha gente.", correct: false },
+                    { text: "No cambia, el mercado lo prohíbe.", correct: false }
+                ]
+            },
+            {
+                q: "¿Cuál es la función principal del Dinero en tu empresa?",
+                options: [
+                    { text: "Ser un medio de cambio aceptado para comprar insumos y cobrar ventas.", correct: true },
+                    { text: "Ser un bien que se puede comer.", correct: false },
+                    { text: "Generar escasez artificial.", correct: false }
+                ]
+            }
+        ];
+
+        // --- INICIALIZACIÓN ---
+        function initTurn() {
+            // Actualizar HUD
+            document.getElementById('hud-month').innerText = state.month;
+            document.getElementById('hud-money').innerText = state.money;
+            document.getElementById('hud-stock').innerText = state.stock;
+
+            // Restablecer valores base para el turno
+            if(state.productionCost < 5) state.productionCost = 5; // Limite
+            state.selectedDecision = null;
+            
+            // Elegir evento aleatorio
+            const event = marketEvents[Math.floor(Math.random() * marketEvents.length)];
+            state.currentDemandModifier = event.demandMod;
+            document.getElementById('market-news').innerHTML = `<strong>📰 Reporte del Mercado:</strong> ${event.text}`;
+
+            // Configurar Sliders
+            const maxProd = Math.floor(state.money / state.productionCost);
+            const sliderProd = document.getElementById('slider-prod');
+            sliderProd.max = maxProd > 1000 ? 1000 : maxProd; // Cap visual
+            sliderProd.value = 0;
+            
+            document.getElementById('slider-price').value = 25; // Precio default sugerido
+            
+            updateSliders();
+            renderDecisions();
+            
+            switchPanel('panel-planning');
+        }
+
+        function updateSliders() {
+            const prod = parseInt(document.getElementById('slider-prod').value);
+            const price = parseInt(document.getElementById('slider-price').value);
+            
+            document.getElementById('val-prod').innerText = prod;
+            document.getElementById('cost-prod').innerText = prod * state.productionCost;
+            document.getElementById('val-price').innerText = price;
+
+            // Validar que no produzca más de lo que puede pagar sumando decisiones
+            checkBudget();
+        }
+
+        function renderDecisions() {
+            const box = document.getElementById('decision-box');
+            box.innerHTML = '';
+            
+            // Mezclar decisiones para variedad
+            let options = [...decisions].sort(() => 0.5 - Math.random()).slice(0, 2); 
+            // Siempre asegurar que haya una opción barata/gratis si el dinero es bajo
+            if (!options.some(d => d.cost === 0)) options[1] = decisions.find(d => d.id === 'none');
+
+            options.forEach(dec => {
+                const card = document.createElement('div');
+                card.className = 'decision-card';
+                card.innerHTML = `
+                    <h4>${dec.title}</h4>
+                    <p>${dec.desc}</p>
+                    <span class="cost-badge">Costo: $${dec.cost}</span>
+                `;
+                card.onclick = () => selectDecision(card, dec);
+                box.appendChild(card);
+            });
+        }
+
+        function selectDecision(element, decisionObj) {
+            document.querySelectorAll('.decision-card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            state.selectedDecision = decisionObj;
+            checkBudget();
+        }
+
+        function checkBudget() {
+            const prodCost = parseInt(document.getElementById('slider-prod').value) * state.productionCost;
+            const decCost = state.selectedDecision ? state.selectedDecision.cost : 0;
+            
+            if (prodCost + decCost > state.money) {
+                document.getElementById('cost-prod').style.color = "var(--danger)";
+                document.getElementById('cost-prod').innerText += " (¡Fondos Insuficientes!)";
+                return false;
+            } else {
+                document.getElementById('cost-prod').style.color = "var(--text-main)";
+                return true;
+            }
+        }
+
+        // --- LÓGICA DE RESOLUCIÓN DEL MES ---
+        function finishMonth() {
+            if (!state.selectedDecision) {
+                alert("Debes elegir una Decisión Estratégica para analizar tu costo de oportunidad.");
+                return;
+            }
+            if (!checkBudget()) {
+                alert("No tienes dinero suficiente. Reduce la producción o cambia tu decisión.");
+                return;
+            }
+
+            // Aplicar costos
+            const prodAmount = parseInt(document.getElementById('slider-prod').value);
+            const price = parseInt(document.getElementById('slider-price').value);
+            const prodCostTotal = prodAmount * state.productionCost;
+            
+            state.money -= prodCostTotal;
+            state.money -= state.selectedDecision.cost;
+            state.stock += prodAmount;
+
+            // Ejecutar efecto de decisión (puede modificar demanda)
+            const decEffectMsg = state.selectedDecision.effect();
+
+            // Calcular Demanda Final vs Precio (Curva de Demanda básica)
+            // Precio de equilibrio estimado: 25
+            let priceFactor = 1;
+            if (price > 25) {
+                priceFactor = Math.max(0, 1 - ((price - 25) * 0.03)); // Por cada peso sobre 25, cae 3% la demanda
+            } else if (price < 25) {
+                priceFactor = 1 + ((25 - price) * 0.05); // Precio bajo sube demanda
+            }
+
+            let finalDemand = Math.floor(state.baseDemand * state.currentDemandModifier * priceFactor);
+            
+            // Calcular Ventas
+            let sold = 0;
+            if (finalDemand >= state.stock) {
+                sold = state.stock; // Vendió todo
+                state.stock = 0;
+            } else {
+                sold = finalDemand; // Sobró stock
+                state.stock -= finalDemand;
+            }
+
+            let revenue = sold * price;
+            let profit = revenue - (prodCostTotal + state.selectedDecision.cost);
+            state.money += revenue;
+
+            // Renderizar Reporte
+            document.getElementById('report-money').innerText = (profit >= 0 ? "+" : "") + "$" + profit;
+            document.getElementById('report-money').className = profit >= 0 ? "profit" : "loss";
+            document.getElementById('report-icon').innerText = profit >= 0 ? "📈" : "📉";
+            
+            document.getElementById('rep-sold').innerText = sold;
+            document.getElementById('rep-stock').innerText = state.stock;
+            document.getElementById('rep-opp').innerText = decEffectMsg;
+
+            document.getElementById('hud-money').innerText = state.money;
+            document.getElementById('hud-stock').innerText = state.stock;
+
+            switchPanel('panel-report');
+
+            // Quiebra check
+            if (state.money <= 0 && state.stock === 0) {
+                endGame("¡Bancarrota! 💥", "Te has quedado sin liquidez (Dinero) y sin bienes para vender. La escasez te superó.");
+            }
+        }
+
+        function nextMonth() {
+            state.month++;
+            
+            if (state.month > 12) {
+                endGame("¡Año Completado! 🏆", "Has logrado mantener la empresa a flote todo el año. ¡Excelente gestión CEO!");
+                return;
+            }
+
+            // Cada 3 meses, Auditoría Teórica
+            if (state.month === 4 || state.month === 8 || state.month === 12) {
+                triggerQuiz();
+            } else {
+                initTurn();
+            }
+        }
+
+        // --- SISTEMA DE QUIZ TEÓRICO ---
+        function triggerQuiz() {
+            const qObj = quizzes[Math.floor(Math.random() * quizzes.length)];
+            document.getElementById('quiz-question').innerText = qObj.q;
+            
+            const box = document.getElementById('quiz-options');
+            box.innerHTML = '';
+            
+            // Mezclar opciones
+            let opts = [...qObj.options].sort(() => 0.5 - Math.random());
+            
+            opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = opt.text;
+                btn.onclick = () => {
+                    if (opt.correct) {
+                        btn.classList.add('correct');
+                        state.money += 2000;
+                        setTimeout(() => {
+                            alert("¡Correcto! Has ganado $2000 de subsidio por aplicar buena teoría económica.");
+                            document.getElementById('quiz-modal').classList.remove('active');
+                            initTurn();
+                        }, 1000);
+                    } else {
+                        btn.classList.add('wrong');
+                        setTimeout(() => {
+                            alert("Incorrecto. Pierdes la oportunidad del subsidio.");
+                            document.getElementById('quiz-modal').classList.remove('active');
+                            initTurn();
+                        }, 1000);
+                    }
+                };
+                box.appendChild(btn);
+            });
+
+            document.getElementById('quiz-modal').classList.add('active');
+        }
+
+        // --- UTILIDADES ---
+        function switchPanel(panelId) {
+            document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        function endGame(title, msg) {
+            document.getElementById('end-title').innerText = title;
+            document.getElementById('end-title').style.color = title.includes("Bancarrota") ? "var(--danger)" : "var(--primary)";
+            document.getElementById('end-msg').innerText = msg;
+            document.getElementById('end-score').innerText = "Capital Final: $" + state.money;
+            document.getElementById('game-over-modal').classList.add('active');
+        }
+
+        function openTutorial() { document.getElementById('tutorial-modal').classList.add('active'); }
+        function closeTutorial() { document.getElementById('tutorial-modal').classList.remove('active'); }
+
+        // Iniciar primer mes
+        window.onload = () => {
+            initTurn();
+            openTutorial(); // Mostrar tutorial al inicio
+        };
+    </script>
+</body>
+</html>
