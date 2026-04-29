@@ -130,38 +130,37 @@
     </div>
 
     <!-- PESTAÑA 4: GENERADOR DE AVISOS A GOOGLE SHEETS -->
-    <div id="avisos" class="tab-content">
-        <div class="form-container">
-            <h2>Generador de Avisos</h2>
-            <p>Completa el formulario para enviar el aviso. Los datos se guardarán automáticamente en Google Sheets.</p>
-            
-            <form id="form-avisos">
-                <div class="input-group-form">
-                    <label for="titulo">Título del Aviso:</label>
-                    <input type="text" id="titulo" name="titulo" required placeholder="Ej: Examen de Matemáticas">
-                </div>
-                
-                <div class="input-group-form">
-                    <label for="curso">Curso:</label>
-                    <select id="curso" name="curso" required>
-                        <option value="">Seleccione un curso...</option>
-                        <option value="1er Año">1er Año</option>
-                        <option value="2do Año">2do Año</option>
-                        <option value="4to Año">4to Año</option>
-                    </select>
-                </div>
-
-                <div class="input-group-form">
-                    <label for="mensaje">Mensaje:</label>
-                    <textarea id="mensaje" name="mensaje" rows="4" required placeholder="Escribe aquí los detalles del aviso..."></textarea>
-                </div>
-
-                <button type="submit" class="btn-action" id="btn-submit">Enviar Aviso a Sheets 🚀</button>
-            </form>
-            <div id="form-feedback" class="feedback"></div>
-        </div>
+   <div id="avisos" class="tab-content">
+    <div class="form-container">
+        <h2>📢 Generador de Avisos</h2>
+        <form id="form-avisos">
+            <div class="input-group-form">
+                <label for="titulo">Título:</label>
+                <input type="text" id="titulo" name="titulo" required>
+            </div>
+            <div class="input-group-form">
+                <label for="curso">Curso:</label>
+                <select id="curso" name="curso" required>
+                    <option value="1er Año">1er Año</option>
+                    <option value="2do Año">2do Año</option>
+                    <option value="4to Año">4to Año</option>
+                </select>
+            </div>
+            <div class="input-group-form">
+                <label for="mensaje">Mensaje:</label>
+                <textarea id="mensaje" name="mensaje" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn-action" id="btn-submit">Publicar Aviso</button>
+        </form>
+        <div id="form-feedback" class="feedback"></div>
     </div>
 
+    <div style="margin-top: 2rem;">
+        <h3 style="text-align: left; border-bottom: 2px solid var(--primary); padding-bottom: 5px;">Avisos Recientes</h3>
+        <div id="contenedor-avisos">
+            <p style="text-align: center;">Cargando avisos...</p>
+        </div>
+    </div>
 </div>
 
 <!-- Enlace a la lógica JS separada -->
