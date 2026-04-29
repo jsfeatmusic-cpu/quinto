@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astro-Máticas: Racionales | CPES N°30</title>
+    <style>
+        :root {
+            --primary-color: #059669; /* Verde esmeralda para Matemáticas */
+            --secondary-color: #047857;
+            --accent-color: #F59E0B; /* Dorado para puntos */
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --danger: #EF4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 { margin: 0; font-size: 2.2rem; }
+        header p { margin: 10px 0 0 0; font-size: 1.1rem; color: #D1FAE5; }
+
+        .btn-volver {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
+            transition: background 0.3s;
+        }
+
+        .btn-volver:hover { background-color: rgba(255, 255, 255, 0.4); }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .game-board {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F9FAFB;
+            padding: 10px 20px;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid #E5E7EB;
+        }
+
+        .score { color: var(--accent-color); }
+        .level { color: var(--primary-color); }
+        .lives { color: var(--danger); letter-spacing: 2px; }
+
+        .question-container {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            min-height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Estilos para representar fracciones matemáticamente */
+        .frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            font-weight: bold;
+            margin: 0 5px;
+            font-size: 1.2em;
+        }
+        .frac .num {
+            border-bottom: 3px solid var(--text-main);
+            padding: 0 5px;
+        }
+        .frac .den {
+            padding: 0 5px;
+        }
+
+        .operator { font-weight: bold; color: var(--primary-color); }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 3px solid #E5E7EB;
+            border-radius: 15px;
+            padding: 1.5rem 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background-color: #ECFDF5;
+            transform: translateY(-2px);
+        }
+
+        .option-btn:active { transform: translateY(1px); }
+        
+        .option-btn.correct { background-color: #10B981; color: white; border-color: #059669; }
+        .option-btn.wrong { background-color: #EF4444; color: white; border-color: #B91C1C; }
+        
+        /* Modal Game Over */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white; padding: 3rem; border-radius: 20px;
+            text-align: center; max-width: 400px; width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+        }
+        .modal-content h2 { color: var(--danger); font-size: 2.5rem; margin-top: 0;}
+        .btn-restart {
+            background: var(--primary-color); color: white; border: none;
+            padding: 15px 30px; border-radius: 50px; font-weight: bold;
+            cursor: pointer; font-size: 1.2rem; margin-top: 20px;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        .btn-restart:hover { background: var(--secondary-color); }
+
+        /* Animaciones */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .shake { animation: shake 0.4s ease-in-out; }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .question-container { font-size: 1.5rem; flex-wrap: wrap; }
+            .hud { font-size: 1rem; padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Astro-Máticas</h1>
+        <p>Resuelve la operación para mantener la energía de la nave</p>
+        <a href="index.html" class="btn-volver">⬅ Volver al Portal</a>
+    </header>
+
+    <main>
+        <div class="game-board" id="board">
+            <div class="hud">
+                <div class="level">Nivel: <span id="level-txt">1</span></div>
+                <div class="score">Puntos: <span id="score-txt">0</span></div>
+                <div class="lives" id="lives-txt">❤️❤️❤️</div>
+            </div>
+
+            <div class="question-container" id="question-box">
+                </div>
+
+            <div class="options-grid" id="options-box">
+                </div>
+        </div>
+    </main>
+
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2>¡Sin Energía! 💥</h2>
+            <p style="font-size: 1.2rem;">Llegaste al Nivel <strong id="final-level"></strong> con <strong id="final-score"></strong> puntos.</p>
+            <button class="btn-restart" onclick="startGame()">Intentar de Nuevo</button>
+        </div>
+    </div>
+
+    <script>
+        // --- LÓGICA MATEMÁTICA BÁSICA ---
+        function gcd(a, b) {
+            a = Math.abs(a); b = Math.abs(b);
+            return b === 0 ? a : gcd(b, a % b);
+        }
+
+        function simplify(n, d) {
+            if (d < 0) { n = -n; d = -d; } // Denominador siempre positivo
+            let g = gcd(n, d);
+            return [n / g, d / g];
+        }
+
+        function renderFraction(n, d) {
+            if (d === 1) return `<span>${n}</span>`;
+            if (n === 0) return `<span>0</span>`;
+            return `<div class="frac"><span class="num">${n}</span><span class="den">${d}</span></div>`;
+        }
+
+        // --- VARIABLES DEL JUEGO ---
+        let score = 0;
+        let lives = 3;
+        let level = 1;
+        let currentAnswer = { n: 1, d: 1 };
+        let isProcessing = false;
+
+        // Decimales predefinidos para la conversión (amigables para jugar)
+        const commonDecimals = [
+            { dec: "0.1", n: 1, d: 10 }, { dec: "0.2", n: 1, d: 5 },
+            { dec: "0.25", n: 1, d: 4 }, { dec: "0.4", n: 2, d: 5 },
+            { dec: "0.5", n: 1, d: 2 }, { dec: "0.6", n: 3, d: 5 },
+            { dec: "0.75", n: 3, d: 4 }, { dec: "0.8", n: 4, d: 5 },
+            { dec: "1.5", n: 3, d: 2 }, { dec: "1.25", n: 5, d: 4 }
+        ];
+
+        // --- GENERADOR INFINITO DE NIVELES ---
+        function generateQuestion() {
+            // El nivel aumenta cada 5 respuestas correctas
+            level = Math.floor(score / 5) + 1;
+            document.getElementById('level-txt').innerText = level;
+
+            let types = [];
+            // Escala de dificultad progresiva
+            if (level <= 2) types = ['add_same', 'sub_same', 'dec2frac'];
+            else if (level <= 4) types = ['add_diff', 'sub_diff', 'dec2frac'];
+            else if (level <= 6) types = ['add_diff', 'sub_diff', 'mul', 'dec2frac'];
+            else types = ['add_diff', 'sub_diff', 'mul', 'div', 'dec2frac'];
+
+            const selectedType = types[Math.floor(Math.random() * types.length)];
+            
+            // Limitadores de tamaño de números basados en nivel
+            const maxDenom = Math.min(6 + level, 20); 
+            const maxNum = Math.min(8 + level, 25);
+
+            let qHtml = "";
+            let ans = [1, 1]; // [numerador, denominador]
+
+            if (selectedType === 'dec2frac') {
+                const dObj = commonDecimals[Math.floor(Math.random() * commonDecimals.length)];
+                qHtml = `<span>Convertir a fracción:</span> <strong style="font-size:2.5rem; margin-left:10px;">${dObj.dec}</strong>`;
+                ans = [dObj.n, dObj.d];
+            } else {
+                let d1 = Math.floor(Math.random() * (maxDenom - 2)) + 2;
+                let d2 = selectedType.includes('same') ? d1 : Math.floor(Math.random() * (maxDenom - 2)) + 2;
+                let n1 = Math.floor(Math.random() * maxNum) + 1;
+                let n2 = Math.floor(Math.random() * maxNum) + 1;
+
+                // Para evitar resultados negativos en restas iniciales (para mantener la moral alta)
+                if (selectedType.includes('sub')) {
+                    if ((n1/d1) < (n2/d2)) { let temp = n1; n1 = n2; n2 = temp; temp = d1; d1 = d2; d2 = temp; }
+                }
+
+                let f1 = renderFraction(n1, d1);
+                let f2 = renderFraction(n2, d2);
+                
+                if (selectedType.includes('add')) {
+                    qHtml = `${f1} <span class="operator">+</span> ${f2} <span class="operator">=</span> ?`;
+                    ans = simplify((n1 * d2) + (n2 * d1), d1 * d2);
+                } else if (selectedType.includes('sub')) {
+                    qHtml = `${f1} <span class="operator">-</span> ${f2} <span class="operator">=</span> ?`;
+                    ans = simplify((n1 * d2) - (n2 * d1), d1 * d2);
+                } else if (selectedType === 'mul') {
+                    qHtml = `${f1} <span class="operator">×</span> ${f2} <span class="operator">=</span> ?`;
+                    ans = simplify(n1 * n2, d1 * d2);
+                } else if (selectedType === 'div') {
+                    qHtml = `${f1} <span class="operator">÷</span> ${f2} <span class="operator">=</span> ?`;
+                    ans = simplify(n1 * d2, d1 * n2);
+                }
+            }
+
+            currentAnswer = { n: ans[0], d: ans[1] };
+            document.getElementById('question-box').innerHTML = qHtml;
+            generateOptions(currentAnswer);
+        }
+
+        function generateOptions(correctObj) {
+            let options = [correctObj];
+            let attempts = 0;
+
+            // Generar 3 distractores
+            while (options.length < 4 && attempts < 50) {
+                attempts++;
+                let mutN = correctObj.n + (Math.floor(Math.random() * 7) - 3); // Mutación leve
+                let mutD = correctObj.d + (Math.floor(Math.random() * 7) - 3);
+                if (mutD <= 0) mutD = 1;
+                if (mutN < 0 && correctObj.n >= 0) mutN = Math.abs(mutN); // Evitar negativos falsos si rta es pos
+
+                let [sn, sd] = simplify(mutN, mutD);
+                
+                // Verificar que no esté repetido
+                if (!options.some(opt => opt.n === sn && opt.d === sd)) {
+                    options.push({ n: sn, d: sd });
+                }
+            }
+
+            // Mezclar (Shuffle)
+            options.sort(() => Math.random() - 0.5);
+
+            const optionsBox = document.getElementById('options-box');
+            optionsBox.innerHTML = '';
+
+            options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = renderFraction(opt.n, opt.d);
+                // Si la respuesta es un entero, los botones del DOM pueden tener color negro a menos que modifiquemos sus elementos internos, 
+                // renderFraction ya lo maneja para que se vea claro.
+                
+                btn.onclick = () => checkAnswer(opt, btn);
+                optionsBox.appendChild(btn);
+            });
+        }
+
+        // --- SISTEMA DE JUEGO ---
+        function checkAnswer(selectedOpt, btnElement) {
+            if (isProcessing) return;
+            isProcessing = true;
+
+            const isCorrect = (selectedOpt.n === currentAnswer.n && selectedOpt.d === currentAnswer.d);
+
+            if (isCorrect) {
+                btnElement.classList.add('correct');
+                score += 10;
+                document.getElementById('score-txt').innerText = score;
+                setTimeout(() => {
+                    isProcessing = false;
+                    generateQuestion();
+                }, 600);
+            } else {
+                btnElement.classList.add('wrong');
+                document.getElementById('board').classList.add('shake');
+                lives--;
+                updateLives();
+                
+                // Buscar el botón correcto y resaltarlo
+                Array.from(document.getElementById('options-box').children).forEach(childBtn => {
+                    // Reconstruimos el string HTML para comparar (forma simple de identificar el correcto)
+                    if(childBtn.innerHTML === renderFraction(currentAnswer.n, currentAnswer.d)) {
+                        childBtn.classList.add('correct');
+                    }
+                });
+
+                setTimeout(() => {
+                    document.getElementById('board').classList.remove('shake');
+                    if (lives > 0) {
+                        isProcessing = false;
+                        generateQuestion();
+                    } else {
+                        gameOver();
+                    }
+                }, 1200);
+            }
+        }
+
+        function updateLives() {
+            let livesStr = "";
+            for(let i=0; i<3; i++) {
+                livesStr += (i < lives) ? "❤️" : "🖤";
+            }
+            document.getElementById('lives-txt').innerText = livesStr;
+        }
+
+        function gameOver() {
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-level').innerText = level;
+            document.getElementById('game-over-modal').classList.add('active');
+        }
+
+        function startGame() {
+            score = 0;
+            lives = 3;
+            level = 1;
+            isProcessing = false;
+            document.getElementById('score-txt').innerText = "0";
+            document.getElementById('game-over-modal').classList.remove('active');
+            updateLives();
+            generateQuestion();
+        }
+
+        // Iniciar
+        window.onload = startGame;
+    </script>
+</body>
+</html>
