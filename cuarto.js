@@ -1,3 +1,10 @@
+// --- NAVEGACIÓN DE PESTAÑAS ---
+function openTab(tabName, btnElement) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    btnElement.classList.add('active');
+}
 const scriptURL = 'https://script.google.com/macros/s/AKfycbwP5PTTDzPvVSHoHyRXaHN8kWqIShVE6tAdYveKgb_2F647b6eYwfwZSGtvJg2ltg3l/exec'; // Asegúrate de poner tu URL real aquí
 const form = document.getElementById('form-avisos');
 const contenedorAvisos = document.getElementById('contenedor-avisos');
