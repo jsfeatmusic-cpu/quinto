@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>División de Datos Patagónicos | CPES N°30</title>
+    <style>
+        :root {
+            --bg-color: #F8FAFC;
+            --dashboard-bg: #FFFFFF;
+            --primary: #0284C7; /* Azul analítico */
+            --secondary: #0369A1;
+            --accent: #F59E0B;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --border-color: #E2E8F0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .header-title h1 { margin: 0; font-size: 1.8rem; letter-spacing: 0.5px; display: flex; align-items: center; gap: 10px;}
+        .header-title p { margin: 5px 0 0 0; color: #E0F2FE; font-size: 1rem; }
+        
+        .btn-nav {
+            padding: 0.5rem 1.2rem; background: rgba(255,255,255,0.2);
+            color: white; text-decoration: none; border-radius: 6px;
+            font-weight: 600; backdrop-filter: blur(4px); transition: 0.3s;
+        }
+        .btn-nav:hover { background: rgba(255,255,255,0.3); }
+
+        main {
+            flex: 1; padding: 2rem 1rem;
+            max-width: 1200px; margin: 0 auto; width: 100%;
+            box-sizing: border-box;
+        }
+
+        .dashboard {
+            display: grid; grid-template-columns: 300px 1fr; gap: 2rem;
+        }
+
+        /* Panel lateral de progreso */
+        .side-panel {
+            background: var(--dashboard-bg); border-radius: 12px; padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
+            height: fit-content;
+        }
+
+        .analyst-profile { text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+        .analyst-profile .avatar { font-size: 4rem; margin-bottom: 10px; }
+        
+        .stat-box {
+            background: #F1F5F9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;
+            display: flex; justify-content: space-between; align-items: center; font-weight: bold;
+        }
+
+        /* Área Principal del Expediente */
+        .workspace { display: flex; flex-direction: column; gap: 1.5rem; }
+
+        .case-card {
+            background: var(--dashboard-bg); border-radius: 12px; padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
+            border-top: 5px solid var(--primary);
+        }
+
+        .case-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 1.5rem; border-bottom: 2px dashed var(--border-color); padding-bottom: 1rem;
+        }
+
+        .case-title { font-size: 1.4rem; color: var(--primary); font-weight: bold; margin: 0; }
+        .case-id { background: #E0F2FE; color: var(--secondary); padding: 4px 10px; border-radius: 20px; font-size: 0.9rem; font-family: monospace; }
+
+        .phase-title { font-size: 1.2rem; color: var(--text-dark); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+        
+        /* Controles de formulario */
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); }
+        
+        input[type="number"], select {
+            width: 100%; padding: 10px; border: 2px solid var(--border-color);
+            border-radius: 6px; font-size: 1rem; transition: border 0.3s;
+            box-sizing: border-box; font-family: monospace;
+        }
+        input[type="number"]:focus, select:focus { border-color: var(--primary); outline: none; }
+
+        .data-array-display {
+            background: #F8FAFC; border: 1px solid #CBD5E1; padding: 1rem;
+            border-radius: 8px; font-family: monospace; font-size: 1.3rem;
+            letter-spacing: 2px; text-align: center; margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+
+        /* Tabla de Frecuencias */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        th, td { border: 1px solid var(--border-color); padding: 12px; text-align: center; }
+        th { background: #F1F5F9; color: var(--text-muted); font-weight: 600; }
+        td input { width: 80px; text-align: center; margin: 0 auto; }
+
+        .btn-submit {
+            background: var(--primary); color: white; border: none;
+            padding: 12px 25px; border-radius: 6px; font-weight: bold;
+            font-size: 1.1rem; cursor: pointer; transition: 0.3s; width: 100%;
+        }
+        .btn-submit:hover { background: var(--secondary); transform: translateY(-2px); }
+
+        .feedback {
+            margin-top: 1rem; padding: 1rem; border-radius: 6px; font-weight: bold;
+            display: none; text-align: center;
+        }
+        .feedback.success { display: block; background: #D1FAE5; color: #065F46; border: 1px solid #34D399; }
+        .feedback.error { display: block; background: #FEE2E2; color: #991B1B; border: 1px solid #F87171; }
+
+        /* Modal Tutorial */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white; padding: 2.5rem; border-radius: 12px;
+            max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;
+        }
+        .modal-content h2 { color: var(--primary); margin-top: 0; }
+        .formula-box { background: #F1F5F9; padding: 10px; border-left: 4px solid var(--accent); margin: 10px 0; font-family: monospace; }
+
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .side-panel { order: -1; display: flex; justify-content: space-between; align-items: center; padding: 1rem; }
+            .analyst-profile { margin: 0; padding: 0; border: none; display: flex; align-items: center; gap: 15px; }
+            .analyst-profile .avatar { font-size: 2.5rem; margin: 0; }
+            .stat-box { margin-bottom: 0; margin-left: 10px; }
+            th, td { padding: 8px; font-size: 0.9rem; }
+            td input { width: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">
+            <h1>📊 División de Datos Patagónicos</h1>
+        </div>
+        <div>
+            <button class="btn-nav" onclick="openTutorial()" style="margin-right: 10px; cursor: pointer;">📘 Guía del Analista</button>
+            <a href="index.html" class="btn-nav">⬅ Salir del Sistema</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="dashboard">
+            <div class="side-panel">
+                <div class="analyst-profile">
+                    <div class="avatar">👨‍💻</div>
+                    <h3 style="margin: 0; color: var(--text-dark);">Analista Nivel <span id="level-txt">1</span></h3>
+                    <p style="color: var(--text-muted); margin: 5px 0 0 0;">Departamento de Estadística</p>
+                </div>
+                <div class="stat-box">
+                    <span>Casos Resueltos:</span>
+                    <span id="score-txt" style="color: var(--primary); font-size: 1.2rem;">0</span>
+                </div>
+                <div class="stat-box" style="background: #FEF3C7; color: #B45309;">
+                    <span>Precisión Requerida:</span>
+                    <span>100%</span>
+                </div>
+            </div>
+
+            <div class="workspace">
+                <div class="case-card">
+                    <div class="case-header">
+                        <div>
+                            <p style="color: var(--text-muted); margin: 0 0 5px 0; font-weight: bold;">EXPEDIENTE ACTIVO</p>
+                            <h2 class="case-title" id="scenario-title">Cargando caso...</h2>
+                        </div>
+                        <span class="case-id" id="case-id">ID: #0000</span>
+                    </div>
+
+                    <p id="scenario-desc" style="font-size: 1.1rem; line-height: 1.6;"></p>
+
+                    <div class="phase-title">🔹 Fase 1: Identificación del Alcance</div>
+                    <div class="form-group">
+                        <label id="q-pop-sample">¿A qué concepto estadístico corresponde la información recolectada en este caso?</label>
+                        <select id="ans-concept">
+                            <option value="">Seleccionar...</option>
+                            <option value="poblacion">Población (Se analizó a todos los elementos)</option>
+                            <option value="muestra">Muestra (Se analizó a un subgrupo representativo)</option>
+                        </select>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
+
+                    <div class="phase-title">🔹 Fase 2: Medidas de Tendencia Central</div>
+                    <p style="color: var(--text-muted);">El equipo de campo ha extraído el siguiente set de datos (ordenado para tu comodidad):</p>
+                    <div class="data-array-display" id="data-array">
+                        --
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                        <div class="form-group">
+                            <label>Media (Promedio):</label>
+                            <input type="number" id="ans-media" step="0.01" placeholder="Ej: 14.5">
+                        </div>
+                        <div class="form-group">
+                            <label>Mediana:</label>
+                            <input type="number" id="ans-mediana" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Moda:</label>
+                            <input type="number" id="ans-moda" step="0.01">
+                        </div>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
+
+                    <div class="phase-title">🔹 Fase 3: Tabla de Frecuencias</div>
+                    <p style="color: var(--text-muted);">Completa la tabla de procesamiento. (Usa hasta 2 decimales en frec. relativa).</p>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Dato (x)</th>
+                                    <th>Frec. Absoluta (fi)</th>
+                                    <th>Frec. Relativa (fr)</th>
+                                    <th>Porcentaje (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td style="font-weight: bold;">TOTAL</td>
+                                    <td style="font-weight: bold;" id="table-total-fi">--</td>
+                                    <td><input type="number" id="ans-total-fr" placeholder="1.00"></td>
+                                    <td><input type="number" id="ans-total-pct" placeholder="100"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div id="feedback-msg" class="feedback"></div>
+
+                    <button class="btn-submit" onclick="verifyCase()">Validar y Cerrar Expediente</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="tutorial-modal" class="modal">
+        <div class="modal-content">
+            <h2>📘 Manual de Análisis Estadístico</h2>
+            <p>Bienvenido al equipo. Aquí tienes los conceptos clave para procesar la información:</p>
+            
+            <h3 style="color: var(--secondary);">1. Población vs. Muestra</h3>
+            <ul>
+                <li><b>Población:</b> El conjunto total de individuos u objetos de interés.</li>
+                <li><b>Muestra:</b> Una parte o subconjunto representativo de la población.</li>
+            </ul>
+
+            <h3 style="color: var(--secondary);">2. Tendencia Central</h3>
+            <div class="formula-box">
+                <b>Media (Promedio):</b> Suma de todos los datos ÷ cantidad total de datos.<br>
+                <b>Mediana:</b> El valor que está exactamente en el medio al ordenar los datos de menor a mayor.<br>
+                <b>Moda:</b> El valor que más se repite.
+            </div>
+
+            <h3 style="color: var(--secondary);">3. Frecuencias</h3>
+            <div class="formula-box">
+                <b>Frec. Absoluta (fi):</b> Cuántas veces aparece un dato.<br>
+                <b>Frec. Relativa (fr):</b> fi ÷ Total de datos (La suma de fr debe dar 1).<br>
+                <b>Porcentaje (%):</b> fr × 100 (La suma debe dar 100%).
+            </div>
+
+            <button class="btn-submit" onclick="closeTutorial()" style="margin-top: 15px;">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+        // --- BASE DE DATOS DE ESCENARIOS ---
+        const scenarios = [
+            {
+                title: "Monitoreo del Viento Eólico",
+                descBase: "Se instalaron anemómetros en el parque eólico cercano a Tres Lagos para medir la velocidad de ráfagas.",
+                isSample: true,
+                descContext: "Debido a la inmensidad del territorio, se seleccionaron aleatoriamente 3 turbinas para el estudio del día.",
+                dataLabels: ["Ráfagas de 60km/h", "Ráfagas de 80km/h", "Ráfagas de 100km/h"]
+            },
+            {
+                title: "Censo Comercial",
+                descBase: "El Ministerio de Economía provincial requiere analizar las ventas diarias de los comercios.",
+                isSample: false,
+                descContext: "Los inspectores han recolectado los tickets de absolutamente todos los locales comerciales operativos hoy en el pueblo.",
+                dataLabels: ["Ventas Bajas", "Ventas Medias", "Ventas Altas"]
+            },
+            {
+                title: "Rendimiento en Ciencias",
+                descBase: "Se analizan las calificaciones del último examen de Física Cuántica y Economía.",
+                isSample: true,
+                descContext: "Para proyectar el rendimiento provincial, se tomaron como caso de estudio solo los exámenes de 5to año del CPES N°30.",
+                dataLabels: ["Aprobado (6)", "Aprobado (8)", "Sobresaliente (10)"]
+            }
+        ];
+
+        let currentCase = {};
+        let score = 0;
+        let level = 1;
+
+        // --- GENERADOR DEL CASO ---
+        function generateCase() {
+            document.getElementById('feedback-msg').className = 'feedback'; // Reset feedback
+            document.getElementById('case-id').innerText = `ID: #0${Math.floor(Math.random() * 9000) + 1000}`;
+            
+            // 1. Seleccionar Escenario
+            const baseScenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+            currentCase.isSample = baseScenario.isSample;
+            
+            document.getElementById('scenario-title').innerText = baseScenario.title;
+            document.getElementById('scenario-desc').innerText = `${baseScenario.descBase} ${baseScenario.descContext}`;
+
+            // 2. Generar Array de Datos (Fase 2)
+            // Para mantenerlo calculable a mano, array de 5 o 7 números
+            const size = (Math.random() > 0.5) ? 5 : 7; 
+            let rawData = [];
+            
+            // Generar una moda clara
+            const modeValue = Math.floor(Math.random() * 10) + 5; 
+            rawData.push(modeValue, modeValue); 
+            if(size === 7) rawData.push(modeValue); // Reforzar moda
+
+            // Rellenar resto asegurando que la media de exacto o .5 para no frustrar
+            while(rawData.length < size) {
+                rawData.push(Math.floor(Math.random() * 10) + 5);
+            }
+
+            rawData.sort((a, b) => a - b);
+            currentCase.array = rawData;
+            document.getElementById('data-array').innerText = rawData.join(" - ");
+
+            // Calcular respuestas correctas Fase 2
+            let sum = rawData.reduce((a, b) => a + b, 0);
+            currentCase.media = parseFloat((sum / size).toFixed(2));
+            currentCase.mediana = rawData[Math.floor(size / 2)];
+            currentCase.moda = modeValue;
+
+            // 3. Generar Tabla de Frecuencias (Fase 3)
+            // Valores que den fr exactos (denominador 10, 20 o 50)
+            const totals = [10, 20, 50];
+            const tableTotal = totals[Math.floor(Math.random() * totals.length)];
+            
+            let fi1 = Math.floor(Math.random() * (tableTotal/2)) + 1;
+            let fi2 = Math.floor(Math.random() * (tableTotal/3)) + 1;
+            let fi3 = tableTotal - fi1 - fi2;
+
+            currentCase.table = [
+                { label: baseScenario.dataLabels[0], fi: fi1, fr: (fi1/tableTotal).toFixed(2), pct: (fi1/tableTotal)*100 },
+                { label: baseScenario.dataLabels[1], fi: fi2, fr: (fi2/tableTotal).toFixed(2), pct: (fi2/tableTotal)*100 },
+                { label: baseScenario.dataLabels[2], fi: fi3, fr: (fi3/tableTotal).toFixed(2), pct: (fi3/tableTotal)*100 }
+            ];
+
+            renderTable(currentCase.table, tableTotal);
+
+            // Limpiar inputs
+            document.getElementById('ans-concept').value = "";
+            document.getElementById('ans-media').value = "";
+            document.getElementById('ans-mediana').value = "";
+            document.getElementById('ans-moda').value = "";
+            document.getElementById('ans-total-fr').value = "";
+            document.getElementById('ans-total-pct').value = "";
+        }
+
+        function renderTable(tableData, total) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            
+            tableData.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.label}</td>
+                    <td style="font-weight: bold;">${row.fi}</td>
+                    <td><input type="number" id="ans-fr-${index}" step="0.01"></td>
+                    <td><input type="number" id="ans-pct-${index}"></td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('table-total-fi').innerText = total;
+        }
+
+        // --- SISTEMA DE VALIDACIÓN ---
+        function verifyCase() {
+            const feedback = document.getElementById('feedback-msg');
+            let errors = [];
+
+            // Fase 1
+            const concept = document.getElementById('ans-concept').value;
+            if (concept === "") errors.push("Fase 1: Debes seleccionar Población o Muestra.");
+            else if ((currentCase.isSample && concept !== 'muestra') || (!currentCase.isSample && concept !== 'poblacion')) {
+                errors.push("Fase 1 Incorrecta: Relee el contexto para identificar si se analizó el total o una parte.");
+            }
+
+            // Fase 2
+            const ansMedia = parseFloat(document.getElementById('ans-media').value);
+            const ansMediana = parseFloat(document.getElementById('ans-mediana').value);
+            const ansModa = parseFloat(document.getElementById('ans-moda').value);
+
+            if (isNaN(ansMedia) || isNaN(ansMediana) || isNaN(ansModa)) {
+                errors.push("Fase 2: Faltan calcular medidas de tendencia central.");
+            } else {
+                if (ansMedia !== currentCase.media) errors.push(`Fase 2: La Media es incorrecta. (Tip: Suma todos y divide por ${currentCase.array.length})`);
+                if (ansMediana !== currentCase.mediana) errors.push("Fase 2: La Mediana es incorrecta. Busca el valor del medio exacto.");
+                if (ansModa !== currentCase.moda) errors.push("Fase 2: La Moda es incorrecta. Busca el que más se repite.");
+            }
+
+            // Fase 3
+            let tableErrors = false;
+            currentCase.table.forEach((row, i) => {
+                let fr = parseFloat(document.getElementById(`ans-fr-${i}`).value);
+                let pct = parseFloat(document.getElementById(`ans-pct-${i}`).value);
+                if (fr != row.fr || pct != row.pct) tableErrors = true;
+            });
+
+            let tFr = parseFloat(document.getElementById('ans-total-fr').value);
+            let tPct = parseFloat(document.getElementById('ans-total-pct').value);
+
+            if (tableErrors) errors.push("Fase 3: Hay errores en el cálculo de Frecuencia Relativa (fi/Total) o Porcentaje.");
+            if (tFr !== 1 && tFr !== 1.0) errors.push("Fase 3: El total de Frecuencia Relativa siempre debe ser 1.");
+            if (tPct !== 100) errors.push("Fase 3: El total de Porcentaje siempre debe ser 100%.");
+
+            // Resultado
+            if (errors.length > 0) {
+                feedback.innerHTML = "<b>⚠️ Se encontraron discrepancias en el análisis:</b><br><br>" + errors.join("<br>");
+                feedback.className = 'feedback error';
+            } else {
+                feedback.innerHTML = "<b>✅ ¡Expediente Validado Correctamente!</b> Procesando siguiente caso...";
+                feedback.className = 'feedback success';
+                score += 1;
+                level = Math.floor(score / 3) + 1;
+                
+                document.getElementById('score-txt').innerText = score;
+                document.getElementById('level-txt').innerText = level;
+
+                setTimeout(generateCase, 2500); // Avanza automático
+            }
+        }
+
+        // --- MENÚS ---
+        function openTutorial() { document.getElementById('tutorial-modal').classList.add('active'); }
+        function closeTutorial() { document.getElementById('tutorial-modal').classList.remove('active'); }
+
+        // Inicializar
+        window.onload = generateCase;
+    </script>
+</body>
+</html>
